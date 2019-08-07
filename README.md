@@ -1,4 +1,11 @@
 # fullstack-starwars-app
-## Web app using [Node js](https://nodejs.org/en/) [Express js](https://expressjs.com/), [Knex](http://knexjs.org/), 
-   [React js](https://es.reactjs.org/) and [Postgresql](https://www.postgresql.org/) 
+## Web app using: 
+### Backend: 
+  *[Node js](https://nodejs.org/en/) 
+  *[Express js](https://expressjs.com/) 
+  *[Knex](http://knexjs.org/)
+  *[Postgresql](https://www.postgresql.org/)
+### Frontend:
+  *[React js](https://es.reactjs.org/)
+  *[Redux js](https://redux.js.org/)
 
