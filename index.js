@@ -1,6 +1,6 @@
 const app = require("express")();
 const knex = require("knex")(require('./knexfile').development);
-const getDataFromApi = require('./fetchData');
+const getDataFromApi = require('./utils/fetchData');
 app.get('/users', async (req, res)=>{
   const r = await knex
     .select('*')
