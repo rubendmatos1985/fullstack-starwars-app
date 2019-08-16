@@ -5,6 +5,7 @@
   * [Express js](https://expressjs.com/) 
   * [Knex](http://knexjs.org/)
   * [Postgresql](https://www.postgresql.org/)
+  * [Typescript](https://www.typescriptlang.org/)
 ### Frontend:
   * [React js](https://es.reactjs.org/)
   * [Redux js](https://redux.js.org/)

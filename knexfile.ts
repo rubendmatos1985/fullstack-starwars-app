@@ -1,14 +1,14 @@
 // Update with your config settings.
-
+const s = require("./settings.js");
 module.exports = {
 
   development: {
     client: 'pg',
     connection: {
-      user: 'postgres',
+      user: s.user,
       host: 'localhost',
       database: 'starwars',
-      password: 'ruben28340'
+      password: s.password
     }
   }
 };
