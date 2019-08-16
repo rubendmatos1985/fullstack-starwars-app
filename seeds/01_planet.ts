@@ -1,11 +1,11 @@
+import Knex from 'knex';
 import getDataFromApi from '../src/utils/fetchData';
 import formatData from '../src/utils/formatData';
 
-exports.seed = async function(knex:any) {
+exports.seed = async function(knex:Knex) {
   const d = await getDataFromApi('https://swapi.co/api/planets/')
   const data = formatData(d.results, [
     'name',
-    'episode_id',
     'rotation_period',
     'orbital_period',
     'diameter',
