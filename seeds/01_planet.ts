@@ -2,7 +2,7 @@ import Knex from 'knex';
 import getDataFromApi from '../src/utils/fetchData';
 import formatData from '../src/utils/formatData';
 
-exports.seed = async function(knex:Knex) {
+exports.seed = async function(knex:Knex):Promise<any> {
   const d = await getDataFromApi('https://swapi.co/api/planets/')
   const data = formatData(d.results, [
     'name',
