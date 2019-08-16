@@ -5,6 +5,7 @@ exports.seed = async function(knex:any) {
   const d = await getDataFromApi('https://swapi.co/api/planets/')
   const data = formatData(d.results, [
     'name',
+    'episode_id',
     'rotation_period',
     'orbital_period',
     'diameter',
