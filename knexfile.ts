@@ -8,7 +8,7 @@ module.exports = {
       user: 'postgres',
       host: 'localhost',
       database: 'starwars',
-      password: 'ruben85'
+      password: 'ruben28340'
     }
   }
 };

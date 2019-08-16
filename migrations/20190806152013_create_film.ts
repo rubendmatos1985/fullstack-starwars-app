@@ -1,5 +1,5 @@
-exports.up = function(knex) {
-  return knex.schema.createTable('film', table =>{
+exports.up = function(knex:any) {
+  return knex.schema.createTable('film', (table:any) =>{
     table.uuid('id')
     table.text('title')
     table.integer('episode')
@@ -13,6 +13,6 @@ exports.up = function(knex) {
   })
 };
 
-exports.down = function(knex) {
+exports.down = function(knex:any) {
   return knex.schema.dropTable('film');
 };

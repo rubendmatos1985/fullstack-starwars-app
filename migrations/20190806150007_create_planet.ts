@@ -1,5 +1,5 @@
-exports.up = function(knex) {
-  return knex.schema.createTable('planet', table => {
+exports.up = function(knex:any) {
+  return knex.schema.createTable('planet', (table:any) => {
     table.uuid('id')
     table.text('name')
     table.text('rotation_period')
@@ -13,6 +13,6 @@ exports.up = function(knex) {
   })
 }
 
-exports.down = function(knex) {
+exports.down = function(knex:any) {
   return knex.schema.dropTable('planet')
 }

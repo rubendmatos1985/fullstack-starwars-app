@@ -1,7 +1,7 @@
-const uuid = require('uuid/v1')
-const getDataFromApi = require('../utils/fetchData')
-const formatData = require('../utils/formatData')
-exports.seed = async function(knex) {
+import getDataFromApi from '../src/utils/fetchData';
+import formatData from '../src/utils/formatData';
+
+exports.seed = async function(knex:any) {
   const d = await getDataFromApi('https://swapi.co/api/planets/')
   const data = formatData(d.results, [
     'name',
