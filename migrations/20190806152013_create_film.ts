@@ -13,7 +13,8 @@ exports.up = function(knex: Knex) {
     table.text("url");
   });
 
-  exports.down = function(knex: Knex) {
-    return knex.schema.dropTable("film");
-  };
+ 
+};
+exports.down = function(knex: Knex) {
+  return knex.schema.dropTable("film");
 };
