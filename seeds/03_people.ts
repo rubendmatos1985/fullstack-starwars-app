@@ -1,9 +1,13 @@
 import * as Knex from "knex";
-import fetchData from '../src/utils/fetchData';
-import formatData from '../src/utils/formatData';
+import fetchData from '../utils/fetchData';
+import formatData from '../utils/formatData';
 export async function seed(knex: Knex): Promise<any> {
-    const d = await fetchData('https://swapi.co/api/people/');
-    const data = formatData(d.results, [
+    const promeses: Promise<any>[] = 
+      Array(9).fill(0)
+        .map((_, i)=> fetchData(`https://swapi.co/api/people/?page=${i+1}`))
+    const  d:object[] = await Promise.all(promeses)
+      .then(v => v.reduce((acc, obj)=> [...acc, obj.results],[]).reduce((acc:any,o:any)=>[...acc, ...o] ,[]))
+    const data = formatData(d, [
        "name",
        "height",
        "mass",

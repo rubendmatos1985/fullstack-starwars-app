@@ -1,6 +1,6 @@
 import * as Knex from "knex";
-import getDataFromApi from '../src/utils/fetchData';
-import formatData from '../src/utils/formatData';
+import getDataFromApi from '../utils/fetchData';
+import formatData from '../utils/formatData';
 export async function seed(knex: Knex): Promise<any> {
     const d = await getDataFromApi('https://swapi.co/api/films/');
     const data = formatData(d.results, [
