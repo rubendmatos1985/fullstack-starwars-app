@@ -12,7 +12,6 @@ export async function up(knex: Knex): Promise<any> {
     table.text('eye_color')
     table.text('birth_year')
     table.text('gender')
-    table.uuid('vehicles')
     table.text('created')
     table.text('edited')
     table.text('url')

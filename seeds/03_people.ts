@@ -1,13 +1,11 @@
 import * as Knex from "knex";
-import fetchData from '../utils/fetchData';
 import formatData from '../utils/formatData';
+import Api from '../api';
+import { IPeopleEntity, IPeopleFromApi } from '../models/People';
+
 export async function seed(knex: Knex): Promise<any> {
-    const promeses: Promise<any>[] = 
-      Array(9).fill(0)
-        .map((_, i)=> fetchData(`https://swapi.co/api/people/?page=${i+1}`))
-    const  d:object[] = await Promise.all(promeses)
-      .then(v => v.reduce((acc:any, obj:any)=> [...acc, obj.results],[]).reduce((acc:any,o:any)=>[...acc, ...o] ,[]))
-    const data = formatData(d, [
+    const peopleFromApi:IPeopleFromApi[] = await Api.People();
+    const data:IPeopleEntity = formatData(peopleFromApi, [
        "name",
        "height",
        "mass",
