@@ -6,7 +6,7 @@ export async function seed(knex: Knex): Promise<any> {
       Array(9).fill(0)
         .map((_, i)=> fetchData(`https://swapi.co/api/people/?page=${i+1}`))
     const  d:object[] = await Promise.all(promeses)
-      .then(v => v.reduce((acc, obj)=> [...acc, obj.results],[]).reduce((acc:any,o:any)=>[...acc, ...o] ,[]))
+      .then(v => v.reduce((acc:any, obj:any)=> [...acc, obj.results],[]).reduce((acc:any,o:any)=>[...acc, ...o] ,[]))
     const data = formatData(d, [
        "name",
        "height",

@@ -3,7 +3,7 @@ import { TableBuilder } from 'knex';
 
 export async function up(knex: Knex): Promise<any> {
   return knex.schema.createTable('people', (table:TableBuilder)=>{
-    table.uuid('id')
+    table.uuid('id').primary().unique()
     table.text('name')
     table.text('height')
     table.text('mass')
@@ -12,8 +12,6 @@ export async function up(knex: Knex): Promise<any> {
     table.text('eye_color')
     table.text('birth_year')
     table.text('gender')
-    table.uuid('homeworld')
-    table.uuid('species')
     table.uuid('vehicles')
     table.text('created')
     table.text('edited')

@@ -6,7 +6,7 @@
   "scripts": {
     "build": "tsc",
     "dev": "nodemon ./index.ts",  
-    "start": "dist/index.js"
+    "start": "/dist/index.js"
   },
   "author": "ruben1985",
   "license": "MIT",
