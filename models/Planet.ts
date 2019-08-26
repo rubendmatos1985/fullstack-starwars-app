@@ -1,3 +1,5 @@
+import { People } from './People';
+import { Film } from './Film';
 export interface Planet{
   id: string
   name: string
@@ -9,4 +11,6 @@ export interface Planet{
   terrain: string
   surface_water: string
   population: string
+  residents: People[]
+  films: Film[]
 }
