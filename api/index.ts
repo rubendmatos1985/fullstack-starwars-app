@@ -2,8 +2,13 @@ import fetchData from "../utils/fetchData";
 import { IPeopleFromApi } from "../models/People";
 import { IFilmFromApi } from "../models/Film";
 import { IApiResponse } from "./responseInterface";
-class Api {
-  static People: () => Promise<IPeopleFromApi[]> = async () =>
+interface IApi{
+  People: ()=> Promise<IPeopleFromApi[]>
+  Film: ()=> Promise<IFilmFromApi[]>
+
+}
+const Api:(()=> IApi) = ()=> ({
+  People:  async () =>
     await Promise.all(
       Array(9)
         .fill(0)
@@ -18,12 +23,12 @@ class Api {
             [...acc, ...obj.results] as IPeopleFromApi[],
           []
         )
-      );
+      ),
 
-  static Film: () => Promise<IFilmFromApi[]> = async () =>
+  Film: async () =>
     await fetchData("https://swapi.co/api/films/")
       .then(
         (response: IApiResponse) => response.results
-      );
-}
-export default Api;
+      )
+})
+export default Api();
