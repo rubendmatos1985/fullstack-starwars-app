@@ -1,11 +1,12 @@
 import fetchData from "../utils/fetchData";
 import { IPeopleFromApi } from "../models/People";
 import { IFilmFromApi } from "../models/Film";
+import { IPlanetFromApi } from '../models/Planet';
 import { IApiResponse } from "./responseInterface";
 interface IApi{
   People: ()=> Promise<IPeopleFromApi[]>
   Film: ()=> Promise<IFilmFromApi[]>
-
+  Planet: ()=> Promise<IPlanetFromApi[]>
 }
 const Api:(()=> IApi) = ()=> ({
   People:  async () =>
@@ -25,10 +26,19 @@ const Api:(()=> IApi) = ()=> ({
         )
       ),
 
-  Film: async () =>
+  Film: async () =>(
     await fetchData("https://swapi.co/api/films/")
       .then(
         (response: IApiResponse) => response.results
       )
+  ),
+  Planet: async ()=>(
+    await Promise.all(
+      Array(7).fill(0)
+      .map((_, i)=> fetchData(`https://swapi.co/api/planets/?page=${i+1}`) as IApiResponse)
+    )
+    .then(v => v.reduce((acc:any, obj: IApiResponse)=> [...acc, ...obj.results] as IPlanetFromApi[],[]))
+      
+  )
 })
 export default Api();
