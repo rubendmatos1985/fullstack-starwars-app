@@ -4,8 +4,7 @@ import Api from '../api';
 import { IPeopleEntity, IPeopleFromApi } from '../models/People';
 
 export async function seed(knex: Knex): Promise<any> {
-    const peopleFromApi:IPeopleFromApi[] = await Api.People();
-    const data:IPeopleEntity = formatData(peopleFromApi, [
+    const data:IPeopleEntity = await formatData(Api.People, [
        "name",
        "height",
        "mass",
