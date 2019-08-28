@@ -1,7 +1,7 @@
 import fetchData from "../utils/fetchData";
-import { IPeopleFromApi } from "../models/People";
-import { IFilmFromApi } from "../models/Film";
-import { IPlanetFromApi } from '../models/Planet';
+import { IPeopleFromApi } from "../interfaces/People";
+import { IFilmFromApi } from "../interfaces/Film";
+import { IPlanetFromApi } from '../interfaces/Planet';
 import { IApiResponse } from "./responseInterface";
 interface IApi{
   People: ()=> Promise<IPeopleFromApi[]>

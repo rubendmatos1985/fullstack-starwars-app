@@ -1,5 +1,5 @@
 import * as Knex from "knex";
-import { IFilmFromApi, IFilmEntity } from '../models/Film';
+import { IFilmFromApi, IFilmEntity } from '../interfaces/Film';
 import Api from '../api/';
 import formatData from '../utils/formatData';
 export async function seed(knex: Knex): Promise<any> {

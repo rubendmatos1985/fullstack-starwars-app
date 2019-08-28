@@ -1,7 +1,7 @@
-import { IFilmFromApi } from '../models/Film'
-import { IPeopleFromApi } from '../models/People'
-import { IPlanetFromApi } from '../models/Planet';
-import { ISpecieFromApi } from '../models/Specie';
+import { IFilmFromApi } from '../interfaces/Film'
+import { IPeopleFromApi } from '../interfaces/People'
+import { IPlanetFromApi } from '../interfaces/Planet';
+import { ISpecieFromApi } from '../interfaces/Specie';
 export interface IApiResponse{
   count: number
   next: string | null
