@@ -1,8 +1,7 @@
 import { IPeopleEntity as People } from './People';
 import { IFilmEntity as Film } from './Film';
-export interface IPlanetEntity{
-  id: string
-  name: string
+import { ISubject } from './Subject';
+export interface IPlanetEntity extends ISubject{
   rotation_period: string
   orbital_period: string
   diameter: string

@@ -1,4 +1,3 @@
-import { IPeopleEntity } from '../interfaces/People';
 import { asyncMemoize as Mem } from '../utils/memoize';
 import Knex from 'knex';
 const knex: Knex = require('knex')(require('../knexfile').development);
@@ -30,6 +29,7 @@ const Film = {
             .from('planets_in_films')
             .where('film_id', id);
         });
+    //const starships:()=> Promise<any> = ()=>{}   
     return Promise.all([film(), characters(), planets()])
       .then(([film, characters, planets]) => ({
         ...film[0],
@@ -37,11 +37,6 @@ const Film = {
         planets
       }))
       .catch((e) => ({ message: 'Not Found' }));
-  }),
-  getAll: () =>
-    knex
-      .select('*')
-      .from('film')
-      .then((val) => val)
+  })
 };
 export default Film;

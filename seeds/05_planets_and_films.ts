@@ -3,12 +3,13 @@ import { IFilmFromApi } from '../interfaces/Film';
 import Api from '../api';
 import uuid from 'uuid/v1';
 import { IFilmsAndPlanets } from '../interfaces/FilmsAndPlanets';
+
 export async function seed(knex: Knex): Promise<any> {
   const filmAndPlanets: Array<{ film: { id: string }[]; planets: { id: string }[] }> = 
     await getFilmsAndPlanetsFromApi(knex);
   return knex('planets_in_films')
     .del()
-    .then(() => {
+    .then((v: any) => {
       return knex('planets_in_films').insert(buildFilmAndPlanetsEntity(filmAndPlanets));
     });
 }

@@ -1,7 +1,7 @@
 import { IPlanetEntity as Planet} from './Planet';
-export interface ISpecieEntity{
-  id: string
-  name: string
+import { ISubject, ISubjectFromApi } from './Subject';
+
+export interface ISpecieEntity extends ISubject{
   classification: string
   designation: string
   average_height: string
@@ -10,12 +10,10 @@ export interface ISpecieEntity{
   eye_colors: string
   average_lifespan: string
   language: string
-  url: string
   homeworld: Planet
 }
 
-export interface ISpecieFromApi{
-  name: string
+export interface ISpecieFromApi extends ISubjectFromApi{
   classification: string
   people: string[]
   films: string[]
@@ -26,8 +24,5 @@ export interface ISpecieFromApi{
   eye_colors: string
   average_lifespan: string
   language: string
-  url: string
   homeworld: string
-  created: string
-  edited: string
 }
