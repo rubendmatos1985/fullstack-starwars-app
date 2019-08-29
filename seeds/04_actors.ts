@@ -4,26 +4,11 @@ import { IFilmFromApi } from '../interfaces/Film';
 import uuid from 'uuid/v1';
 export async function seed(knex: Knex): Promise<any> {
   const actors = await buildAsyncActor(knex);
-  const result = actors
-    .map((obj) =>
-      obj.people.reduce(
-        (acc, curr) => [
-          ...acc,
-          {
-            id: uuid(),
-            people_id: curr.id,
-            film_id: obj.film[0].id
-          }
-        ],
-        []
-      )
-    )
-    .reduce((acc, curr) => [...acc, ...curr]);
-  
+
   return knex('actors')
     .del()
     .then(() => {
-      return knex('actors').insert(result);
+      return knex('actors').insert(buildActorsEntity(actors));
     });
 }
 
@@ -42,3 +27,21 @@ const buildAsyncActor = async (knex: Knex) => {
   }));
   return Promise.all(actor);
 };
+const buildActorsEntity: (
+  a: Array<{ film: Array<{ id: string }>; people: Array<{ id: string }> }>
+) => Array<{ id: string; people_id: string; film_id: string }> = (actors) =>
+  actors
+    .map((obj: { film: { id: string }[]; people: { id: string }[] }) =>
+      obj.people.reduce(
+        (acc: Array<{ id: string; people_id: string; film_id: string }>, curr: { id: string }) => [
+          ...acc,
+          {
+            id: uuid(),
+            people_id: curr.id,
+            film_id: obj.film[0].id
+          }
+        ],
+        []
+      )
+    )
+    .reduce((acc, curr) => [...acc, ...curr]);

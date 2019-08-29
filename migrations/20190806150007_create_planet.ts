@@ -12,6 +12,7 @@ exports.up = function(knex:any) {
     table.text('terrain')
     table.text('surface_water')
     table.text('population')
+    table.text('url')
   })
 }
 

@@ -12,7 +12,8 @@ export async function seed(knex:Knex):Promise<any> {
     'gravity',
     'terrain',
     'surface_water',
-    'population'
+    'population',
+    'url'
   ]);
   return knex('planet')
     .del()
