@@ -22,7 +22,7 @@ const Api: IApi = {
       )
   )('https://swapi.co/api/people/?page='),
 
-  Film: Mem(async () => await fetchData('https://swapi.co/api/films/').then((response) => response.results))(
+  Film: Mem(async (url: string) => await fetchData(url).then((response) => response.results))(
     'https://swapi.co/api/films/'
   ),
 
