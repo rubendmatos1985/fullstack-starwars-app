@@ -29,7 +29,7 @@ const Film = {
             .from('planets_in_films')
             .where('film_id', id);
         });
-    //const starships:()=> Promise<any> = ()=>{}   
+       
     return Promise.all([film(), characters(), planets()])
       .then(([film, characters, planets]) => ({
         ...film[0],
