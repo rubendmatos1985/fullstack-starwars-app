@@ -19,7 +19,6 @@ export interface IStarshipFromApi extends ISubjectFromApi{
   films: string[]
   
 }
-
 export interface IStarshipEntity extends ISubject{
   model: string
   manufacturer: string
@@ -35,4 +34,28 @@ export interface IStarshipEntity extends ISubject{
   starship_class: string
   pilots: IPeopleEntity[]
   films: IFilmEntity[]
+}
+
+export enum StarshipEntityFields {
+  Id = 'id',
+  Url = 'url',
+  Name = 'name',
+  Created = 'created',
+  Edited = 'edited',
+  Model = 'model',
+  Manufacturer = 'manufacturer',
+  CostInCredits = 'cost_in_credits',
+  Length = 'length',
+  MaxAtmosphericSpeed = 'max_atmospheric_speed',
+  Crew = 'crew',
+  Passengers = 'passengers',
+  CargoCapacity = 'cargo_capacity',
+  Consumables = 'consumables',
+  HyperdriveRating = 'hyperdrive_rating',
+  MGLT = 'MGLT',
+  StarshipClass = 'starship_class'
+}
+
+export interface StarshipEntityFieldsArray{
+  readonly [index: number]: StarshipEntityFields
 }

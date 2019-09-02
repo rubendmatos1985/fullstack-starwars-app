@@ -27,3 +27,12 @@ export interface IFilmFromApi{
   edited: string
   url: string
 }
+
+interface IFromForeignTables{
+  id: string
+  name: string
+}
+export interface IFilmResponse extends IFilmEntity{
+  characters: IFromForeignTables[],
+  planets: IFromForeignTables[]
+}

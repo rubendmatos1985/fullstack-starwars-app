@@ -19,6 +19,8 @@ export async function up(knex: Knex): Promise<any> {
       t.text('MGLT')
       t.text('starship_class')
       t.text('url')
+      t.text('created')
+      t.text('edited')
   })
 }
 
