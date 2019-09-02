@@ -4,8 +4,7 @@ import { ISpecieFromApi, ISpecieEntityFields, ISpecieEntity } from '../types/int
 import { Table } from '../types/Tables';
 import uuid from 'uuid/v1';
 export async function seed(knex: Knex): Promise<any> {
-  
-   const data: {
+  const data: {
     specie: string;
     homeworld: string;
   }[] = await makeRelation(knex).then((obj: any[]) =>
@@ -14,12 +13,12 @@ export async function seed(knex: Knex): Promise<any> {
       homeworld: v.homeworld.reduce((acc: any, v: any) => v.id, '')
     }))
   );
-  const t:ISpecieEntity[] = await knex(Table.Specie).select('*');
+  const specieArray:ISpecieEntity[] = await knex(Table.Specie).select('*');
   return knex(Table.Specie)
     .del()
     .then(() => {
       return knex(Table.Specie).insert(
-        t.map(
+        specieArray.map(
           (s:ISpecieEntity, i:number)=>({
             ...s,
             homeworld: data[i].homeworld ? data[i].homeworld : null
