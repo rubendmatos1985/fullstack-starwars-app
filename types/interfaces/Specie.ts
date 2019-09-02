@@ -26,3 +26,18 @@ export interface ISpecieFromApi extends ISubjectFromApi{
   language: string
   homeworld: string
 }
+
+export enum ISpecieEntityFields{
+  Id='id',
+  Name = 'name',
+  Classification = 'classification',
+  Designation = 'designation',
+  AverageHeight = 'average_height',
+  SkinColors = 'skin_colors',
+  HairColors = 'hair_colors',
+  EyeColors = 'eye_colors',
+  AverageLifespan = 'average_lifespan',
+  Homeworld = 'homeworld',
+  Language = 'language',
+  Url = 'url'
+}
