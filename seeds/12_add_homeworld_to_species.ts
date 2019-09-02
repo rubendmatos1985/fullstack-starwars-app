@@ -1,15 +1,11 @@
 import * as Knex from 'knex';
 import Api from '../api';
-import { ISpecieFromApi } from '../types/interfaces/Specie';
+import { ISpecieFromApi, ISpecieEntityFields, ISpecieEntity } from '../types/interfaces/Specie';
 import { Table } from '../types/Tables';
 import uuid from 'uuid/v1';
 export async function seed(knex: Knex): Promise<any> {
-  const trxProvider = knex.transactionProvider();
-  const trx = await trxProvider();
-  /* const ids = await trx(Table.Specie).where('id','3e014c40-cd9e-11e9-929a-9f734674de5d')
-    .update('homeworld', '0b023d95-cd98-11e9-b0f0-db48161b2545')
-    .then(trx.commit);
- */ const data: {
+  
+   const data: {
     specie: string;
     homeworld: string;
   }[] = await makeRelation(knex).then((obj: any[]) =>
@@ -18,29 +14,19 @@ export async function seed(knex: Knex): Promise<any> {
       homeworld: v.homeworld.reduce((acc: any, v: any) => v.id, '')
     }))
   );
-  /*data.forEach(
-   async (obj: {specie: string; homeworld: string})=>{
-     await knex(Table.Specie).where('id', obj.specie).update('homeworld', obj.homeworld)
-     .then(v => console.log(v));
-    }
-  ) */
-  /* return data.forEach((obj) =>
-    knex(Table.Specie)
-     .where('id', obj.specie) 
-     .update('homeworld', obj.homeworld)
-     .then(obj => console.log(obj))
-      
-  ); */
-  
-    return await data.forEach(async (obj) => {
-      console.log(obj);
-      return await knex(Table.Specie)
-        .where('id', obj.specie)
-        .update('homeworld', obj.homeworld)
-        .then(console.log)        
-        .catch(e => console.log("Error: " + e))
+  const t:ISpecieEntity[] = await knex(Table.Specie).select('*');
+  return knex(Table.Specie)
+    .del()
+    .then(() => {
+      return knex(Table.Specie).insert(
+        t.map(
+          (s:ISpecieEntity, i:number)=>({
+            ...s,
+            homeworld: data[i].homeworld ? data[i].homeworld : null
+          })
+        )
+      );
     });
-  
 }
 
 const makeRelation = async (knex: Knex) => {
