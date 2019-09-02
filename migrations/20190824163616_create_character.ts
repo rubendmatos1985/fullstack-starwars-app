@@ -8,10 +8,12 @@ export async function up(knex: Knex): Promise<any> {
       .uuid("people_id")
       .references("id")
       .inTable("people")
+      .onDelete('cascade')
     table
       .uuid("film_id")
       .references("id")
       .inTable("film")
+      .onDelete('cascade')
   });
 }
 
