@@ -1,3 +1,4 @@
+import {IFromForeignTables} from './FromForeignTables';
 export interface IFilmClass{
   getById: (id: string)=> ()=> Promise<IFilmResponse>
   //create: (object:IFilmResponse)=> Promise<IFilmResponse>
@@ -33,10 +34,7 @@ export interface IFilmFromApi{
   url: string
 }
 
-export interface IFromForeignTables{
-  id: string
-  name: string
-}
+
 export interface IFilmResponse extends IFilmEntity{
   characters: IFromForeignTables[],
   planets: IFromForeignTables[]

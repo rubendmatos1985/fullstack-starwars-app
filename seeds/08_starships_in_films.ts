@@ -4,8 +4,9 @@ import { IFilmFromApi } from '../types/interfaces/Film';
 import { Table } from '../types/Tables';
 import uuid from 'uuid/v1';
 import { StarshipsInFilms } from '../types/interfaces/StarshipsInFilms';
+import { IFilmsAndStarships } from '../types/interfaces/FilmsAndStarships';
 export async function seed(knex: Knex): Promise<any> {
-  const filmsAndStarships = await makeStarshipsInFilmsRelation(knex);
+  const filmsAndStarships:{film: { id: string }[], starships: { id: string }[]}[] = await makeStarshipsInFilmsRelation(knex);
   return knex(Table.StarshipsInFilms)
     .del()
     .then(() => {
@@ -13,7 +14,7 @@ export async function seed(knex: Knex): Promise<any> {
     });
 }
 
-const makeStarshipsInFilmsRelation: (k: Knex) => any = async (knex: Knex) => {
+const makeStarshipsInFilmsRelation: (k: Knex) => Promise<any> = async (knex: Knex) => {
   const films: IFilmFromApi[] = await Api.Film();
   const filmWithStarships: Promise<{ film: { id: string }[]; starships: { id: string }[] }>[] = films.map(
     async (film: IFilmFromApi) => ({

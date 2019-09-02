@@ -16,21 +16,21 @@ const Film: IFilmClass = {
     const characters: () => Promise<IFromForeignTables[]> = () =>
       knex
         .select('id', 'name')
-        .from('people')
+        .from(Table.People)
         .whereIn('id', (knex) => {
           knex
             .select('people_id')
-            .from('actors')
+            .from(Table.Actors)
             .where('film_id', id);
         });
     const planets: () => Promise<IFromForeignTables[]> = () =>
       knex
         .select('id', 'name')
-        .from('planet')
+        .from(Table.Planet)
         .whereIn('id', (knex) => {
           knex
             .select('planet_id')
-            .from('planets_in_films')
+            .from(Table.PlanetsInFilms)
             .where('film_id', id);
         });
     const starships: () => Promise<IFromForeignTables[]> = () =>
