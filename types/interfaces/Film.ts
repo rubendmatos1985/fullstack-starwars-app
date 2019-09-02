@@ -1,6 +1,6 @@
 export interface IFilmClass{
   getById: (id: string)=> ()=> Promise<IFilmResponse>
-  create: (object:IFilmResponse)=> Promise<IFilmResponse>
+  //create: (object:IFilmResponse)=> Promise<IFilmResponse>
 }
  
 export interface IFilmEntity{

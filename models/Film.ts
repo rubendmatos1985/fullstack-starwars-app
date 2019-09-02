@@ -3,10 +3,10 @@ import Knex from 'knex';
 import { ExecException } from 'child_process';
 import { Table } from '../types/Tables';
 import { IFilmResponse, IFilmEntity, IFilmClass, IFromForeignTables } from '../types/interfaces/Film';
-import  { filter } from 'ramda';
+import { filter } from 'ramda';
 const knex: Knex = require('knex')(require('../knexfile').development);
 
-const Film:IFilmClass={
+const Film: IFilmClass = {
   getById: Mem((id: string) => {
     const film: () => Promise<IFilmEntity[]> = () =>
       knex
@@ -32,27 +32,39 @@ const Film:IFilmClass={
             .select('planet_id')
             .from('planets_in_films')
             .where('film_id', id);
-        });    
-    const starships: ()=> Promise<IFromForeignTables[]> = ()=>
-        knex
-          .select('id', 'name')
-          .from(Table.Starship)
-          .whereIn('id', knex=>{
-            knex
-              .select('starship_id')
-              .from(Table.StarshipsInFilms)
-              .where('film_id', id)
-          })      
-    return Promise.all([film(), characters(), planets(), starships()])
-      .then(([film, characters, planets, starships]) => ({
+        });
+    const starships: () => Promise<IFromForeignTables[]> = () =>
+      knex
+        .select('id', 'name')
+        .from(Table.Starship)
+        .whereIn('id', (knex) => {
+          knex
+            .select('starship_id')
+            .from(Table.StarshipsInFilms)
+            .where('film_id', id);
+        });
+    const vehicles: () => Promise<IFromForeignTables[]> = () =>
+      knex
+        .select('id', 'name')
+        .from(Table.Vehicle)
+        .whereIn('id', (knex) => {
+          knex
+            .select('vehicle_id')
+            .from(Table.VehiclesInFilms)
+            .where('film_id', id);
+        });
+    return Promise.all([film(), characters(), planets(), starships(), vehicles()])
+      .then(([film, characters, planets, starships, vehicles]) => ({
         ...film[0],
         characters,
         planets,
-        starships
+        starships,
+        vehicles
       }))
-      .catch((e: ExecException) => { console.log(e); return { message: 'Not Found' }});
-  }
-  ),
-  create: (object:IFilmResponse)=> knex.insert(object).into(Table.Film)
+      .catch((e: ExecException) => {
+        console.log(e);
+        return { message: 'Not Found' };
+      });
+  })
 };
 export default Film;

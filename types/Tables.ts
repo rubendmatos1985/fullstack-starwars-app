@@ -9,5 +9,6 @@ export enum Table{
   Specie = 'specie',
   Starship = 'starship',
   Vehicle = 'vehicle',
+  VehiclesInFilms = 'vehicles_in_films',
   StarshipsInFilms = 'starships_in_films'
 }
