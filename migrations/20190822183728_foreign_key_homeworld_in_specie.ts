@@ -1,6 +1,7 @@
 import * as Knex from "knex";
+import { Table } from "../types/Tables";
 export async function up(knex: Knex): Promise<any> {
-  return knex.schema.alterTable('specie', (table:Knex.TableBuilder)=>{
+  return knex.schema.alterTable(Table.Specie, (table:Knex.TableBuilder)=>{
     table.uuid('homeworld').references('id').inTable('planet')
   })
 }

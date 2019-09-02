@@ -1,7 +1,8 @@
 import * as Knex from 'knex';
 import Api from '../api';
-import { IFilmFromApi } from '../interfaces/Film';
+import { IFilmFromApi } from '../types/interfaces/Film';
 import uuid from 'uuid/v1';
+import { IActorEntity } from '../types/interfaces/Actor';
 export async function seed(knex: Knex): Promise<any> {
   const actors = await buildAsyncActor(knex);
 
@@ -29,7 +30,7 @@ const buildAsyncActor = async (knex: Knex) => {
 };
 const buildActorsEntity: (
   a: Array<{ film: Array<{ id: string }>; people: Array<{ id: string }> }>
-) => Array<{ id: string; people_id: string; film_id: string }> = (actors) =>
+) => Array<IActorEntity> = (actors) =>
   actors
     .map((obj: { film: { id: string }[]; people: { id: string }[] }) =>
       obj.people.reduce(

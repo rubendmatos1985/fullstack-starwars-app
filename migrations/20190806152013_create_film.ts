@@ -1,6 +1,7 @@
 import Knex, { TableBuilder } from 'knex';
+import { Table } from '../types/Tables';
 exports.up = function(knex: Knex) {
-  return knex.schema.createTable("film", (table: TableBuilder) => {
+  return knex.schema.createTable(Table.Film, (table: TableBuilder) => {
     table.uuid("id").primary().unique()
     table.text("title");
     table.integer("episode_id");

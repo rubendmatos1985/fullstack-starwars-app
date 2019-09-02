@@ -1,11 +1,12 @@
 import * as Knex from "knex";
+import { Table } from "../types/Tables";
 
 
 export async function up(knex: Knex): Promise<any> {
-  return knex.schema.createTable('planets_in_films', (t:Knex.TableBuilder)=>{
+  return knex.schema.createTable(Table.PlanetsInFilms, (t:Knex.TableBuilder)=>{
     t.uuid('id').unique()
-    t.uuid('planet_id').references('id').inTable('planet')
-    t.uuid('film_id').references('id').inTable('film')
+    t.uuid('planet_id').references('id').inTable(Table.Planet)
+    t.uuid('film_id').references('id').inTable(Table.Film)
   })
 }
 

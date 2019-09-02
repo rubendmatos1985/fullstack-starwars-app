@@ -1,7 +1,8 @@
 import * as Knex from "knex";
+import { Table } from "../types/Tables";
 
 export async function up(knex: Knex): Promise<any> {
-  return knex.schema.createTable("character", (table: Knex.TableBuilder) => {
+  return knex.schema.createTable(Table.Character, (table: Knex.TableBuilder) => {
     table.uuid("id").unique();
     table
       .uuid("people_id")

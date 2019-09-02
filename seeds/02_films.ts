@@ -1,9 +1,10 @@
 import * as Knex from "knex";
-import { IFilmFromApi, IFilmEntity } from '../interfaces/Film';
+import { IFilmFromApi, IFilmEntity } from '../types/interfaces/Film';
 import Api from '../api/';
-import formatData from '../utils/formatData';
+import mapData from '../utils/mapData';
+import { Table } from "../types/Tables";
 export async function seed(knex: Knex): Promise<any> {
-    const data:IFilmEntity = await formatData(Api.Film, [
+    const data:IFilmEntity[] = await mapData<IFilmFromApi, IFilmEntity>(Api.Film, [
         "title",
         "episode_id",
         "opening_crawl",
@@ -14,6 +15,6 @@ export async function seed(knex: Knex): Promise<any> {
         "edited",
         "url"
     ])
-    return knex("film").del()
-        .then(() => knex("film").insert(data));
+    return knex(Table.Film).del()
+        .then(() => knex(Table.Film).insert(data));
 };

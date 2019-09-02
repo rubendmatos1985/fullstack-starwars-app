@@ -11,15 +11,17 @@ export const memoize: (f:Function)=>(a:any)=>any = (fn) => {
   };
 };
 
-export const asyncMemoize: (f:Function)=>(a:any)=> any = (fn) => {
+export const asyncMemoize:(f:(a:any)=>Promise<any>) => (a:any)=> ()=> Promise<any> = (fn) => {
   let state = {} as any;
-  return async function(...args: any) {
+  return (args: any)=> {
     const key: string = [...args].reduce((acc, curr) => acc.concat(curr), '');
     if (Object.keys(state).some((k: string) => k === key)) {
-      return  ()=> state[key];
-    } else {
-      state[key] = await fn(...args);
+      console.log("Memoize: Data extracted From Cache")
       return ()=> state[key];
+    } else {
+      console.log("Memoize: data extracted From DB")
+      state[key] = fn(args);
+      return  ()=> state[key];
     }
   };
 };

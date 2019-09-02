@@ -28,8 +28,8 @@ const Film = {
             .select('planet_id')
             .from('planets_in_films')
             .where('film_id', id);
-        });
-       
+        });    
+
     return Promise.all([film(), characters(), planets()])
       .then(([film, characters, planets]) => ({
         ...film[0],

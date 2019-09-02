@@ -1,9 +1,11 @@
 import Knex from 'knex';
-import formatData from '../utils/formatData';
+import mapData from '../utils/mapData';
 import Api from '../api/';
+import { IPlanetFromApi, IPlanetEntity } from '../types/interfaces/Planet';
+import { Table } from '../types/Tables';
 
 export async function seed(knex:Knex):Promise<any> { 
-  const data = await formatData(Api.Planet, [
+  const data = await mapData<IPlanetFromApi, IPlanetEntity>(Api.Planet, [
     'name',
     'rotation_period',
     'orbital_period',
@@ -15,9 +17,9 @@ export async function seed(knex:Knex):Promise<any> {
     'population',
     'url'
   ]);
-  return knex('planet')
+  return knex(Table.Planet)
     .del()
     .then(function() {
-      return knex('planet').insert(data)
+      return knex(Table.Planet).insert(data)
     })
 }

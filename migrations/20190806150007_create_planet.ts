@@ -1,7 +1,8 @@
 import { TableBuilder } from "knex";
+import { Table } from "../types/Tables";
 
 exports.up = function(knex:any) {
-  return knex.schema.createTable('planet', (table:TableBuilder) => {
+  return knex.schema.createTable(Table.Planet, (table:TableBuilder) => {
     table.uuid('id').primary().unique()
     table.text('name')
     table.text('rotation_period')

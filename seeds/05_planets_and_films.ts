@@ -1,8 +1,8 @@
 import * as Knex from 'knex';
-import { IFilmFromApi } from '../interfaces/Film';
+import { IFilmFromApi } from '../types/interfaces/Film';
 import Api from '../api';
 import uuid from 'uuid/v1';
-import { IFilmsAndPlanets } from '../interfaces/FilmsAndPlanets';
+import { IFilmsAndPlanets } from '../types/interfaces/FilmsAndPlanets';
 
 export async function seed(knex: Knex): Promise<any> {
   const filmAndPlanets: Array<{ film: { id: string }[]; planets: { id: string }[] }> = 

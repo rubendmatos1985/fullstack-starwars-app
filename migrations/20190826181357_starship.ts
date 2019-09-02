@@ -1,8 +1,9 @@
 import * as Knex from "knex";
+import { Table } from "../types/Tables";
 
 
 export async function up(knex: Knex): Promise<any> {
-  return knex.schema.createTable('starship', (t:Knex.TableBuilder)=>{
+  return knex.schema.createTable(Table.Starship, (t:Knex.TableBuilder)=>{
       t.uuid('id').unique()
       t.text('name')
       t.text('model')
@@ -23,6 +24,6 @@ export async function up(knex: Knex): Promise<any> {
 
 
 export async function down(knex: Knex): Promise<any> {
-  return knex.schema.dropTable('starship');
+  return knex.schema.dropTable(Table.Starship);
 }
 

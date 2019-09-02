@@ -1,10 +1,10 @@
 import * as Knex from "knex";
-import formatData from '../utils/formatData';
+import mapData from '../utils/mapData';
 import Api from '../api';
-import { IPeopleEntity, IPeopleFromApi } from '../interfaces/People';
+import { IPeopleEntity, IPeopleFromApi } from '../types/interfaces/People';
 
 export async function seed(knex: Knex): Promise<any> {
-    const data:IPeopleEntity = await formatData(Api.People, [
+    const data:IPeopleEntity[] = await mapData<IPeopleFromApi, IPeopleEntity>(Api.People, [
        "name",
        "height",
        "mass",

@@ -1,8 +1,9 @@
 import Knex, { TableBuilder } from "knex";
+import { Table } from "../types/Tables";
 
 
 export async function up(knex: Knex): Promise<any> {
-  return knex.schema.createTable('vehicle', (table: TableBuilder)=>{
+  return knex.schema.createTable(Table.Vehicle, (table: TableBuilder)=>{
     table.uuid('id').primary().unique()
     table.text('name')
     table.text('model')
