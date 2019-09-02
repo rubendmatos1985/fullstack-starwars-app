@@ -2,11 +2,12 @@ import { asyncMemoize as Mem } from '../utils/memoize';
 import Knex from 'knex';
 import { ExecException } from 'child_process';
 import { Table } from '../types/Tables';
-import { IFilmResponse, IFilmEntity, IFilmClass, IFromForeignTables } from '../types/interfaces/Film';
+import { IFilmResponse, IFilmEntity, IFilmMethods } from '../types/interfaces/Film';
 import { filter } from 'ramda';
+import { IFromForeignTables } from '../types/interfaces/FromForeignTables';
 const knex: Knex = require('knex')(require('../knexfile').development);
 
-const Film: IFilmClass = {
+const Film: IFilmMethods = {
   getById: Mem((id: string) => {
     const film: () => Promise<IFilmEntity[]> = () =>
       knex
