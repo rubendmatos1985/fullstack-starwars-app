@@ -5,7 +5,7 @@ import Api from '../api';
 import { Table } from '../types/Tables';
 
 export async function seed(knex: Knex): Promise<any> {
-  const data: Promise<IStarshipEntity[]> = mapData<IStarshipFromApi, IStarshipEntity>(
+  const data: IStarshipEntity[] = await mapData<IStarshipFromApi, IStarshipEntity>(
     Api.Starship,
     Object.keys(Fields).map((k) => Fields[k as any])
   );

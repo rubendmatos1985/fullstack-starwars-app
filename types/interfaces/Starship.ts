@@ -46,7 +46,7 @@ export enum StarshipEntityFields {
   Manufacturer = 'manufacturer',
   CostInCredits = 'cost_in_credits',
   Length = 'length',
-  MaxAtmosphericSpeed = 'max_atmospheric_speed',
+  MaxAtmospheringSpeed = 'max_atmosphering_speed',
   Crew = 'crew',
   Passengers = 'passengers',
   CargoCapacity = 'cargo_capacity',

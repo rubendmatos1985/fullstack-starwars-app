@@ -1,3 +1,8 @@
+export interface IFilmClass{
+  getById: (id: string)=> ()=> Promise<IFilmResponse>
+  create: (object:IFilmResponse)=> Promise<IFilmResponse>
+}
+ 
 export interface IFilmEntity{
   id: string
   title: string
@@ -28,7 +33,7 @@ export interface IFilmFromApi{
   url: string
 }
 
-interface IFromForeignTables{
+export interface IFromForeignTables{
   id: string
   name: string
 }
