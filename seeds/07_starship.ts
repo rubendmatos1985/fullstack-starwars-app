@@ -1,6 +1,6 @@
 import * as Knex from 'knex';
 import mapData from '../utils/mapData';
-import { IStarshipFromApi, IStarshipEntity, StarshipEntityFields as Fields } from '../types/interfaces/Starship';
+import { IStarshipFromApi, IStarshipEntity, StarshipEntityFields as Fields, StarshipEntityFieldsArray } from '../types/interfaces/Starship';
 import Api from '../api';
 import { Table } from '../types/Tables';
 

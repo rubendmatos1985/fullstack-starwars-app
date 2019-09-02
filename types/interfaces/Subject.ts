@@ -4,9 +4,7 @@ export interface ISubject{
   url: string
 }
 
-export interface ISubjectFromApi{
-  name: string
-  url: string
+export interface ISubjectFromApi extends ISubject{
   created: string
   edited: string
 }

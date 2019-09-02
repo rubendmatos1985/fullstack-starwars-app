@@ -6,11 +6,13 @@ import { IApiResponse } from './responseInterface';
 import { asyncMemoize as Mem } from '../utils/memoize';
 import { ExecException } from 'child_process';
 import { IStarshipFromApi } from '../types/interfaces/Starship';
+import { IVehicleFromApi } from '../types/interfaces/Vehicle';
 interface IApi {
   People: () => Promise<IPeopleFromApi[]>;
   Film: () => Promise<IFilmFromApi[]>;
   Planet: () => Promise<IPlanetFromApi[]>;
   Starship: () => Promise<IStarshipFromApi[]>;
+  Vehicle: ()=> Promise<IVehicleFromApi[]>
 }
 const Api: IApi = {
   People: Mem(
@@ -51,6 +53,17 @@ const Api: IApi = {
       )
         .then((v) => v.reduce((acc: any, obj: any) => [...acc, ...(obj.results as any[])], []))
         .catch((e: ExecException) => ({ message: 'error' }))
-  )('https://swapi.co/api/starships/?page=')
+  )('https://swapi.co/api/starships/?page='),
+  Vehicle: Mem(
+    async (url: string) =>
+      await Promise.all(
+        Array(4)
+          .fill(0)
+          .map((_, i) => fetchData(`${url}${i + 1}`))
+      )
+        .then((v) => v.reduce((acc: any, obj: any) => [...acc, ...(obj.results as any[])], []))
+        .catch((e: ExecException) => ({ message: 'error' }))
+  )('https://swapi.co/api/vehicles/?page=')
+  
 };
 export default Api;
