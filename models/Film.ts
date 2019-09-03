@@ -5,10 +5,11 @@ import { Table } from '../types/Tables';
 import { IFilmResponse, IFilmEntity, IFilmMethods } from '../types/interfaces/Film';
 import { filter } from 'ramda';
 import { IFromForeignTables } from '../types/interfaces/FromForeignTables';
+import { FilmFields } from '../types/DB';
 const knex: Knex = require('knex')(require('../knexfile').development);
 
-const Film: IFilmMethods = {
-  getById: Mem((id: string) => {
+class Film implements IFilmMethods{
+  getById = Mem((id: string) => {
     const film: () => Promise<IFilmEntity[]> = () =>
       knex
         .select('*')
@@ -54,7 +55,17 @@ const Film: IFilmMethods = {
             .from(Table.VehiclesInFilms)
             .where('film_id', id);
         });
-    return Promise.all([film(), characters(), planets(), starships(), vehicles()])
+    const species: () => Promise<IFromForeignTables[]> = () =>
+      knex
+        .select('id', 'name')
+        .from(Table.Specie)
+        .whereIn('id', (knex) => {
+          knex
+            .select('specie_id')
+            .from(Table.SpeciesInFilms)
+            .where('film_id', id);
+        });
+    return Promise.all([film(), characters(), planets(), starships(), vehicles(), species()])
       .then(([film, characters, planets, starships, vehicles]) => ({
         ...film[0],
         characters,
@@ -67,5 +78,13 @@ const Film: IFilmMethods = {
         return { message: 'Not Found' };
       });
   })
+  getAll = async ()=>{
+   const ids: {id: FilmFields.id }[] = await knex.select('id').from(Table.Film)
+    return ids.map(
+     ({id})=>
+       this.getById(id)()
+    )
+       
+  }
 };
 export default Film;
