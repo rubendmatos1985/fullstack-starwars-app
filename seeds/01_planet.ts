@@ -3,8 +3,9 @@ import mapData from '../utils/mapData';
 import Api from '../api/';
 import { IPlanetFromApi, IPlanetEntity } from '../types/interfaces/Planet';
 import { Table } from '../types/Tables';
+import { Planet } from '../types/DB';
 
-export async function seed(knex:Knex):Promise<any> { 
+export async function seed(knex:Knex):Promise<Planet> { 
   const data = await mapData<IPlanetFromApi, IPlanetEntity>(Api.Planet, [
     'name',
     'rotation_period',
