@@ -50,4 +50,4 @@ const buildSpeciesInFilmsEntity: (
         []
       )
     )
-    .reduce((acc: any, curr: any) => [...acc, ...curr]);
+    .reduce((acc: SpeciesInFilms[], curr: any) => [...acc, ...curr]);
