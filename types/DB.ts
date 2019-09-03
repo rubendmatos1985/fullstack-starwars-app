@@ -281,3 +281,16 @@ export interface PlanetsInFilms {
 
 }
 
+export namespace SpeciesInFilmsFields {
+  export type id = string | null;
+  export type specie_id = string | null;
+  export type film_id = string | null;
+
+}
+
+export interface SpeciesInFilms {
+  id: SpeciesInFilmsFields.id;
+  specie_id: SpeciesInFilmsFields.specie_id;
+  film_id: SpeciesInFilmsFields.film_id;
+
+}
