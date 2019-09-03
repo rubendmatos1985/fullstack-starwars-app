@@ -1,6 +1,6 @@
 import {IFromForeignTables} from './FromForeignTables';
 export interface IFilmMethods{
-  getById: (id: string)=> ()=> Promise<IFilmResponse>
+  getById: (id: string)=> ()=> Promise<any>
   //create: (object:IFilmResponse)=> Promise<IFilmResponse>
 }
  
