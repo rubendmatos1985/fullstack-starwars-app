@@ -28,7 +28,7 @@ export interface IFilmFromApi{
   planets: string[]
   starships: string[]
   vehicles: string[]
-  sprecies: string[]
+  species: string[]
   created: string
   edited: string
   url: string

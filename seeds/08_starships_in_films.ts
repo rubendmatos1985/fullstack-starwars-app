@@ -3,9 +3,12 @@ import Api from '../api/';
 import { IFilmFromApi } from '../types/interfaces/Film';
 import { Table } from '../types/Tables';
 import uuid from 'uuid/v1';
-import { starships_in_filmsFields, starships_in_films } from '../types/DB';
+import { starships_in_filmsFields, starships_in_films, StarshipsInFilms, StarshipsInFilmsFields } from '../types/DB';
 export async function seed(knex: Knex): Promise<any> {
-  const filmsAndStarships:{film: { id: string }[], starships: { id: string }[]}[] = await makeStarshipsInFilmsRelation(knex);
+  const filmsAndStarships: {
+    film: { id: string }[];
+    starships: { id: string }[];
+  }[] = await makeStarshipsInFilmsRelation(knex);
   return knex(Table.StarshipsInFilms)
     .del()
     .then(() => {
@@ -33,16 +36,16 @@ const makeStarshipsInFilmsRelation: (k: Knex) => Promise<any> = async (knex: Kne
 
 const buildStarshipsInFilmsEntity: (
   filmsAndStarships: { film: { id: string }[]; starships: { id: string }[] }[]
-) => Array<starships_in_films> = (filmAndPlanets) =>
+) => Array<StarshipsInFilms> = (filmAndPlanets) =>
   filmAndPlanets
     .map((obj: { film: Array<{ id: string }>; starships: Array<{ id: string }> }) =>
       obj.starships.reduce(
         (acc: Array<starships_in_films>, curr: { id: string }) => [
           ...acc,
           {
-            id: uuid(),
-            starship_id: curr.id as starships_in_filmsFields.starship_id,
-            film_id: obj.film[0].id as starships_in_filmsFields.film_id
+            id: uuid() as StarshipsInFilmsFields.id,
+            starship_id: curr.id as StarshipsInFilmsFields.starship_id,
+            film_id: obj.film[0].id as StarshipsInFilmsFields.film_id
           }
         ],
         []
