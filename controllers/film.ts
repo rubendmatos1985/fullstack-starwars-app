@@ -5,6 +5,10 @@ import Film from '../models/Film';
 const FilmRouter:Router = express.Router();
 const film = new Film();
 
+
+FilmRouter.get('/insert', async (req:Request, res:Response)=>{
+
+})
 FilmRouter.get('/:id', async (req:Request, res:Response) => {
   const result: () => Promise<any> = film.getById(req.params.id);
     result()

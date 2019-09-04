@@ -1,24 +1,11 @@
 import {IFromForeignTables} from './FromForeignTables';
+import { Film, FilmFields } from '../DB';
 export interface IFilmClass{
   getById: (id: string)=> ()=> Promise<any>
   getAll: ()=> Promise<any>
-  //create: (object:IFilmResponse)=> Promise<IFilmResponse>
+  insert: (object:IFilmResponse[])=> any
 }
- 
-export interface IFilmEntity{
-  id: string
-  title: string
-  episode_id: number
-  opening_crawl: string
-  director: string
-  producer: string
-  release_date: string
-  created: string
-  edited: string
-  url: string
-}
-
-export interface IFilmFromApi{
+ export interface IFilmFromApi{
   title: string
   episode_id: number
   opening_crawl: string
@@ -36,7 +23,11 @@ export interface IFilmFromApi{
 }
 
 
-export interface IFilmResponse extends IFilmEntity{
+
+export interface IFilmResponse extends Film{
   characters: IFromForeignTables[],
-  planets: IFromForeignTables[]
+  planets: IFromForeignTables[],
+  starships: IFromForeignTables[],
+  vehicles: IFromForeignTables[]
 }
+

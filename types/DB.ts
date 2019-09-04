@@ -100,8 +100,10 @@ export namespace FilmFields {
     export type created = string | null;
     export type edited = string | null;
     export type url = string | null;
-
+    
 }
+
+
 
 export interface Film {
     id: FilmFields.id;

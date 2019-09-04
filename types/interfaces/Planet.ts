@@ -1,5 +1,5 @@
 import { IPeopleEntity as People } from './People';
-import { IFilmEntity as Film } from './Film';
+import { Film } from '../DB';
 import { ISubject } from './Subject';
 export interface IPlanetEntity extends ISubject{
   rotation_period: string

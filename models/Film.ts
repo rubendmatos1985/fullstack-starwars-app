@@ -2,15 +2,15 @@ import { asyncMemoize as Mem } from '../utils/memoize';
 import Knex from 'knex';
 import { ExecException } from 'child_process';
 import { Table } from '../types/Tables';
-import { IFilmResponse, IFilmEntity, IFilmClass } from '../types/interfaces/Film';
-import { filter } from 'ramda';
+import { IFilmResponse, IFilmClass } from '../types/interfaces/Film';
 import { IFromForeignTables } from '../types/interfaces/FromForeignTables';
-import { FilmFields } from '../types/DB';
+import { FilmFields, Film as FilmEntity } from '../types/DB';
+
 const knex: Knex = require('knex')(require('../knexfile').development);
 
 class Film implements IFilmClass {
   getById = Mem((id: string) => {
-    const film: () => Promise<IFilmEntity[]> = () =>
+    const film: () => Promise<FilmEntity[]> = () =>
       knex
         .select('*')
         .from(Table.Film)
@@ -82,8 +82,19 @@ class Film implements IFilmClass {
     const ids: { id: FilmFields.id }[] = await knex.select('id').from(Table.Film);
     return ids.map(({ id }) => this.getById(id)());
   };
-  insert = async ()=>{
-
-  }
+  insert = async (films: any[]) => {
+    const normalizedFilm: FilmEntity[] = films.map((film: IFilmResponse, index: number) =>
+      Object.keys(film)
+        .filter((k: string) => k !== 'characters' && k !== 'vehicles' && k !== 'starships' && k !== 'planets' )
+        .reduce(
+          (acc: any, curr: any) => ({
+            ...acc,
+            [curr]: films[index][curr] 
+          }),
+          {}
+        )
+    );
+    return normalizedFilm; // to do insert table in DB
+  };
 }
 export default Film;
