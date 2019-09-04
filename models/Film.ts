@@ -2,13 +2,13 @@ import { asyncMemoize as Mem } from '../utils/memoize';
 import Knex from 'knex';
 import { ExecException } from 'child_process';
 import { Table } from '../types/Tables';
-import { IFilmResponse, IFilmEntity, IFilmMethods } from '../types/interfaces/Film';
+import { IFilmResponse, IFilmEntity, IFilmClass } from '../types/interfaces/Film';
 import { filter } from 'ramda';
 import { IFromForeignTables } from '../types/interfaces/FromForeignTables';
 import { FilmFields } from '../types/DB';
 const knex: Knex = require('knex')(require('../knexfile').development);
 
-class Film implements IFilmMethods{
+class Film implements IFilmClass {
   getById = Mem((id: string) => {
     const film: () => Promise<IFilmEntity[]> = () =>
       knex
@@ -77,14 +77,13 @@ class Film implements IFilmMethods{
         console.log(e);
         return { message: 'Not Found' };
       });
-  })
-  getAll = async ()=>{
-   const ids: {id: FilmFields.id }[] = await knex.select('id').from(Table.Film)
-    return ids.map(
-     ({id})=>
-       this.getById(id)()
-    )
-       
+  });
+  getAll = async () => {
+    const ids: { id: FilmFields.id }[] = await knex.select('id').from(Table.Film);
+    return ids.map(({ id }) => this.getById(id)());
+  };
+  insert = async ()=>{
+
   }
-};
+}
 export default Film;

@@ -2,7 +2,7 @@ import * as Knex from 'knex';
 import Api from '../api';
 import { ISpecieFromApi, ISpecieEntityFields, ISpecieEntity } from '../types/interfaces/Specie';
 import { Table } from '../types/Tables';
-import uuid from 'uuid/v1';
+
 export async function seed(knex: Knex): Promise<any> {
   const data: {
     specie: string;
@@ -13,17 +13,15 @@ export async function seed(knex: Knex): Promise<any> {
       homeworld: v.homeworld.reduce((acc: any, v: any) => v.id, '')
     }))
   );
-  const specieArray:ISpecieEntity[] = await knex(Table.Specie).select('*');
+  const specieArray: ISpecieEntity[] = await knex(Table.Specie).select('*');
   return knex(Table.Specie)
     .del()
     .then(() => {
       return knex(Table.Specie).insert(
-        specieArray.map(
-          (s:ISpecieEntity, i:number)=>({
-            ...s,
-            homeworld: data[i].homeworld ? data[i].homeworld : null
-          })
-        )
+        specieArray.map((s: ISpecieEntity, i: number) => ({
+          ...s,
+          homeworld: data[i].homeworld ? data[i].homeworld : null
+        }))
       );
     });
 }
