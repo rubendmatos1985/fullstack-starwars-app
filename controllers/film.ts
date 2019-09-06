@@ -9,14 +9,7 @@ import sql from '../utils/sql';
 const knex: Knex = require('knex')(require('../knexfile').development);
 
 class Film implements IFilmClass {
-  getById = Mem((id: string) => {
-    return getByIdQuery(id)
-    
-      /* .catch((e: ExecException) => {
-        console.log(e);
-        return { message: 'Not Found' };
-      }) */
-  });
+  getById = Mem(getByIdQuery);
   getAll = async () => {
     const ids: { id: FilmFields.id }[] = await knex.select('id').from(Table.Film);
     return ids.map(({ id }) => this.getById(id)());
