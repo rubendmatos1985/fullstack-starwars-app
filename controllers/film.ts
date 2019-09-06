@@ -3,7 +3,6 @@ import Knex from 'knex';
 import { ExecException } from 'child_process';
 import { Table } from '../types/Tables';
 import { IFilmResponse, IFilmClass } from '../types/interfaces/Film';
-import { IFromForeignTables } from '../types/interfaces/FromForeignTables';
 import { FilmFields, Film as FilmEntity } from '../types/DB';
 import sql from '../utils/sql';
 const knex: Knex = require('knex')(require('../knexfile').development);
@@ -67,4 +66,4 @@ const getByIdQuery = (id: string) => knex.raw(
   { id }
 )
 .then(res => res.rows[0].json_build_object)
-.then(({ film, characters, planets, starships, vehicles })=>({ ...film, characters, planets, starships, vehicles }) )
+.then(({ film, characters, planets, starships, vehicles })=>({ ...film, characters, planets, starships, vehicles }) as IFilmResponse )
