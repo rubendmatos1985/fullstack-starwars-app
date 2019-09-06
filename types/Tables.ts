@@ -1,6 +1,5 @@
 export enum Table{
   Actors = 'actors',
-  Character = 'character',
   Film = 'film',
   People = 'people',
   Pilot = 'pilot',
@@ -12,4 +11,21 @@ export enum Table{
   VehiclesInFilms = 'vehicles_in_films',
   StarshipsInFilms = 'starships_in_films',
   SpeciesInFilms = 'species_in_films'
+}
+
+export enum ManyToManyTable{
+  Actors = 'actors',
+  VehiclesInFilms = 'vehicles_in_films',
+  StarshipsInFilms = 'starships_in_films',
+  SpeciesInFilms = 'species_in_films',
+  PlanetsInFilms = 'planets_in_films'
+}
+
+export enum EntityTable{
+  Film = 'film',
+  People = 'people',
+  Planet = 'planet',
+  Specie = 'specie',
+  Starship = 'starship',
+  Vehicle = 'vehicle',
 }
