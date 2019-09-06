@@ -1,7 +1,6 @@
 import { Application, Request, Response } from 'express';
 import film from './routes/film';
 import Knex from 'knex';
-import sql from './utils/sql';
 const app: Application = require('express')();
 
 const knex: Knex = require('knex')(require('./knexfile').development);
