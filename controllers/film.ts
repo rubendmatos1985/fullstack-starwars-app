@@ -3,7 +3,6 @@ import Knex from 'knex';
 import { Table, EntityTable, ManyToManyTable } from '../types/Tables';
 import { IFilmResponse, IFilmClass } from '../types/interfaces/Film';
 import { FilmFields, Film as FilmEntity } from '../types/DB';
-import sql from '../utils/sql';
 import { knex } from '../DB';
 import { selectFromManyToMany } from '../utils/queries';
 
