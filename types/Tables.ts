@@ -28,4 +28,5 @@ export enum EntityTable{
   Specie = 'specie',
   Starship = 'starship',
   Vehicle = 'vehicle',
+  Test    = 'test'
 }

@@ -1,96 +1,95 @@
 import { asyncMemoize as Mem } from '../utils/memoize';
-import Knex from 'knex';
 import { Table, EntityTable, ManyToManyTable } from '../types/Tables';
-import { IFilmResponse, IFilmClass } from '../types/interfaces/Film';
-import { FilmFields, Film as FilmEntity } from '../types/DB';
 import { knex } from '../DB';
-import { selectFromManyToMany } from '../utils/queries';
+import { selectFromManyToMany, ISelectFromManyToMany } from '../utils/queries';
+import either from 'ramda/es/either';
 
-class Film implements IFilmClass {
-  getById = Mem(getByIdQuery);
-  getAll = async () => {
-    const ids: { id: FilmFields.id }[] = await knex.select('id').from(Table.Film);
-    return ids.map(({ id }) => this.getById(id)());
-  };
-  insert = async (films: any[]) => {
-    const normalizedFilm: FilmEntity[] = films.map((film: IFilmResponse, index: number) =>
-      Object.keys(film)
-        .filter((k: string) => k !== 'characters' && k !== 'vehicles' && k !== 'starships' && k !== 'planets')
-        .reduce(
-          (acc: any, curr: any) => ({
-            ...acc,
-            [curr]: films[index][curr]
-          }),
-          {}
-        )
-    );
-    return normalizedFilm; // to do insert table in DB
-  };
+export default {
+  getById: Mem(getByIdQuery(EntityTable.Film,
+    [
+      {
+        tableName: EntityTable.Vehicle,
+        showFields: ['id', 'name'],
+        fieldNameInResponse: 'vehicles',
+        manyToManyTableName: ManyToManyTable.VehiclesInFilms,
+        intersectEntityOn: 'vehicle_id',
+        where: 'film_id'
+
+      },
+      {
+        tableName: EntityTable.People,
+        showFields: ['id', 'name'],
+        fieldNameInResponse: 'actors',
+        manyToManyTableName: ManyToManyTable.Actors,
+        intersectEntityOn: 'people_id',
+        where: 'film_id'
+      },
+      {
+        tableName: EntityTable.Starship,
+        showFields: ['id', 'name'],
+        fieldNameInResponse: 'vehicles',
+        manyToManyTableName: ManyToManyTable.StarshipsInFilms,
+        intersectEntityOn: 'starship_id',
+        where: 'film_id'
+      },
+      {
+        tableName: EntityTable.Planet,
+        showFields: ['id', 'name'],
+        fieldNameInResponse: 'planets',
+        manyToManyTableName: ManyToManyTable.PlanetsInFilms,
+        intersectEntityOn: 'planet_id',
+        where: 'film_id'
+      }
+    ],
+  ))
 }
-export default Film;
 
 // HELPERS
-const actors = selectFromManyToMany(
-  {
-    name: EntityTable.People,
-    fields: ['id', 'name']
-  },
-  {
-    relationWithEntityOn: 'people_id',
-    where: 'film_id',
-    name: ManyToManyTable.Actors
-  }
-);
-const planets = selectFromManyToMany(
-  {
-    name: EntityTable.Planet,
-    fields: ['id', 'name']
-  },
-  {
-    relationWithEntityOn: 'planet_id',
-    where: 'film_id',
-    name: ManyToManyTable.PlanetsInFilms
-  }
-);
-const starships = selectFromManyToMany(
-  {
-    name: EntityTable.Starship,
-    fields: ['id', 'name']
-  },
-  {
-    relationWithEntityOn: 'starship_id',
-    where: 'film_id',
-    name: ManyToManyTable.StarshipsInFilms
-  }
-);
-const vehicles = selectFromManyToMany({
-  name: EntityTable.Starship,
-  fields: ['id', 'name']
-},
-{
-  relationWithEntityOn: 'vehicle_id',
-  where: 'film_id',
-  name: ManyToManyTable.VehiclesInFilms
+
+export interface IManyToManyFieldsBuilder {
+  tableName: EntityTable,
+  showFields: string[],
+  fieldNameInResponse: string,
+  manyToManyTableName: ManyToManyTable,
+  intersectEntityOn: string,
+  where: string
 }
-);
-const getByIdQuery = (id: string) => {
-  return knex
-    .raw(
-      `SELECT json_build_object(
-        'film', ( SELECT to_json(row)
-                  FROM ( SELECT * FROM film WHERE id = :id ) 
+
+interface IOneToMany {
+  tableName: EntityTable,
+  showFields: string[],
+  fieldNameInResponse: string,
+  where: string
+}
+
+function getByIdQuery(
+  tableName: string,
+  manyToManyFields?: IManyToManyFieldsBuilder[],
+  oneToManyFields?: IOneToMany
+) {
+  return (id: string) => {
+    const mmFields = () => manyToManyFields
+      ? manyToManyFields
+        .map(selectFromManyToMany)
+        .reduce((acc: string, curr: (id: string) => ISelectFromManyToMany) => 
+          acc !== ""
+          ? `${acc}, '${curr(id).fieldName}', ${curr(id).query}`
+          : `'${curr(id).fieldName}', ${curr(id).query}`
+          , "")
+      : "";
+    console.log(mmFields());  
+    return knex
+      .raw(
+        `'${tableName}', ( SELECT to_json(row)
+                  FROM ( SELECT * FROM ${tableName} WHERE id = :id ) 
                   row 
                 ),
-        'characters',${actors(id)},
-        'planets',  ${planets(id)},
-        'starships', ${starships(id)},
-        'vehicles',  ${vehicles(id)}                                 
-  )`,
-      { id }
-    )
-    .then((res: any) => res.rows[0].json_build_object)
-    .then(
-      ({ film, characters, planets, starships, vehicles }: any) =>
-        ({ ...film, characters, planets, starships, vehicles } as IFilmResponse)
-    );
-};
+        ${mmFields()}                                 
+      `,
+        { id }
+      )
+      .wrap('SELECT json_build_object(', ')')
+      .then((res: any) => res.rows[0].json_build_object)
+      
+  }
+}
