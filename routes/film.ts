@@ -18,8 +18,7 @@ R.get('/:id', (req:Request, res:Response) => {
       .then((film:IFilmResponse)=> res.json(film))
     });
 R.get('/', async (req:Request, res:Response)=>{
-  /* const films: Array<Promise<IFilm>> = await film.getAll()
-  Promise.all(films)
-    .then((films: any[])=> res.json(films)) */ 
+  const result = await Film.getAll();
+  res.json(result); 
 })
  export default R;

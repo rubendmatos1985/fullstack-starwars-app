@@ -1,12 +1,11 @@
 import { asyncMemoize as Mem } from '../utils/memoize';
-import { EntityTable, ManyToManyTable } from '../types/Tables';
-import { knex } from '../DB';
-import { selectFromManyToMany, ISelectFromManyToMany } from '../utils/queries';
-import { IPostgresJsonBuildObject } from '../types/DB';
+import { EntityTable, ManyToManyTable, Table } from '../types/Tables';
 import { IFilmResponse } from '../types/interfaces/Film';
+import { getByIdQuery } from '../DB/queries';
+import { knex } from '../DB';
 
-export default {
-  getById: Mem(getByIdQuery<EntityTable.Film, IFilmResponse>(
+const r = (()=>{
+  const _getById = Mem(getByIdQuery<EntityTable.Film, IFilmResponse>(
     EntityTable.Film,
     [
       {
@@ -44,64 +43,17 @@ export default {
       }
     ],
   ))
-}
+  return{
+   getById: _getById,
+   getAll: async ()=>{
+    const films:{id:string}[] = await knex.select('id').from(Table.Film);
+    return Promise.all(
+      films.map((f:{id: string}) => _getById(f.id)())
+    )
+   }
+   
+ 
+}})()
 
-// HELPERS
 
-export interface IManyToManyFieldsBuilder {
-  tableName: EntityTable,
-  showFields: string[],
-  fieldNameInResponse: string,
-  manyToManyTableName: ManyToManyTable,
-  intersectEntityOn: string,
-  where: string
-}
-
-interface IOneToMany {
-  tableName: EntityTable,
-  showFields: string[],
-  fieldNameInResponse: string,
-  where: string
-}
-
-function getByIdQuery<T, B>(
-  tableName: T,
-  manyToManyFields?: IManyToManyFieldsBuilder[],
-  oneToManyFields?: IOneToMany
-) {
-  return (id: string) => {
-    const mmFields = () => manyToManyFields
-      ? manyToManyFields
-        .map(selectFromManyToMany)
-        .reduce((acc: string, curr: (id: string) => ISelectFromManyToMany) =>
-          acc !== ""
-            ? `${acc}, '${curr(id).fieldName}', ${curr(id).query}`
-            : `'${curr(id).fieldName}', ${curr(id).query}`
-          , "")
-      : "";
-    return knex
-      .raw(
-        `'${tableName}', ( SELECT to_json(row)
-                  FROM ( SELECT * FROM ${tableName} WHERE id = :id ) 
-                  row 
-                ),
-        ${mmFields()}                                 
-      `,
-        { id }
-      )
-      .wrap('SELECT json_build_object(', ')')
-      .then((res: IPostgresJsonBuildObject) => res.rows[0].json_build_object)
-      .then((res: any) =>
-        Object.keys(res)
-          .reduce((acc: any, curr: string, index: number): B =>
-            index === 0
-              ? ({
-                ...res[curr]
-              })
-              : ({
-                ...acc, [curr]: res[curr]
-              })
-            , {})
-      )
-  }
-}
+export default r;
