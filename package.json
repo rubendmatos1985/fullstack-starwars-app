@@ -18,7 +18,6 @@
     "knex": "0.19.1",
     "pg": "7.12.0",
     "ramda": "0.26.1",
-    "sql-template-strings": "2.2.2",
     "uuid": "3.3.2"
   },
   "devDependencies": {
