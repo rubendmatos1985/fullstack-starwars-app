@@ -18,7 +18,8 @@ export enum ManyToManyTable{
   VehiclesInFilms = 'vehicles_in_films',
   StarshipsInFilms = 'starships_in_films',
   SpeciesInFilms = 'species_in_films',
-  PlanetsInFilms = 'planets_in_films'
+  PlanetsInFilms = 'planets_in_films',
+  Resident = 'resident'
 }
 
 export enum EntityTable{
