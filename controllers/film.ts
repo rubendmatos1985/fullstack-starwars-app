@@ -1,11 +1,13 @@
 import { asyncMemoize as Mem } from '../utils/memoize';
-import { Table, EntityTable, ManyToManyTable } from '../types/Tables';
+import { EntityTable, ManyToManyTable } from '../types/Tables';
 import { knex } from '../DB';
 import { selectFromManyToMany, ISelectFromManyToMany } from '../utils/queries';
-import either from 'ramda/es/either';
+import { IPostgresJsonBuildObject } from '../types/DB';
+import { IFilmResponse } from '../types/interfaces/Film';
 
 export default {
-  getById: Mem(getByIdQuery(EntityTable.Film,
+  getById: Mem(getByIdQuery<EntityTable.Film, IFilmResponse>(
+    EntityTable.Film,
     [
       {
         tableName: EntityTable.Vehicle,
@@ -62,8 +64,8 @@ interface IOneToMany {
   where: string
 }
 
-function getByIdQuery(
-  tableName: string,
+function getByIdQuery<T, B>(
+  tableName: T,
   manyToManyFields?: IManyToManyFieldsBuilder[],
   oneToManyFields?: IOneToMany
 ) {
@@ -71,13 +73,12 @@ function getByIdQuery(
     const mmFields = () => manyToManyFields
       ? manyToManyFields
         .map(selectFromManyToMany)
-        .reduce((acc: string, curr: (id: string) => ISelectFromManyToMany) => 
+        .reduce((acc: string, curr: (id: string) => ISelectFromManyToMany) =>
           acc !== ""
-          ? `${acc}, '${curr(id).fieldName}', ${curr(id).query}`
-          : `'${curr(id).fieldName}', ${curr(id).query}`
+            ? `${acc}, '${curr(id).fieldName}', ${curr(id).query}`
+            : `'${curr(id).fieldName}', ${curr(id).query}`
           , "")
       : "";
-    console.log(mmFields());  
     return knex
       .raw(
         `'${tableName}', ( SELECT to_json(row)
@@ -89,7 +90,18 @@ function getByIdQuery(
         { id }
       )
       .wrap('SELECT json_build_object(', ')')
-      .then((res: any) => res.rows[0].json_build_object)
-      
+      .then((res: IPostgresJsonBuildObject) => res.rows[0].json_build_object)
+      .then((res: any) =>
+        Object.keys(res)
+          .reduce((acc: any, curr: string, index: number): B =>
+            index === 0
+              ? ({
+                ...res[curr]
+              })
+              : ({
+                ...acc, [curr]: res[curr]
+              })
+            , {})
+      )
   }
 }

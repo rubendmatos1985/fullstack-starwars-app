@@ -1,3 +1,5 @@
+import { EntityTable } from "./Tables";
+
 export namespace PilotFields {
     export type id = string | null;
     export type vehicle_id = string | null;
@@ -295,4 +297,15 @@ export interface SpeciesInFilms {
   specie_id: SpeciesInFilmsFields.specie_id;
   film_id: SpeciesInFilmsFields.film_id;
 
+}
+
+export interface IJsonBuildObject{
+  json_build_object: any
+}
+
+export interface IPostgresJsonBuildObject{
+    command: string;
+    rowCount: number;
+    oid: any;
+    rows: IJsonBuildObject[]
 }
