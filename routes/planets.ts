@@ -4,6 +4,9 @@ import Planet from '../controllers/Planet';
 
 const R:Router = Router();
 
-R.get('/:id', (req:Request, res:Response)=>{
- 
+R.get('/:id', async (req:Request, res:Response)=>{
+  const planet:IPlanetResponse = await Planet.getById(req.params.id)()
+  res.json(planet);
 })
+
+export default R;

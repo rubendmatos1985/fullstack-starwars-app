@@ -2,9 +2,11 @@ import { Application, Request, Response } from 'express';
 import film from './routes/film';
 import Knex from 'knex';
 const app: Application = require('express')();
+import planet from './routes/planets';
 
 const knex: Knex = require('knex')(require('./knexfile').development);
 app.use('/films', film);
+app.use('/planets', planet);
 app.get('/test', (req: Request, res: Response) => {
   
 });
