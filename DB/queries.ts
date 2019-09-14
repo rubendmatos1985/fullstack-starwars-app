@@ -28,7 +28,7 @@ export function getByIdQuery<T, B>(
   const evaluate = (condition: (arg: any) => boolean, val: any) => condition(val) ? Maybe.Just(val) : Maybe.Nothing();
 
   return (id: string) => {
-    const mmFields = evaluate((v) => v !== null, manyToManyFields)
+    const mmFields = Maybe.fromNullable(manyToManyFields)
       .map((v: any) => v.map(selectFromManyToMany))
       .map((v: any) => v.reduce((acc: string, curr: (id: string) => ISelectFromManyToMany) =>
         evaluate(a => a !== "", acc)
