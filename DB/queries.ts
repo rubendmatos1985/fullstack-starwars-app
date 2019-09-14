@@ -25,13 +25,13 @@ export function getByIdQuery<T, B>(
   manyToManyFields?: IManyToManyFieldsBuilder[],
   oneToManyFields?: IOneToMany
 ) {
-  const evalArg = (condition: (arg: any) => boolean, val: any) => condition(val) ? Maybe.Just(val) : Maybe.Nothing();
+  const evaluate = (condition: (arg: any) => boolean, val: any) => condition(val) ? Maybe.Just(val) : Maybe.Nothing();
 
   return (id: string) => {
-    const mmFields = evalArg((v) => v !== null, manyToManyFields)
+    const mmFields = evaluate((v) => v !== null, manyToManyFields)
       .map((v: any) => v.map(selectFromManyToMany))
       .map((v: any) => v.reduce((acc: string, curr: (id: string) => ISelectFromManyToMany) =>
-        evalArg(a => a !== "", acc)
+        evaluate(a => a !== "", acc)
           .map((a: string) => `${a}, '${curr(id).fieldName}', ${curr(id).query}`)
           .getOrElse(`'${curr(id).fieldName}', ${curr(id).query}`)
         , ""))
@@ -51,7 +51,7 @@ export function getByIdQuery<T, B>(
       .then((res: any) =>
         Object.keys(res)
           .reduce((acc: any, curr: string, index: number): B =>
-            evalArg((i: number) => i === 0, index)
+            evaluate((i: number) => i === 0, index)
               .map(() => ({ ...res[curr] }))
               .getOrElse({
                 ...acc, [curr]: res[curr]
