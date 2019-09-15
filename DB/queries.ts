@@ -61,7 +61,7 @@ export function getByIdQuery<T, B>(
 
 
 
-function mapDBResponse<T>(manyToManyFields: IMMFieldsData[] | undefined) {
+function mapDBResponse<T>(manyToManyFields: IMMFieldsData[] | undefined){
   return (result: any) =>
     Object.keys(result)
       .reduce((acc: any, curr: string, index: number): T =>
@@ -78,7 +78,7 @@ function mapDBResponse<T>(manyToManyFields: IMMFieldsData[] | undefined) {
 
 
 function fetchManyToManyFields<T>(tableName: T, id: string) {
-  return (getMMFieldById: Function) =>
+  return (getMMFieldById: (w:string)=>IFieldWithQuery) =>
     knex
       .raw(
         `'${tableName}', ( SELECT to_json(row)
