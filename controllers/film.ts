@@ -1,7 +1,7 @@
 import { asyncMemoize as Mem } from '../utils/memoize';
 import { EntityTable, ManyToManyTable, Table } from '../types/Tables';
 import { IFilmResponse } from '../types/interfaces/Film';
-import { getByIdQuery } from '../DB/queries';
+import { getByIdQuery } from '../DB/getById';
 import { knex } from '../DB';
 
 const r = (()=>{

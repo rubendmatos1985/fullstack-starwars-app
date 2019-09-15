@@ -1,10 +1,10 @@
 import { IPlanetResponse } from "../types/interfaces/Planet";
 import { asyncMemoize as Mem} from '../utils/memoize';
-import { getByIdQuery } from "../DB/queries";
+import { getByIdQuery } from "../DB/getById";
 import { EntityTable, Table, ManyToManyTable } from "../types/Tables";
 import { knex } from "../DB";
 import { asyncCompose } from "../utils/asyncCompose";
-import { PlanetFields, Planet } from "../types/DB";
+import { PlanetFields } from "../types/DB";
 
 export default (()=>{
   const getIds = (tableName:Table)=> knex.select('id').from(tableName);
