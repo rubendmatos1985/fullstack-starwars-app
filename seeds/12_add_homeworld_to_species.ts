@@ -1,6 +1,6 @@
 import * as Knex from 'knex';
 import Api from '../api';
-import { ISpecieFromApi, ISpecieEntityFields, ISpecieEntity } from '../types/interfaces/Specie';
+import { ISpecieFromApi, ISpecieEntity } from '../types/interfaces/Specie';
 import { Table } from '../types/Tables';
 
 export async function seed(knex: Knex): Promise<any> {

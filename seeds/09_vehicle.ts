@@ -6,7 +6,22 @@ import Api from "../api";
 
 export async function seed(knex: Knex): Promise<any> {
     const data:IVehicleEntity[] = await mapData<IVehicleFromApi, IVehicleEntity>(Api.Vehicle,
-      Object.keys(VehicleFields).map(key => VehicleFields[key as any]))    
+        [
+          VehicleFields.Name,
+          VehicleFields.Model,
+          VehicleFields.Manufacturer,
+          VehicleFields.CostInCredits,
+          VehicleFields.Lenght,
+          VehicleFields.MaxAtmospheringSpeed,
+          VehicleFields.Crew,
+          VehicleFields.Passengers,
+          VehicleFields.CargoCapacity,
+          VehicleFields.Consumables,
+          VehicleFields.VehicleClass,
+          VehicleFields.Url
+       ]
+
+       )    
     return knex(Table.Vehicle).del()
         .then(() => {
           return knex(Table.Vehicle).insert(data);

@@ -1,14 +1,26 @@
 import * as Knex from "knex";
 import mapData from "../utils/mapData";
-import { ISpecieFromApi, ISpecieEntity, ISpecieEntityFields } from "../types/interfaces/Specie";
+import { ISpecieFromApi, ISpecieEntity, ISpecieEntityFields as Specie } from "../types/interfaces/Specie";
 import Api from "../api";
 import { Table } from "../types/Tables";
 
 export async function seed(knex: Knex): Promise<any> {
   const data:ISpecieEntity[] = await mapData<ISpecieFromApi, ISpecieEntity>(
-    Api.Specie, 
-    Object.keys(ISpecieEntityFields).map(key => ISpecieEntityFields[key as any]).filter(v => v != ISpecieEntityFields.Homeworld)
+    Api.Specie,
+    [
+      Specie.Name,
+      Specie.Classification,
+      Specie.Designation,
+      Specie.AverageHeight,
+      Specie.SkinColors,
+      Specie.HairColors,
+      Specie.EyeColors,
+      Specie.AverageLifespan,
+      Specie.Language,
+      Specie.Url
+    ]
     )
+    
     
     return knex(Table.Specie).del()
         .then(() => {

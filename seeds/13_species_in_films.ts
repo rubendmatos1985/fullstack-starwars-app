@@ -1,6 +1,6 @@
 import * as Knex from 'knex';
 import { Table } from '../types/Tables';
-import { Specie, SpeciesInFilms, SpeciesInFilmsFields } from '../types/DB';
+import { SpeciesInFilms, SpeciesInFilmsFields } from '../types/DB';
 import { IFilmFromApi } from '../types/interfaces/Film';
 import Api from '../api';
 import uuid from 'uuid/v1';

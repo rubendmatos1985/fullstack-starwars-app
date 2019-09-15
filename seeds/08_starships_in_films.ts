@@ -3,7 +3,7 @@ import Api from '../api/';
 import { IFilmFromApi } from '../types/interfaces/Film';
 import { Table } from '../types/Tables';
 import uuid from 'uuid/v1';
-import { starships_in_filmsFields, starships_in_films, StarshipsInFilms, StarshipsInFilmsFields } from '../types/DB';
+import { StarshipsInFilms, StarshipsInFilmsFields } from '../types/DB';
 export async function seed(knex: Knex): Promise<any> {
   const filmsAndStarships: {
     film: { id: string }[];
@@ -40,7 +40,7 @@ const buildStarshipsInFilmsEntity: (
   filmAndPlanets
     .map((obj: { film: Array<{ id: string }>; starships: Array<{ id: string }> }) =>
       obj.starships.reduce(
-        (acc: Array<starships_in_films>, curr: { id: string }) => [
+        (acc: Array<StarshipsInFilms>, curr: { id: string }) => [
           ...acc,
           {
             id: uuid() as StarshipsInFilmsFields.id,
