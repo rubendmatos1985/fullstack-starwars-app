@@ -1,10 +1,5 @@
 import {IFromForeignTables} from './FromForeignTables';
 import { Film, FilmFields } from '../DB';
-export interface IFilmClass{
-  getById: (id: string)=> ()=> Promise<any>
-  getAll: ()=> Promise<any>
-  insert: (object:IFilmResponse[])=> any
-}
  export interface IFilmFromApi{
   title:          string
   episode_id:     number

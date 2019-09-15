@@ -1,10 +1,11 @@
 import * as Knex from "knex";
-import { IFilmFromApi, IFilmEntity } from '../types/interfaces/Film';
+import { IFilmFromApi } from '../types/interfaces/Film';
+import { Film } from '../types/DB';
 import Api from '../api/';
 import mapData from '../utils/mapData';
 import { Table } from "../types/Tables";
 export async function seed(knex: Knex): Promise<any> {
-    const data:IFilmEntity[] = await mapData<IFilmFromApi, IFilmEntity>(Api.Film, [
+    const data:Film[] = await mapData<IFilmFromApi, Film>(Api.Film, [
         "title",
         "episode_id",
         "opening_crawl",

@@ -4,7 +4,7 @@ import { IFilmResponse } from '../types/interfaces/Film';
 import { getByIdQuery } from '../DB/getById';
 import { knex } from '../DB';
 
-const r = (()=>{
+export default (()=>{
   const _getById = Mem(getByIdQuery<EntityTable.Film, IFilmResponse>(
     EntityTable.Film,
     [
@@ -56,4 +56,3 @@ const r = (()=>{
 }})()
 
 
-export default r;
