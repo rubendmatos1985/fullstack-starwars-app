@@ -22,6 +22,10 @@ export enum ManyToManyTable{
   Resident = 'resident'
 }
 
+export enum OneToManyTable{
+  Race = 'race',
+}
+
 export enum EntityTable{
   Film = 'film',
   People = 'people',
