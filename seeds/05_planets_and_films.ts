@@ -2,7 +2,7 @@ import * as Knex from 'knex';
 import { IFilmFromApi } from '../types/interfaces/Film';
 import Api from '../api';
 import uuid from 'uuid/v1';
-import { IFilmsAndPlanets } from '../types/interfaces/FilmsAndPlanets';
+import { PlanetsInFilms } from '../types/DB';
 
 export async function seed(knex: Knex): Promise<any> {
   const filmAndPlanets: Array<{ film: { id: string }[]; planets: { id: string }[] }> = 
@@ -32,11 +32,11 @@ const getFilmsAndPlanetsFromApi: (k: Knex) => Promise<{ film: any[]; planets: an
 
 const buildFilmAndPlanetsEntity: (
   filmAndPlanets: Array<{ film: Array<{ id: string }>; planets: Array<{ id: string }> }>
-) => Array<IFilmsAndPlanets> = (filmAndPlanets) =>
+) => Array<PlanetsInFilms> = (filmAndPlanets) =>
   filmAndPlanets
     .map((obj: { film: Array<{ id: string }>; planets: Array<{ id: string }> }) =>
       obj.planets.reduce(
-        (acc: Array<IFilmsAndPlanets>, curr: { id: string }) => [
+        (acc: Array<PlanetsInFilms>, curr: { id: string }) => [
           ...acc,
           {
             id: uuid(),
