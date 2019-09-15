@@ -4,9 +4,10 @@ import { getByIdQuery } from "../DB/queries";
 import { EntityTable, Table, ManyToManyTable } from "../types/Tables";
 import { knex } from "../DB";
 import { asyncCompose } from "../utils/asyncCompose";
+import { PlanetFields, Planet } from "../types/DB";
 
 export default (()=>{
-  const getIds = (tableName:Table) => knex.select('id').from(tableName);
+  const getIds = (tableName:Table)=> knex.select('id').from(tableName);
   const _getById = Mem(getByIdQuery<EntityTable.Planet, IPlanetResponse>(
     
     EntityTable.Planet,
@@ -29,7 +30,7 @@ export default (()=>{
       }
     ]
   ))
-  const _getAll = (tables:{id: string}[])=> tables.map((t:{id:string})=> _getById(t.id)())
+  const _getAll = (tables:{id: PlanetFields.id}[])=> tables.map((t:{id:PlanetFields.id})=> _getById(t.id)())
   return{
     getById: _getById,
     getAll: async ()=> await asyncCompose(
