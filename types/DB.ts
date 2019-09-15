@@ -50,7 +50,7 @@ export namespace ActorsFields {
 
 }
 
-export interface actors {
+export interface Actors {
     id: ActorsFields.id;
     people_id: ActorsFields.people_id;
     film_id: ActorsFields.film_id;
