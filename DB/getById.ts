@@ -1,4 +1,4 @@
-import { ManyToManyTable, EntityTable } from '../types/Tables';
+import { ManyToManyTable, EntityTable, OneToManyTable } from '../types/Tables';
 import { knex } from './index';
 import { IPostgresJsonBuildObject } from '../types/DB';
 import { compose } from 'ramda';
@@ -17,7 +17,7 @@ export interface IShowFieldsTransformed {
 export interface IFieldsData {
   tableName: EntityTable,
   fieldNameInResponse: string,
-  manyToManyTableName: ManyToManyTable,
+  manyToManyTableName: ManyToManyTable | OneToManyTable,
   intersectEntityOn: string,
   where: string
 }
@@ -41,12 +41,12 @@ interface IOneToMany {
 
 export function getByIdQuery<T, B>(
   tableName: T,
-  manyToManyFields?: IMMFieldsData[] | undefined,
-  oneToManyFields?: IOneToMany
+  foreignFields?: IMMFieldsData[] | undefined,
+  oneToManyFields?: IOneToMany[]
 ) {
   return async (id: string) =>
     await asyncCompose(
-      mapDBResponse<B>(manyToManyFields),
+      mapDBResponse<B>(foreignFields),
 
       (res: IPostgresJsonBuildObject) => res.rows[0].json_build_object,
 
@@ -54,7 +54,7 @@ export function getByIdQuery<T, B>(
 
       getMMFieldsQueryFrom
 
-    )(Promise.resolve(manyToManyFields))
+    )(Promise.resolve(foreignFields))
 
 }
 

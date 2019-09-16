@@ -1,10 +1,6 @@
 import {Router, Request, Response} from 'express';
-import { IFilmResponse as IFilm, IFilmResponse } from '../types/interfaces/Film';
-import { FilmFields } from '../types/DB';
+import { IFilmResponse } from '../types/interfaces/Film';
 import Film from '../controllers/Film';
-import { Table, EntityTable, ManyToManyTable } from '../types/Tables';
-import { TableBuilder } from 'knex';
-import { knex } from '../DB';
 
 
 const R:Router = Router();

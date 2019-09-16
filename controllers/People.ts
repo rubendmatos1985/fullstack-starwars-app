@@ -1,10 +1,10 @@
-import { memoize as Mem } from "../utils/memoize"
+import { asyncMemoize as Mem } from "../utils/memoize"
 import { getByIdQuery } from "../DB/getById"
-import { EntityTable, ManyToManyTable } from "../types/Tables"
+import { EntityTable, ManyToManyTable, OneToManyTable } from "../types/Tables"
 import { IFilmResponse } from "../types/interfaces/Film"
 
-/* export default (() => {
-  const _getById = Mem((id: string) => getByIdQuery<EntityTable.People, IFilmResponse>(EntityTable.People,
+ export default (() => {
+  const _getById = Mem(getByIdQuery<EntityTable.People, IFilmResponse>(EntityTable.People,
     [
       {
         tableName: EntityTable.Film,
@@ -18,11 +18,22 @@ import { IFilmResponse } from "../types/interfaces/Film"
         tableName: EntityTable.Specie,
         showFields: ['id', 'name'],
         fieldNameInResponse: 'species',
-        manyToManyTableName: ManyToManyTable.
-      }
+        manyToManyTableName: OneToManyTable.Race,
+        intersectEntityOn: 'specie_id',
+        where: 'people_id'
+
+      },
+       {
+        tableName: EntityTable.Vehicle,
+        showFields: ['id', 'name'],
+        fieldNameInResponse: 'vehicles',
+        manyToManyTableName: ManyToManyTable.Pilot,
+        intersectEntityOn: 'vehicle_id',
+        where: 'people_id'
+      } 
     ]))
 
   return {
     getById: _getById,
   }
-})() */
+})()
