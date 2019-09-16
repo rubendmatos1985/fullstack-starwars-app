@@ -1,7 +1,7 @@
 import * as Knex from "knex";
 import mapData from "../utils/mapData";
 import { ISpecieFromApi, ISpecieEntity, ISpecieEntityFields as Specie } from "../types/interfaces/Specie";
-import Api from "../api";
+import Api from "../original_starwars_api";
 import { Table } from "../types/Tables";
 
 export async function seed(knex: Knex): Promise<any> {

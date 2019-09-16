@@ -1,5 +1,5 @@
 import * as Knex from 'knex';
-import Api from '../api';
+import Api from '../original_starwars_api';
 import { ISpecieFromApi, ISpecieEntity } from '../types/interfaces/Specie';
 import { Table } from '../types/Tables';
 

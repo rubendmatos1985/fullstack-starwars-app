@@ -1,5 +1,5 @@
 import * as Knex from 'knex';
-import Api from '../api';
+import Api from '../original_starwars_api';
 import { IFilmFromApi } from '../types/interfaces/Film';
 import uuid from 'uuid/v1';
 import { Actors } from '../types/DB';

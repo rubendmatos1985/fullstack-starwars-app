@@ -2,7 +2,7 @@ import * as Knex from 'knex';
 import { Table } from '../types/Tables';
 import { SpeciesInFilms, SpeciesInFilmsFields } from '../types/DB';
 import { IFilmFromApi } from '../types/interfaces/Film';
-import Api from '../api';
+import Api from '../original_starwars_api';
 import uuid from 'uuid/v1';
 export async function seed(knex: Knex): Promise<any> {
   const data: Array<{ film: { id: string }[]; species: { id: string }[] }> = await makeSpeciesInFilmsRelation(knex);

@@ -1,7 +1,7 @@
 import * as Knex from "knex";
 import { IFilmFromApi } from '../types/interfaces/Film';
 import { Film } from '../types/DB';
-import Api from '../api/';
+import Api from '../original_starwars_api';
 import mapData from '../utils/mapData';
 import { Table } from "../types/Tables";
 export async function seed(knex: Knex): Promise<any> {

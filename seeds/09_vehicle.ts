@@ -2,7 +2,7 @@ import * as Knex from "knex";
 import { Table } from "../types/Tables";
 import { IVehicleFromApi, IVehicleEntity, VehicleFields } from "../types/interfaces/Vehicle";
 import mapData from "../utils/mapData";
-import Api from "../api";
+import Api from "../original_starwars_api";
 
 export async function seed(knex: Knex): Promise<any> {
     const data:IVehicleEntity[] = await mapData<IVehicleFromApi, IVehicleEntity>(Api.Vehicle,

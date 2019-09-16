@@ -1,7 +1,7 @@
 import * as Knex from 'knex';
 import mapData from '../utils/mapData';
 import { IStarshipFromApi, IStarshipEntity, StarshipEntityFields as Fields  } from '../types/interfaces/Starship';
-import Api from '../api';
+import Api from '../original_starwars_api';
 import { Table } from '../types/Tables';
 
 export async function seed(knex: Knex): Promise<any> {
