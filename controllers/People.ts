@@ -30,6 +30,14 @@ import { IFilmResponse } from "../types/interfaces/Film"
         manyToManyTableName: ManyToManyTable.Pilot,
         intersectEntityOn: 'vehicle_id',
         where: 'people_id'
+      },
+      {
+        tableName: EntityTable.Starship,
+        showFields: ['id', 'name'],
+        fieldNameInResponse: 'starships',
+        manyToManyTableName: ManyToManyTable.StarshipPilot,
+        intersectEntityOn: 'starship_id',
+        where: 'people_id'
       } 
     ]))
 
