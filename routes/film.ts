@@ -9,9 +9,9 @@ R.get('/insert', async (req:Request, res:Response)=>{
   
  
 })
-R.get('/:id', (req:Request, res:Response) => {
-  Film.getById(req.params.id)()
-      .then((film:IFilmResponse)=> res.json(film))
+R.get('/:id', async (req:Request, res:Response) => {
+ const result:IFilmResponse = await Film.getById(req.params.id)()
+  res.json(result);   
     });
 R.get('/', async (req:Request, res:Response)=>{
   const result = await Film.getAll();
