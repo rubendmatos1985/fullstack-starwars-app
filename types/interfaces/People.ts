@@ -25,3 +25,18 @@ export interface IPeopleFromApi extends IPeople{
   vehicles: string[]
   starships: string[]
 }
+
+export enum IPeopleEntityFields{
+  Id = 'id',
+  Name = 'name',
+  Height = 'height',
+  Mass = 'mass',
+  HairColor = 'hair_color',
+  SkinColor = 'skin_color',
+  EyeColor = 'eye_color',
+  BirthYear = 'birth_year',
+  Gender = 'gender',
+  Created = 'created',
+  Edited = 'edited',
+  Url = 'url'
+}
