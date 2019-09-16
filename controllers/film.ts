@@ -3,27 +3,30 @@ import { EntityTable, ManyToManyTable, Table } from '../types/Tables';
 import { IFilmResponse } from '../types/interfaces/Film';
 import { getByIdQuery } from '../DB/getById';
 import { knex } from '../DB';
-
+import { VehicleFieldsNames } from '../types/interfaces/Vehicle';
+import { VehiclesInFilmsFieldsNames } from '../types/interfaces/VehiclesInFilms';
+import { IPeopleEntityFields } from '../types/interfaces/People';
+import  { IActors, IActorsFieldsNames } from '../types/interfaces/Actors';
 export default (()=>{
   const _getById = Mem(getByIdQuery<EntityTable.Film, IFilmResponse>(
     EntityTable.Film,
     [
       {
         tableName: EntityTable.Vehicle,
-        showFields: ['id', 'name'],
+        showFields: [VehicleFieldsNames.Id, VehicleFieldsNames.Name],
         fieldNameInResponse: 'vehicles',
         manyToManyTableName: ManyToManyTable.VehiclesInFilms,
-        intersectEntityOn: 'vehicle_id',
-        where: 'film_id'
+        intersectEntityOn: VehiclesInFilmsFieldsNames.VehicleId,
+        where: VehiclesInFilmsFieldsNames.VehicleId
 
       },
       {
         tableName: EntityTable.People,
-        showFields: ['id', 'name'],
+        showFields: [IPeopleEntityFields.Id, IPeopleEntityFields.Name],
         fieldNameInResponse: 'actors',
         manyToManyTableName: ManyToManyTable.Actors,
-        intersectEntityOn: 'people_id',
-        where: 'film_id'
+        intersectEntityOn: IActorsFieldsNames.PeopleId,
+        where: IActorsFieldsNames.FilmId
       },
       {
         tableName: EntityTable.Starship,

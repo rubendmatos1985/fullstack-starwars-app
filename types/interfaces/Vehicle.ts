@@ -11,7 +11,8 @@ export interface IVehicleFromApi extends ISubjectFromApi, ITransportFromApi{
 
 export interface IVehicleEntity extends Vehicle, ISubjectFromApi, ITransportEntity{}
 
-export enum VehicleFields{
+
+export enum VehicleFieldsNames{
   Id = 'id',
   Name= 'name',
   Model = 'model',
@@ -27,6 +28,6 @@ export enum VehicleFields{
   Url = 'url'
 }
 
-export interface VehicleFieldsArray{
-  [key: number] : VehicleFields
+export interface VehicleFieldsNamesArray{
+  [key: number] : VehicleFieldsNames
 }
