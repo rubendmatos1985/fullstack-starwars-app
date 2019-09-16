@@ -9,5 +9,8 @@ R.get('/:id', async (req: Request, res: Response)=>{
    .then((result:any) => res.json(result));
 })
 
-
+R.get('/', async(req:Request, res:Response)=>{
+  const result = await People.getAll()
+  res.json(result)
+})
 export default R;
