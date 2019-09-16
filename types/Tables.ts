@@ -11,7 +11,8 @@ export enum Table{
   VehiclesInFilms = 'vehicles_in_films',
   StarshipsInFilms = 'starships_in_films',
   SpeciesInFilms = 'species_in_films',
-  Race = 'race'
+  Race = 'race',
+  StarshipPilot = 'starship_pilot'
 
 }
 
@@ -22,7 +23,8 @@ export enum ManyToManyTable{
   SpeciesInFilms = 'species_in_films',
   PlanetsInFilms = 'planets_in_films',
   Resident = 'resident',
-  Pilot = 'pilot'
+  Pilot = 'pilot',
+  StarshipPilot = 'starship_pilot'
 }
 
 export enum OneToManyTable{
