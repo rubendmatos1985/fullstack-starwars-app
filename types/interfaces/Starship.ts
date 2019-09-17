@@ -1,5 +1,6 @@
 import {ISubject, ISubjectFromApi} from './Subject';
 import { ITransportFromApi, ITransportEntity } from './Transport';
+import { IFromForeignTables } from './FromForeignTables';
 interface IStarship{
   hyperdrive_rating: string
   MGLT: string
@@ -8,6 +9,12 @@ interface IStarship{
 
 export interface IStarshipFromApi extends IStarship, ISubjectFromApi, ITransportFromApi{}
 export interface IStarshipEntity extends IStarship ,ISubject, ITransportEntity{}
+
+export interface IStarshipResponse extends IStarshipEntity{
+  pilots: IFromForeignTables[],
+  films: IFromForeignTables[]
+}
+
 
 export enum StarshipEntityFields {
   Id = 'id',
