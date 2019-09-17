@@ -1,5 +1,6 @@
 import { ISubjectFromApi, ISubject } from "./Subject";
 import { ITransportFromApi, ITransportEntity } from "./Transport";
+import { IFromForeignTables } from "./FromForeignTables";
 
 interface Vehicle { 
   vehicle_class: string
@@ -10,6 +11,11 @@ export interface IVehicleFromApi extends ISubjectFromApi, ITransportFromApi{
 }
 
 export interface IVehicleEntity extends Vehicle, ISubjectFromApi, ITransportEntity{}
+
+export interface IVehicleResponse extends IVehicleEntity{
+  pilots: IFromForeignTables[],
+  films: IFromForeignTables[]
+}
 
 
 export enum VehicleFieldsNames{
