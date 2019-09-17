@@ -1,4 +1,4 @@
-import { Application } from 'express';
+import { Application, Request, Response } from 'express';
 import film from './routes/film';
 import helmet  from 'helmet';
 const app: Application = require('express')();
@@ -15,7 +15,9 @@ app.use('/people', people);
 app.use('/species', specie);
 app.use('/vehicles', vehicle)
 app.use('/starships', starship)
-
+app.get('/',(req:Request, res:Response)=>{
+    res.send('Welcome')
+})  
 app.use(helmet());
 app.listen(getPort(process), () => console.log(`server started on port ${getPort(process)}`));
 
