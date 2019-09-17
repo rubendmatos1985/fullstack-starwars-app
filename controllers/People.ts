@@ -12,14 +12,9 @@ import { StarshipPilotFieldsNames } from "../types/interfaces/StarshipPilot"
 import { knex } from "../DB"
 import { IPeopleEntityFields } from "../types/interfaces/People"
 import { asyncCompose } from "../utils/asyncCompose"
+import { getAll } from "../DB/getAll"
 
 export default (() => {
-  const getIds = (tableName: EntityTable): Promise<{ id: string }[]> => knex.select('id').from(tableName);
-  
-  const mapPromisesToResult = (promises: Promise<any[]>[]): Promise<any[]> => Promise.all(promises);
-  
-  const _getAll = (ids: { id: string }[]): Promise<any[]>[] => ids.map(o => _getById(o.id)())
-
   const _getById = Mem(getByIdQuery<EntityTable.People, IFilmResponse>(EntityTable.People,
     [
       {
@@ -59,10 +54,6 @@ export default (() => {
 
   return {
     getById: _getById,
-    getAll: () => asyncCompose(
-      mapPromisesToResult,
-      _getAll,
-      getIds
-    )(Promise.resolve(EntityTable.People))
+    getAll: getAll(EntityTable.People, _getById)
   }
 })()

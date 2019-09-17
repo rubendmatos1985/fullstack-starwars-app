@@ -6,15 +6,9 @@ import { IPeopleEntityFields } from "../types/interfaces/People";
 import { SpeciesInFilmsFieldsName } from '../types/interfaces/SpeciesInFilms';
 import { RaceFields } from "../types/interfaces/Races";
 import { FilmFieldsNames } from "../types/interfaces/Film";
-import { knex } from "../DB";
-import { asyncCompose } from "../utils/asyncCompose";
+import { getAll } from "../DB/getAll";
 
 export default (() => {
-  const getIds = async (tName: EntityTable):Promise<{id: string}[]> => await knex.select('id').from(tName);
-
-  const mapPromisesToResult = (promises: Promise<ISpecieResponse>[]): Promise<ISpecieResponse[]> =>
-   Promise.all(promises);
-
   const _getById = Mem(getByIdQuery<EntityTable.Specie, ISpecieResponse>(
     EntityTable.Specie, [
     {
@@ -35,13 +29,8 @@ export default (() => {
     }
 
   ]))
-  const _getAll = (ids: { id: string }[]):Promise<ISpecieResponse>[] => ids.map(o => _getById(o.id)())
   return {
     getById: _getById,
-    getAll: () => asyncCompose(
-      mapPromisesToResult,
-      _getAll,
-      getIds
-    )(Promise.resolve(EntityTable.Specie))
+    getAll: getAll(EntityTable.Specie, _getById)
   }
 })()

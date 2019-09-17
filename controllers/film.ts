@@ -2,12 +2,12 @@ import { asyncMemoize as Mem } from '../utils/memoize';
 import { EntityTable, ManyToManyTable, Table } from '../types/Tables';
 import { IFilmResponse } from '../types/interfaces/Film';
 import { getByIdQuery } from '../DB/getById';
-import { knex } from '../DB';
 import { VehicleFieldsNames } from '../types/interfaces/Vehicle';
 import { VehiclesInFilmsFieldsNames } from '../types/interfaces/VehiclesInFilms';
 import { IPeopleEntityFields } from '../types/interfaces/People';
-import  { IActors, IActorsFieldsNames } from '../types/interfaces/Actors';
-export default (()=>{
+import { IActorsFieldsNames } from '../types/interfaces/Actors';
+import { getAll } from '../DB/getAll';
+export default (() => {
   const _getById = Mem(getByIdQuery<EntityTable.Film, IFilmResponse>(
     EntityTable.Film,
     [
@@ -46,16 +46,10 @@ export default (()=>{
       }
     ],
   ))
-  return{
-   getById: _getById,
-   getAll: async ()=>{
-    const films:{id:string}[] = await knex.select('id').from(Table.Film);
-    return Promise.all(
-      films.map((f:{id: string}) => _getById(f.id)())
-    )
-   }
-   
- 
-}})()
+  return {
+    getById: _getById,
+    getAll: getAll(EntityTable.Film, _getById)
+  }
+})()
 
 

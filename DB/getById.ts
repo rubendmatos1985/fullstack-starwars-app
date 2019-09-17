@@ -42,7 +42,6 @@ interface IOneToMany {
 export function getByIdQuery<T, B>(
   tableName: T,
   foreignFields?: IMMFieldsData[] | undefined,
-  oneToManyFields?: IOneToMany[]
 ) {
   return async (id: string) =>
     await asyncCompose(

@@ -8,16 +8,9 @@ import { FilmFieldsNames } from "../types/interfaces/Film"
 import { VehiclesInFilmsFieldsNames } from "../types/interfaces/VehiclesInFilms"
 import { knex } from "../DB"
 import { asyncCompose } from "../utils/asyncCompose"
+import { getAll } from "../DB/getAll"
 
 export default (() => {
-
-  const getIds = (tableName: EntityTable): Promise<{ id: string }[]> => knex.select('id').from(tableName);
-
-  const _getAll = (ids: { id: string }[]): Promise<IVehicleResponse>[] => ids.map(o => _getById(o.id)())
-
-  const mapPromisesToResponse = (promises: Promise<IVehicleResponse>[]): Promise<IVehicleResponse[]> =>
-    Promise.all(promises);
-
   const _getById = Mem(getByIdQuery<EntityTable.Vehicle, IVehicleResponse>(
     EntityTable.Vehicle,
     [
@@ -43,10 +36,6 @@ export default (() => {
 
   return {
     getById: _getById,
-    getAll: ()=> asyncCompose(
-      mapPromisesToResponse,
-      _getAll,
-      getIds
-    )(Promise.resolve(EntityTable.Vehicle))
+    getAll: getAll(EntityTable.Vehicle, _getById)
   }
 })()
