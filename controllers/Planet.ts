@@ -2,12 +2,9 @@ import { IPlanetResponse } from "../types/interfaces/Planet";
 import { asyncMemoize as Mem} from '../utils/memoize';
 import { getByIdQuery } from "../DB/getById";
 import { EntityTable, Table, ManyToManyTable } from "../types/Tables";
-import { knex } from "../DB";
-import { asyncCompose } from "../utils/asyncCompose";
-import { PlanetFields } from "../types/DB";
 import { getAll } from "../DB/getAll";
 
-export default (()=>{
+export const Planet = (()=>{
   const _getById = Mem(getByIdQuery<EntityTable.Planet, IPlanetResponse>(
     EntityTable.Planet,
     [

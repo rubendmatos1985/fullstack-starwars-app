@@ -8,7 +8,7 @@ import { RaceFields } from "../types/interfaces/Races";
 import { FilmFieldsNames } from "../types/interfaces/Film";
 import { getAll } from "../DB/getAll";
 
-export default (() => {
+export const Specie = (() => {
   const _getById = Mem(getByIdQuery<EntityTable.Specie, ISpecieResponse>(
     EntityTable.Specie, [
     {

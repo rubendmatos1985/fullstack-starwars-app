@@ -9,12 +9,9 @@ import { VehicleFieldsNames } from "../types/interfaces/Vehicle"
 import { PilotFieldNames } from "../types/interfaces/Pilot"
 import { StarshipEntityFields } from "../types/interfaces/Starship"
 import { StarshipPilotFieldsNames } from "../types/interfaces/StarshipPilot"
-import { knex } from "../DB"
-import { IPeopleEntityFields } from "../types/interfaces/People"
-import { asyncCompose } from "../utils/asyncCompose"
 import { getAll } from "../DB/getAll"
 
-export default (() => {
+export const People = (() => {
   const _getById = Mem(getByIdQuery<EntityTable.People, IFilmResponse>(EntityTable.People,
     [
       {

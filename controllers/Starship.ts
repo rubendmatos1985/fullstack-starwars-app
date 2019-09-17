@@ -5,11 +5,10 @@ import { IStarshipResponse } from "../types/interfaces/Starship"
 import { FilmFieldsNames } from "../types/interfaces/Film"
 import { StarshipsInFilmsFields } from "../types/interfaces/StarshipsInFilms"
 import { IPeopleEntityFields } from "../types/interfaces/People"
-import { PilotFieldNames } from "../types/interfaces/Pilot"
 import { getAll } from "../DB/getAll"
 import { StarshipPilotFieldsNames } from "../types/interfaces/StarshipPilot"
 
-export default (() => {
+export const Starship = (() => {
   const _getById = Mem(getByIdQuery<EntityTable.Starship, IStarshipResponse>(
     EntityTable.Starship,
     [
