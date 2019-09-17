@@ -50,7 +50,7 @@ export function getByIdQuery<T, B>(
 
       (res: IPostgresJsonBuildObject) => res.rows[0].json_build_object,
 
-      fetchManyToManyFields<T>(tableName, id),
+      fetchEntityWithManyToManyFields<T>(tableName, id),
 
       getMMFieldsQueryFrom
 
@@ -77,7 +77,7 @@ function mapDBResponse<T>(manyToManyFields: IMMFieldsData[] | undefined){
 }
 
 
-function fetchManyToManyFields<T>(tableName: T, id: string) {
+function fetchEntityWithManyToManyFields<T>(tableName: T, id: string) {
   return (getMMFieldById: (w:string)=>IFieldWithQuery) =>
     knex
       .raw(

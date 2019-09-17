@@ -4,9 +4,11 @@ import helmet  from 'helmet';
 const app: Application = require('express')();
 import planet from './routes/planets';
 import people from './routes/people';
+import specie from './routes/species';
 app.use('/films', film);
 app.use('/planets', planet);
 app.use('/people', people);
+app.use('/species', specie);
 app.get('/test', (req: Request, res: Response) => {
   
 });

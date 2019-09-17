@@ -1,5 +1,6 @@
 import { IPlanetEntity as Planet} from './Planet';
 import { ISubject, ISubjectFromApi } from './Subject';
+import { IFromForeignTables } from './FromForeignTables';
 
 export interface ISpecieEntity extends ISubject{
   classification: string
@@ -40,4 +41,10 @@ export enum ISpecieEntityFields{
   Homeworld = 'homeworld',
   Language = 'language',
   Url = 'url'
+}
+
+
+export interface ISpecieResponse extends ISpecieEntity{
+  people: IFromForeignTables[],
+  films: IFromForeignTables[]
 }
