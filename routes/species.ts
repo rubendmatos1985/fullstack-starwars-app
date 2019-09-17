@@ -1,5 +1,5 @@
 import { Router, Request, Response } from 'express';
-import { Specie } from '../../fullstack-starwars-app/controllers/Specie';
+import { Specie } from '../controllers/Specie';
 const R = Router();
 
 R.get('/:id', async (req:Request, res:Response)=>{

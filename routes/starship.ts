@@ -1,5 +1,5 @@
 import { Router, Request, Response } from 'express';
-import { Starship } from '../../fullstack-starwars-app/controllers/Starship';
+import { Starship } from '../controllers/Starship';
 
 const R = Router();
 

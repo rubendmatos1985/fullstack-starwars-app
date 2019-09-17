@@ -1,5 +1,5 @@
 import { Router, Request, Response } from 'express';
-import { People } from '../../fullstack-starwars-app/controllers/People';
+import { People } from '../controllers/People';
 
 const R:Router = Router();
 

@@ -1,5 +1,5 @@
 import { Router, Response, Request } from 'express';
-import { Vehicle } from '../../fullstack-starwars-app/controllers/Vehicle';
+import { Vehicle } from '../controllers/Vehicle';
 
 const R:Router = Router();
 
