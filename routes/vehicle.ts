@@ -1,5 +1,5 @@
 import { Router, Response, Request } from 'express';
-import { Vehicle } from '../controllers/Vehicle';
+import { Vehicle } from '../controllers/vehicle';
 
 const R:Router = Router();
 
