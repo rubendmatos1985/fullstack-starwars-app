@@ -1,7 +1,7 @@
 import * as Knex from "knex";
 import { Table, EntityTable } from "../types/Tables";
 import Api from "../original_starwars_api";
-import { IVehicleFromApi, VehicleFields } from "../types/interfaces/Vehicle";
+import { IVehicleFromApi, VehicleFieldsNames } from "../types/interfaces/Vehicle";
 import uuid from "uuid/v1";
 import { knex } from "../DB";
 import { IPeopleEntityFields } from "../types/interfaces/People";
@@ -22,9 +22,9 @@ const buildPilotRelation = async (vehicles: IVehicleFromApi[]) =>
     vehicles.map(async v => ({
       vehicle_id: await
         knex
-          .select(VehicleFields.Id)
+          .select(VehicleFieldsNames.Id)
           .from(EntityTable.Vehicle)
-          .where(VehicleFields.Url, v.url),
+          .where(VehicleFieldsNames.Url, v.url),
       people:
         await Promise.all(
           v.pilots.map(async (url: string) =>
