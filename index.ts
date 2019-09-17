@@ -1,4 +1,4 @@
-import { Application, Request, Response } from 'express';
+import { Application } from 'express';
 import film from './routes/film';
 import helmet  from 'helmet';
 const app: Application = require('express')();
