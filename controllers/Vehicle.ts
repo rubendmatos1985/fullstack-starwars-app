@@ -8,7 +8,7 @@ import { FilmFieldsNames } from "../types/interfaces/Film"
 import { VehiclesInFilmsFieldsNames } from "../types/interfaces/VehiclesInFilms"
 import { getAll } from "../DB/getAll"
 
-export const Vehicle = (() => {
+export default (() => {
   const _getById = Mem(getByIdQuery<EntityTable.Vehicle, IVehicleResponse>(
     EntityTable.Vehicle,
     [

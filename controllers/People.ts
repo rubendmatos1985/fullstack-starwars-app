@@ -11,7 +11,7 @@ import { StarshipEntityFields } from "../types/interfaces/Starship"
 import { StarshipPilotFieldsNames } from "../types/interfaces/StarshipPilot"
 import { getAll } from "../DB/getAll"
 
-export const People = (() => {
+export default(() => {
   const _getById = Mem(getByIdQuery<EntityTable.People, IFilmResponse>(EntityTable.People,
     [
       {

@@ -1,5 +1,5 @@
 import { Router, Request, Response } from 'express';
-import { People } from '../controllers/people';
+import People  from '../controllers/people';
 
 const R:Router = Router();
 

@@ -4,7 +4,7 @@ import { getByIdQuery } from "../DB/getById";
 import { EntityTable, Table, ManyToManyTable } from "../types/Tables";
 import { getAll } from "../DB/getAll";
 
-export const Planet = (()=>{
+export default(()=>{
   const _getById = Mem(getByIdQuery<EntityTable.Planet, IPlanetResponse>(
     EntityTable.Planet,
     [

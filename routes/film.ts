@@ -1,6 +1,6 @@
 import {Router, Request, Response} from 'express';
 import { IFilmResponse } from '../types/interfaces/Film';
-import { Film } from '../controllers/film';
+import Film from '../controllers/film';
 
 
 const R:Router = Router();

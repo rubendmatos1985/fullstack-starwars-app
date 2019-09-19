@@ -8,7 +8,7 @@ import { IPeopleEntityFields } from "../types/interfaces/People"
 import { getAll } from "../DB/getAll"
 import { StarshipPilotFieldsNames } from "../types/interfaces/StarshipPilot"
 
-export const Starship = (() => {
+export default(() => {
   const _getById = Mem(getByIdQuery<EntityTable.Starship, IStarshipResponse>(
     EntityTable.Starship,
     [
