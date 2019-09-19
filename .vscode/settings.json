@@ -10,5 +10,8 @@
       "server": "localhost",
       "username": "postgres"
     }
+  ],
+  "appService.zipIgnorePattern": [
+    ".vscode{,/**}"
   ]
 }
