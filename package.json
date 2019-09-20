@@ -20,6 +20,7 @@
     "knex": "0.19.1",
     "pg": "7.12.0",
     "ramda": "0.26.1",
+    "react-router-config": "^5.0.1",
     "uuid": "3.3.2"
   },
   "devDependencies": {
@@ -27,6 +28,7 @@
     "@types/knex": "0.16.1",
     "@types/node": "12.7.3",
     "@types/ramda": "0.26.21",
+    "@types/react-router-config": "^5.0.0",
     "@types/uuid": "3.4.5",
     "isomorphic-fetch": "2.2.1",
     "nodemon": "1.19.1",
