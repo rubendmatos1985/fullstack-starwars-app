@@ -6,7 +6,7 @@ module.exports = {
     client: 'pg',
     connection: {
       user: s.user,
-      host: 'localhost',
+      host: s.host,
       database: 'starwars',
       password: s.password
     }
