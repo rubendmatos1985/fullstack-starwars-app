@@ -2,8 +2,6 @@ import express, { Application, Request, Response } from 'express';
 import film from './routes/film';
 import helmet  from 'helmet';
 const app: Application = require('express')();
-import fs, { readFileSync } from 'fs';
-import path from 'path';
 import planet from './routes/planets';
 import people from './routes/people';
 import specie from './routes/species';
