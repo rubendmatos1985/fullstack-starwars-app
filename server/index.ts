@@ -21,7 +21,7 @@ app.use('/api/v1/people', people);
 app.use('/api/v1/species', specie);
 app.use('/api/v1/vehicles', vehicle)
 app.use('/api/v1/starships', starship)
-app.get(['/*'], (req: any, res: any, next:express.NextFunction) => {
+app.get('/*', (req: any, res: any, next:express.NextFunction) => {
   const promises = matchRoutes(Routes, req.path)
     .map(({ route, match }) => route.loadData ? route.loadData(match) : Promise.resolve(null))
     .map((promise:Promise<any>) => promise && new Promise((resolve, reject) => 
