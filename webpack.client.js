@@ -1,7 +1,8 @@
 const path = require('path')
 const webpackNodeExternals = require('webpack-node-externals')
+
 module.exports = {
-  entry: './server/index.ts',
+  entry: './client/index.ts',
   devtool: 'inline-source-map',
   module: {
     rules: [
