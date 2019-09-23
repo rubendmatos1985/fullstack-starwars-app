@@ -1,7 +1,7 @@
 const path = require('path')
 const webpackNodeExternals = require('webpack-node-externals')
 module.exports = {
-  entry: './server/index.ts',
+  entry: ['@babel/polyfill', './server/index.ts'],
   devtool: 'inline-source-map',
   module: {
     rules: [
