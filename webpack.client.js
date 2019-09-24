@@ -2,18 +2,19 @@ const path = require('path')
 const webpackNodeExternals = require('webpack-node-externals')
 
 module.exports = {
-  entry: ['@babel/polyfill', './client/index.tsx'],
+  entry: ['./client/index.tsx'],
   devtool: 'inline-source-map',
+  target: 'web',
   module: {
     rules: [
       {
         test: /\.tsx?$/,
-        use: 'babel-loader',
+        use: 'ts-loader',
         exclude: /node_modules/
       }
     ]
   },
-  mode: 'development',
+  mode: 'production',
   resolve: {
     extensions: ['.tsx', '.ts', '.js']
   },
