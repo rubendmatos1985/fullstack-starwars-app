@@ -13,7 +13,7 @@ import Routes from '../client/routes';
 import getPort from './utils/port-getter';
 import renderer from './utils/renderer';
 
-app.use(express.static('/build'))
+app.use('/static', express.static('public'))
 
 app.use('/api/v1/films', film);
 app.use('/api/v1/planets', planet);

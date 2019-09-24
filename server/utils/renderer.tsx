@@ -20,14 +20,13 @@ const renderer = (req: Request, context = {}) => {
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta http-equiv="X-UA-Compatible" content="ie=edge">
         ${helmet.title.toString()}
-        <link rel="stylesheet" type="text/css" href="http://localhost:3000/build/assets/css/styles.min.css">
         <link href="https://fonts.googleapis.com/css?family=Lato:400,700" rel="stylesheet">
         <link rel="stylesheet" type="text/css" charset="UTF-8" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.6.0/slick.min.css" />
         <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.9/css/all.css" integrity="sha384-5SOiIsAziJl6AWe0HWRKTXlfcSHKmYV4RBF18PPJ173Kzn7jzMyFuTtk8JA7QQG1" crossorigin="anonymous">
     </head>
     <body ${helmet.bodyAttributes.toString()}>
         <div id="root">${content}</div>
-        <script src="http://localhost:${getPort(process)}/build/client_bundle.js"></script>
+        <script src="http://localhost:${getPort(process)}/public/client_bundle.js"></script>
     </body>
   
 </html>`;

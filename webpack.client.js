@@ -19,8 +19,8 @@ module.exports = {
   },
   output: {
     filename: 'client_bundle.js',
-    path: path.resolve(__dirname, 'build'),
-    publicPath: '/build'
+    path: path.resolve(__dirname, 'public'),
+    publicPath: '/public'
   },
   externals: [webpackNodeExternals()]
 }
