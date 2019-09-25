@@ -2,6 +2,7 @@ import 'regenerator-runtime/runtime';
 import * as express from 'express'
 import { Application, Request, Response } from 'express';
 import film from './routes/film';
+import {Helmet, HelmetData} from 'react-helmet';
 import helmet from 'helmet';
 const app: Application = require('express')();
 import planet from './routes/planets';
@@ -12,9 +13,9 @@ import starship from './routes/starship';
 import { matchRoutes, MatchedRoute } from 'react-router-config';
 import Routes from '../client/routes';
 import getPort from './utils/port-getter';
-import renderer from './utils/renderer';
-
-app.use('/public', express.static('public'))
+import renderReactApp from './utils/renderReactApp';
+import { readFileSync } from 'fs';
+import AppRenderedToString from './utils/AppRenderedToString';
 
 app.use('/api/v1/films', film);
 app.use('/api/v1/planets', planet);
@@ -29,7 +30,7 @@ app.get('/*', (req: any, res: any, next:express.NextFunction) => {
           promise.then(resolve).catch(resolve)
         ))
    if(promises.length > 0){
-    Promise.all(promises).then(() => res.send(renderer(req)));
+    Promise.all(promises).then(() => res.send(renderReactApp(req)));
    }else{
      next()
     } 
