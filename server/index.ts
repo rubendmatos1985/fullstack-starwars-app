@@ -8,8 +8,9 @@ import Joi from '@hapi/joi';
 import path from 'path';
 import getPort from './utils/port-getter';
 import apiRoot from './routes/api/root';
-
+import cors from 'cors';
 app.use(helmet());
+app.use(cors({ origin: 'http://localhost:3001' }));
 app.use(helmet.hidePoweredBy());
 
 app.use('/static', express.static(path.join(path.dirname(__dirname), 'public')))
