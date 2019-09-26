@@ -4,12 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "webpack --config webpack.server.js && webpack --config webpack.client.js",
-    "start": "node build/server_bundle.js",
-    "dev": "npm-run-all --parallel dev:*",
-    "dev:build-server": "webpack --config webpack.server.js --watch",
-    "dev:build-client": "webpack --config webpack.client.js --watch",
-    "dev:server": "nodemon --watch build --exec node build/server_bundle.js"
+    "build": "tsc",
+    "start": "tsc && node ./dist/index.js"
   },
   "author": "ruben1985",
   "license": "MIT",
@@ -28,6 +24,7 @@
     "react-helmet": "5.2.1",
     "react-router-config": "5.0.1",
     "react-router-dom": "5.0.1",
+    "rimraf": "^3.0.0",
     "uuid": "3.3.2",
     "webpack": "4.40.2",
     "webpack-cli": "^3.3.9",
@@ -63,6 +60,7 @@
     "npm-run-all": "4.1.5",
     "ts-loader": "6.1.2",
     "ts-node": "8.3.0",
+    "tsconfig-paths-webpack-plugin": "^3.2.0",
     "tslint": "5.20.0",
     "tslint-react": "4.1.0",
     "typescript": "3.5.3"

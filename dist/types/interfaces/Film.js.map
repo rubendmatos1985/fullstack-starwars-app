@@ -1,0 +1,1 @@
+{"version":3,"file":"Film.js","sourceRoot":"","sources":["../../../server/types/interfaces/Film.ts"],"names":[],"mappings":";;AAiCA,IAAY,eAWX;AAXD,WAAY,eAAe;IACzB,4BAAS,CAAA;IACT,kCAAe,CAAA;IACf,2CAAyB,CAAA;IACzB,iDAA8B,CAAA;IAC9B,wCAAqB,CAAA;IACrB,wCAAsB,CAAA;IACtB,+CAA6B,CAAA;IAC7B,sCAAmB,CAAA;IACnB,oCAAiB,CAAA;IACjB,8BAAW,CAAA;AACb,CAAC,EAXW,eAAe,GAAf,uBAAe,KAAf,uBAAe,QAW1B"}
