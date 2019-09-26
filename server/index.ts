@@ -12,7 +12,7 @@ import starship from './routes/starship';
 
 import path from 'path';
 import getPort from './utils/port-getter';
-app.use('/static', express.static(path.join(path.dirname(__dirname), 'client', 'dist')))
+app.use('/static', express.static(path.join(path.dirname(__dirname), 'public')))
 app.use('/api/v1/films', film);
 app.use('/api/v1/planets', planet);
 app.use('/api/v1/people', people);
