@@ -5,13 +5,15 @@
   "main": "index.js",
   "scripts": {
     "build": "tsc",
-    "start": "tsc && node ./dist/index.js",
-    "dev": "nodemon --watch ./server/* --exec ts-node ./server/index.ts"
+    "start": "rimraf dist && tsc && cpy ./server/.env dist && node -r dotenv/config ./dist/index.js dotenv_config_path=./dist/.env",
+    "dev": "nodemon --watch ./server/* --exec ts-node -r dotenv/config ./server/index.ts dotenv_config_path=./server/.env"
   },
   "author": "ruben1985",
   "license": "MIT",
   "dependencies": {
+    "@types/dotenv": "^6.1.1",
     "core-js": "^3.2.1",
+    "dotenv": "^8.1.0",
     "es6-promise": "4.2.8",
     "express": "4.17.1",
     "folktale": "2.3.2",

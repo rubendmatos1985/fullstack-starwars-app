@@ -1,5 +1,5 @@
 import { Router, Request, Response } from 'express';
-import Specie  from '../controllers/specie';
+import Specie  from '../../controllers/specie';
 const R = Router();
 
 R.get('/:id', async (req:Request, res:Response)=>{

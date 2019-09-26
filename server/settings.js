@@ -1,6 +1,6 @@
 
 module.exports = {
-  host: "pg-starwars.postgres.database.azure.com",
-  user: "ruben85@pg-starwars",
-  password: "*ruben28340*"
+  host: process.env.HOST,
+  user: process.env.USER,
+  password: process.env.PASSWORD
 }
