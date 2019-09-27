@@ -2,9 +2,7 @@
 import express from 'express'
 import { Application, Request, Response } from 'express';
 import helmet from 'helmet';
-import home from './routes/home';
 const app: Application = require('express')();
-import Joi from '@hapi/joi';
 import path from 'path';
 import user from './routes/user';
 import getPort from './utils/port-getter';

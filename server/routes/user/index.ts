@@ -15,7 +15,7 @@ R.post('/login', (req: Request, res:Response)=>{
 
 R.post('/signout', (req:Request, res: Response)=>{
     console.log(req.body)
-    res.send(req.body)
+    res.send('ok')
 })
 
 export default R;
