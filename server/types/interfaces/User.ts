@@ -18,7 +18,8 @@ export enum UserFields{
     Created = 'created',
     Updated = 'updated',
     LastConexion = 'last_conexion',
-    ApiKey = 'api_key'
+    ApiKey = 'api_key',
+    
 }
 
 
