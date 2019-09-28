@@ -12,7 +12,7 @@ export enum Table{
   StarshipsInFilms = 'starships_in_films',
   SpeciesInFilms = 'species_in_films',
   Race = 'race',
-  StarshipPilot = 'starship_pilot'
+  StarshipPilot = 'starship_pilot',
 
 }
 
@@ -38,5 +38,6 @@ export enum EntityTable{
   Specie = 'specie',
   Starship = 'starship',
   Vehicle = 'vehicle',
-  Test    = 'test'
+  Test    = 'test',
+  User = 'user'
 }

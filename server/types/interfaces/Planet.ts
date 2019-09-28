@@ -4,7 +4,7 @@ import { IFromForeignTables } from './FromForeignTables';
 
 export interface IPlanet{
   getById: (id: string)=> ()=> Promise<IPlanetResponse>
-  //getAll:  ()=> ()=> Promise<IPlanetResponse>[]
+
 }
 
 export interface IPlanetEntity extends ISubject{

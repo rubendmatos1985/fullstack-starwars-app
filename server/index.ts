@@ -11,7 +11,6 @@ import cors from 'cors';
 app.use(helmet());
 app.use(express.json())
 app.use(cors({ origin: 'http://localhost:3001' }));
-app.use(helmet.hidePoweredBy());
 app.use(express.static(path.join(path.dirname(__dirname), 'client', 'build')))
 app.use('/api/v1', apiRoot)
 app.use('/user', user)

@@ -1,5 +1,3 @@
-
-
 export enum PermissionKeys{
     Write='write',
     Read='read',
@@ -11,12 +9,27 @@ export enum PermissionKeys{
     All = 'all'
 }
 
+export enum UserFields{
+    Id = 'id',
+    Name = 'name',
+    Email = 'email',
+    Permissions = 'permissions',
+    Password = 'password',
+    Created = 'created',
+    Updated = 'updated',
+    LastConexion = 'last_conexion',
+    ApiKey = 'api_key'
+}
 
 
-
-export interface IUserEntity {
+export interface IUserEntity{
     id: string
     name: string
     email: string
-    permissions: PermissionKeys[] 
+    permissions?: PermissionKeys[],
+    password: string,
+    created: Date,
+    updated: Date,
+    last_conexion: Date,
+    api_key?: string
 }
