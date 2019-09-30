@@ -1,4 +1,3 @@
-require('ts-node/register')
 const s = require("./settings.js");
 module.exports = {
 

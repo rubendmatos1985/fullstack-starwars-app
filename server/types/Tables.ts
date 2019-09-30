@@ -13,6 +13,7 @@ export enum Table{
   SpeciesInFilms = 'species_in_films',
   Race = 'race',
   StarshipPilot = 'starship_pilot',
+ 
 
 }
 
@@ -24,7 +25,8 @@ export enum ManyToManyTable{
   PlanetsInFilms = 'planets_in_films',
   Resident = 'resident',
   Pilot = 'pilot',
-  StarshipPilot = 'starship_pilot'
+  StarshipPilot = 'starship_pilot',
+  UserPermissions = 'user_permissions'
 }
 
 export enum OneToManyTable{
@@ -39,5 +41,6 @@ export enum EntityTable{
   Starship = 'starship',
   Vehicle = 'vehicle',
   Test    = 'test',
-  User = 'user'
+  User = 'user',
+  Permission = 'permission'
 }

@@ -5,15 +5,19 @@
   "main": "index.js",
   "scripts": {
     "build": "rimraf dist && tsc && node dist/index.js",
-    "start" : "nodemon -e ts --watch server/* --exec \" npm run build \""
+    "start": "nodemon -e ts --watch server/* --exec \" npm run build \""
   },
   "author": "ruben1985",
   "license": "MIT",
   "dependencies": {
     "@hapi/joi": "^16.1.4",
+    "@types/connect-pg-simple": "^4.2.0",
+    "@types/express-session": "^1.15.14",
+    "connect-pg-simple": "^6.0.1",
     "dotenv": "^8.1.0",
     "es6-promise": "4.2.8",
     "express": "4.17.1",
+    "express-session": "^1.16.2",
     "folktale": "2.3.2",
     "fs": "0.0.1-security",
     "helmet": "3.21.0",
