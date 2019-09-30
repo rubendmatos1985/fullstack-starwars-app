@@ -22,10 +22,6 @@ const handleUserInput = (req: Request, res: Response, next: NextFunction) => ifE
   ()=> next()
 )(req)
 
-const checkIfUserExists = (req: Request, res: Response, nex: NextFunction)=> ifElse(
-  
-)
-
 
 interface RequestWithUserFromDB extends Request {
   user?: any,

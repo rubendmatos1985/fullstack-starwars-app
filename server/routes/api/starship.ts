@@ -1,5 +1,5 @@
 import { Router, Request, Response } from 'express';
-import  Starship  from '../../controllers/starship';
+import  Starship  from '../../models/starship';
 
 const R = Router();
 

@@ -1,18 +1,12 @@
-import * as Knex from "knex";
-import { UserFields } from "../types/interfaces/User";
-import { EntityTable, ManyToManyTable } from "../types/Tables";
-import { PermissionFields } from "../types/interfaces/Permission";
-
-
-export async function up(knex: Knex): Promise<any> {
-    return knex.schema.createTable(ManyToManyTable.UserPermissions, (t: Knex.TableBuilder) => {
-        t.uuid('id').primary().unique().notNullable()
-        t.uuid('user_id').references(UserFields.Id).inTable(EntityTable.User)
-        t.uuid('permission_id').references(PermissionFields.Id).inTable(EntityTable.Permission)
-       })
+exports.up = async function (knex) {
+  return knex.schema.createTable('user_permissions', (t) => {
+    t.uuid('id').primary().unique().notNullable()
+    t.uuid('user_id').references('id').inTable('user')
+    t.uuid('permission_id').references('id').inTable('permission')
+  })
 }
 
 
-export async function down(knex: Knex): Promise<any> {
-    return knex.schema.dropTableIfExists(ManyToManyTable.UserPermissions)
+exports.down = async function (knex) {
+  return knex.schema.dropTableIfExists('user_permissions')
 }

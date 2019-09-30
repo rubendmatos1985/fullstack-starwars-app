@@ -5,6 +5,9 @@ import Express, { Application } from 'express';
 import user from './routes/user';
 import getPort from './utils/port-getter';
 import apiRoot from './routes/api/root';
+import uuid from 'uuid/v4'; // random
+
+export const jwtSecretKey:string = uuid();
 
 const app:Application = Express();
 

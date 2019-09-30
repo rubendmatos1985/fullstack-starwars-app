@@ -1,6 +1,6 @@
 import express,{Router, Request, Response} from 'express';
 import { IPlanetResponse } from '../../types/interfaces/Planet';
-import  Planet  from '../../controllers/planet';
+import  Planet  from '../../models/planet';
 
 const R:Router = Router();
 
