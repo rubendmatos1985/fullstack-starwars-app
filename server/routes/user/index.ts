@@ -2,8 +2,12 @@ import Routes, { Router, Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
 import User from '../../models/User';
 import { UserFields, IUserEntity } from '../../types/interfaces/User';
-import { validateOnSignIn, extractErrorFromMessage, signDataIsInvalid, sendErrorMessage } from './helpers';
-import { ifElse, compose } from 'ramda';
+import { handleSignInValidation } from './helpers';
+
+interface RequestWithUserFromDB extends Request {
+  user?: any,
+  body: IRequestBody
+}
 
 const R: Router = Routes();
 interface IRequestBody {
@@ -12,24 +16,8 @@ interface IRequestBody {
   email: string
 }
 
-const handleUserInput = (req: Request, res: Response, next: NextFunction) => ifElse(
-  signDataIsInvalid,
-  compose(
-    sendErrorMessage(res),
-    extractErrorFromMessage,
-    validateOnSignIn
-  ),
-  ()=> next()
-)(req)
 
-
-interface RequestWithUserFromDB extends Request {
-  user?: any,
-  body: IRequestBody
-}
-
-
-R.post('/signin', handleUserInput,
+R.post('/signin', handleSignInValidation,
   async (req: RequestWithUserFromDB, res: Response) => {
     const user: IUserEntity[] | [] = await User.getByField('email', req.body.email)
     if (user[0]) {
