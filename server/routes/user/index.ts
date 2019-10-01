@@ -9,22 +9,26 @@ interface RequestWithUserFromDB extends Request {
   body: IRequestBody
 }
 
-const R: Router = Routes();
+const UserRouter: Router = Routes();
 interface IRequestBody {
   id?: string,
   name: string,
   email: string
 }
 
-
-R.post('/signin', UserControllers.SignIn.Validate, UserControllers.SignIn.Save)
-
-R.post('/login', getUser, (req: RequestWithUserFromDB, res: Response) => {
+UserRouter
+ .post('/signin', 
+   UserControllers.SignIn.Validate, 
+   UserControllers.SignIn.Save, 
+   UserControllers.SignIn.SendEmailWithApiKey,
+   UserControllers.SignIn.SendResponseToUser
+  )
+ 
+ .post('/login', getUser, (req: RequestWithUserFromDB, res: Response) => {
   console.log(req.user)
-  res.send(req.body)
-})
-
-R.post('/signout', (req: Request, res: Response) => {
+  res.send(req.body)})
+ 
+  .post('/signout', (req: Request, res: Response) => {
   console.log(req.body)
   res.send('ok')
 })
@@ -35,4 +39,4 @@ async function getUser(req: RequestWithUserFromDB, res: Response, next: NextFunc
   next();
 }
 
-export default R;
+export default UserRouter;

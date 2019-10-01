@@ -23,7 +23,7 @@ export default (() => {
         api_key: uuid()
       })
       .then(r => r[0])
-      .catch(e => console.log(e))
+      .catch(e => { console.log(e); return {}})
     
   return {
     getById,
