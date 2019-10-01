@@ -9,9 +9,9 @@ import uuid from "uuid/v1";
 
 export default (() => {
   const getById = getByIdQuery<EntityTable.User, IUserEntity>(EntityTable.User)
-  const addUser = ({ name, email, password }) =>
+  const create = ({ name, email, password }) =>
     knex(EntityTable.User)
-      .returning(['id', 'name', 'email'])
+      .returning(['id', 'name', 'email', 'api_key'])
       .insert({
         id: uuid(),
         name,
@@ -22,9 +22,12 @@ export default (() => {
         last_conexion: new Date(),
         api_key: uuid()
       })
+      .then(r => r[0])
+      .catch(e => console.log(e))
+    
   return {
     getById,
     getByField: _getByField(EntityTable.User),
-    add: addUser
+    create
   }
 })()
