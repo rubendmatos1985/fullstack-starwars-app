@@ -27,5 +27,5 @@ export const sendErrorMessage: Action2<Response, any> = (res) => (message) => (
 export const getUserByEmail: Func1<EmailFromRequest, Promise<any[] | []>> = User.getByField('email');
 
 
-  export const sendSuccessfullyResponse = (res: Response) => (objFromDB: any) =>
-   res.json({ ...objFromDB, status: 'succesfull' })
+export const sendSuccessfullyResponse = (res: Response) => (objFromDB: any) =>
+  res.json({ ...objFromDB, status: 'succesfull' })
