@@ -6,14 +6,12 @@ import {
   extractMessageFromValidationResult,
   validateOnSignIn,
   getUserByEmail,
-  sendSuccessfullyResponse
+  buildUserAlreadyExistsMessage,
+  mutateRequestBodyWithValue
 } from './helpers';
 import User from '../../models/User';
 import { asyncCompose } from '../../utils/asyncCompose';
 import { sendEmail } from '../../services/Email';
-import { tryCatch } from 'ramda';
-
-
 export namespace UserControllers {
 
   export namespace SignIn {
@@ -33,25 +31,34 @@ export namespace UserControllers {
         compose(not, isNil),
         compose(
           sendErrorMessage(res),
-          (user) => ({ message: `User with email ${user.email} already exists!'`, status: 'error' })
+          buildUserAlreadyExistsMessage
         ),
         () => asyncCompose(
-          ({ api_key }) =>{ req.body.apiKey = api_key;  next()},
+          () => next(),
+          mutateRequestBodyWithValue(req, 'apiKey', 'api_key'),
           User.create
         )(req.body)
       ),
       getUserByEmail
     )(req.body.email)
 
-    export const SendEmailWithApiKey = (req: Request, res: Response, next: NextFunction) =>
-      asyncCompose(
-        ()=> next(),
-        tryCatch(sendEmail, ()=> Promise.resolve().then(()=>{ req.body.error = "Error sending email" }))
-      )(req.body)
-    export const SendResponseToUser = (req: Request, res: Response, next: NextFunction)=>
-      isNil(req.body.error)
-      ? res.json({ status: 'successfull', message: 'Please check your email' })
-      : res.json({ status: 'error', message: req.body.error })   
+    export const SendEmailWithApiKey = async (req: Request, res: Response, next: NextFunction) =>{
+       await sendEmail(
+          success => Promise.resolve({
+            status: 'successfull',
+            message: "Check your Email"
+          })
+            .then(obj => { req.body = obj }),
+          error => Promise.resolve({
+            status: 'error',
+            message: "Error sending email. We are working on it. Pleas try later"
+          })
+            .then(obj => { req.body = obj })
+        )(req.body)
+        next();
+     }
+    export const SendResponseToUser = (req: Request, res: Response, next: NextFunction) => res.json(req.body)
+
   }
 }
 
