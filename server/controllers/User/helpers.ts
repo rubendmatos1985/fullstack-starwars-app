@@ -3,8 +3,6 @@ import { Request, Response } from 'express';
 import { has, compose } from 'ramda';
 import User from '../../models/User';
 import { Func1, Action2 } from '../../types/genricTypes';
-import { asyncCompose } from '../../utils/asyncCompose';
-import { NextFunction } from 'connect';
 export type EmailFromRequest = string;
 
 
@@ -23,7 +21,7 @@ export const extractMessageFromValidationResult: Func1<ValidationResult<any>, st
 export const signInDataIsInvalid: Func1<Request, boolean> = compose(has('error'), validateOnSignIn)
 
 
-export const sendErrorMessage: Action2<Response, any> = (res) => (message) => (
+export const interruptFlowWithErrorMessage: Action2<Response, any> = (res) => (message) => (
   res.status(403).send({ status: "Error", message })
 )
 
@@ -34,16 +32,9 @@ export const sendSuccessfullyResponse = (res: Response) => (objFromDB: any) =>
   res.json({ ...objFromDB, status: 'succesfull' })
 
 
-export const buildUserAlreadyExistsMessage = (user) => 
+export const buildUserAlreadyExistsMessage = (user) =>
   ({ message: `User with email ${user.email} already exists!'`, status: 'error' })
 
 
-  export const buildAndSendErrorMessage = (res:Response) => compose(
-    sendErrorMessage(res),
-    buildUserAlreadyExistsMessage
-  )
-
-
-  export const mutateRequestBodyWithValue = (req:Request, newKeyName: string, keyInObj: string) => 
-    (obj) =>{ req.body[newKeyName]  = obj[keyInObj]; }
+export const mutateRequestBodyWithApiKey = (req: Request) => (obj) => { req.body.apiKey = obj.api_key; }
 

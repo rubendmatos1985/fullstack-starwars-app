@@ -2,12 +2,12 @@ import { Request, Response, NextFunction } from 'express';
 import { compose, ifElse, isNil, not } from 'ramda';
 import {
   signInDataIsInvalid,
-  sendErrorMessage,
+  interruptFlowWithErrorMessage,
   extractMessageFromValidationResult,
   validateOnSignIn,
   getUserByEmail,
   buildUserAlreadyExistsMessage,
-  mutateRequestBodyWithValue
+  mutateRequestBodyWithApiKey
 } from './helpers';
 import User from '../../models/User';
 import { asyncCompose } from '../../utils/asyncCompose';
@@ -19,7 +19,7 @@ export namespace UserControllers {
     export const Validate = (req: Request, res: Response, next: NextFunction) => ifElse(
       signInDataIsInvalid,
       compose(
-        sendErrorMessage(res),
+        interruptFlowWithErrorMessage(res),
         extractMessageFromValidationResult,
         validateOnSignIn
       ),
@@ -30,33 +30,33 @@ export namespace UserControllers {
       ifElse(
         compose(not, isNil),
         compose(
-          sendErrorMessage(res),
+          interruptFlowWithErrorMessage(res),
           buildUserAlreadyExistsMessage
         ),
         () => asyncCompose(
           () => next(),
-          mutateRequestBodyWithValue(req, 'apiKey', 'api_key'),
+          mutateRequestBodyWithApiKey(req),
           User.create
         )(req.body)
       ),
       getUserByEmail
     )(req.body.email)
 
-    export const SendEmailWithApiKey = async (req: Request, res: Response, next: NextFunction) =>{
-       await sendEmail(
-          success => Promise.resolve({
-            status: 'successfull',
-            message: "Check your Email"
-          })
-            .then(obj => { req.body = obj }),
-          error => Promise.resolve({
-            status: 'error',
-            message: "Error sending email. We are working on it. Pleas try later"
-          })
-            .then(obj => { req.body = obj })
-        )(req.body)
-        next();
-     }
+    export const SendEmailWithApiKey = async (req: Request, res: Response, next: NextFunction) => {
+      await sendEmail(
+        success => Promise.resolve({
+          status: 'successfull',
+          message: "Check your Email"
+        })
+          .then(obj => { req.body = obj }),
+        error => Promise.resolve({
+          status: 'error',
+          message: "Error sending email. We are working on it. Pleas try later"
+        })
+          .then(obj => { req.body = obj })
+      )(req.body)
+      next();
+    }
     export const SendResponseToUser = (req: Request, res: Response, next: NextFunction) => res.json(req.body)
 
   }
