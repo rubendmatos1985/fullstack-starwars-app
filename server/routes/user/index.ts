@@ -1,7 +1,6 @@
 import Routes, { Router, Request, Response, NextFunction } from 'express';
-import jwt from 'jsonwebtoken';
 import User from '../../models/User';
-import { UserFields, IUserEntity } from '../../types/interfaces/User';
+import { UserFields } from '../../types/interfaces/User';
 import { UserControllers } from '../../controllers/User';
 
 interface RequestWithUserFromDB extends Request {
