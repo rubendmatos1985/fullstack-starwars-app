@@ -3,7 +3,15 @@ import { Request, Response } from 'express';
 import { has, compose } from 'ramda';
 import User from '../../models/User';
 import { Func1, Action2 } from '../../types/genricTypes';
+import bcrypt from 'bcrypt';
+import { asyncCompose } from '../../utils/asyncCompose';
+import { UserControllers } from '.';
+
 export type EmailFromRequest = string;
+
+interface UserDataWithBcryptSalt extends UserControllers.SignIn.UserSubscriptionData{ salt: string }
+
+type PasswordEncrypter = (d: UserControllers.SignIn.UserSubscriptionData)=> UserControllers.SignIn.UserSubscriptionData
 
 
 export const validateOnSignIn: (r: Request) => ValidationResult<any> = (req) => Joi.object({
@@ -38,3 +46,10 @@ export const buildUserAlreadyExistsMessage = (user) =>
 
 export const mutateRequestBodyWithApiKey = (req: Request) => (obj) => { req.body.apiKey = obj.api_key; }
 
+export const encryptPassword:PasswordEncrypter = asyncCompose (
+  async (obj: UserDataWithBcryptSalt)=> 
+    ({ name: obj.name, email: obj.email, password: await bcrypt.hash(obj.password, obj.salt) }),
+  
+  async (reqBody:UserControllers.SignIn.UserSubscriptionData)=> 
+    ({...reqBody, salt: await bcrypt.genSalt(10)})
+ )

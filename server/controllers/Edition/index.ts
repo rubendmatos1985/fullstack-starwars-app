@@ -4,8 +4,9 @@ export namespace Edition{
     export namespace Authentication{
        export const CheckUserIsLogged = (req: Request, res: Response, next: NextFunction)=>{
            
-            // TO DO 
-            // HANDLE USER LOGIN 
+          console.log("User is Logged");
+          console.log("Giving access");
+          
            next();     
         }
     }

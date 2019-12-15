@@ -3,11 +3,11 @@ module.exports = {
 
     client: 'pg',
     connection: {
-      user: s.user,
-      host: s.host,
+      user: "postgres",
+      port: "5432",
+      host: "localhost",
       database: 'starwars',
-      password: s.password,
-      ssl: true
+      password: "ruben28340",
  
   }
 };

@@ -1,6 +1,6 @@
 import { asyncMemoize as Mem } from "../utils/memoize"
 import { getByIdQuery } from "../DB/getById"
-import { IVehicleEntity, IVehicleResponse, VehicleFieldsNames } from "../types/interfaces/Vehicle"
+import { IVehicleResponse } from "../types/interfaces/Vehicle"
 import { EntityTable, ManyToManyTable } from "../types/Tables"
 import { IPeopleEntityFields } from "../types/interfaces/People"
 import { PilotFieldNames } from "../types/interfaces/Pilot"
