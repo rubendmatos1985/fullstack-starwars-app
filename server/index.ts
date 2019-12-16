@@ -3,16 +3,25 @@ import helmet from 'helmet';
 import Express, { Application } from 'express';
 import getPort from './utils/port-getter';
 import { Authentication } from  './middlewares/authenticationMiddlewares';
-import FilmsController from '../MVC/Controllers/FilmsController';
-import { IController } from '../MVC/Controllers/Controller';
-import PeopleController from '../MVC/Controllers/PeopleController';
-import PlanetController from '../MVC/Controllers/PlanetController';
-import SpeciesController from '../MVC/Controllers/SpeciesController';
-import StarshipController from '../MVC/Controllers/StarshipController';
-import VehicleController from '../MVC/Controllers/VehicleController';
+import FilmsController from './Controllers/FilmsController';
+import { IController } from './Controllers/Controller';
+import PeopleController from './Controllers/PeopleController';
+import PlanetController from './Controllers/PlanetController';
+import SpeciesController from './Controllers/SpeciesController';
+import StarshipController from './Controllers/StarshipController';
+import VehicleController from './Controllers/VehicleController';
+import UserController from './Controllers/UserController';
 
 const App:Application = Express();
 
+// REGISTER MIDDLEWARES
+App
+  .use(helmet())
+  .use(express.json());
+
+// REGISTER API CONTROLLERS 
+// WITH COMMON MIDDLEWARES 
+// AS ROUTER MIDDLEWARES
 [
   new FilmsController(),
   new PeopleController(),
@@ -22,17 +31,17 @@ const App:Application = Express();
   new VehicleController()
 ]
   .forEach((controller: IController)=> 
-    App.use(`/api/v1/${controller.Pathname}`, controller.Router()));
+    App.use(
+      `/api/v1/${controller.Pathname}`, 
+      Authentication.CheckKeyIsProvided,
+      Authentication.ValidateKey, 
+      controller.Router()
+    ));
 
-App
-  .use(helmet())
-  .use(express.json())
+App.use("/user", new UserController().Router())
 
-   //.use('/api/v1', Authentication.CheckKeyIsProvided, Validation.ValidateKey,  ApiRoutes)
 
-/*    .use('/edition', Authentication.CheckUserIsLogged, EditionRoutes) */
 
- /*   .use('/user', user)
- */
-
-   .listen(getPort(process), () => console.log(`server started on port ${getPort(process)}`));
+ // START APP
+   App
+    .listen(getPort(process), () => console.log(`server started on port ${getPort(process)}`));

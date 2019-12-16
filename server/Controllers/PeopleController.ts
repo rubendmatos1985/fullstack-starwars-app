@@ -1,18 +1,6 @@
 import { IController } from "./Controller";
 import { Router, Response, Request } from "express";
-import People from '../../server/models/People';
-/* const R:Router = Router();
-
-
-R.get('/:id', async (req: Request, res: Response)=>{
-  People.getById(req.params.id)()
-   .then((result:any) => res.json(result));
-})
-
-R.get('/', async(req:Request, res:Response)=>{
-  const result = await People.getAll()
-  res.json(result)
-}) */
+import People from '../models/People';
 
 class PeopleController implements IController {
     public Router: () => Router;

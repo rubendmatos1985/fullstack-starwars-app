@@ -1,13 +1,13 @@
-import { Router, Request, Response } from 'express';
-import  Starship  from '../../server/models/starship';
+import { Router, Response, Request } from 'express';
+import Vehicle  from '../models/vehicle';
 import { IController } from './Controller';
 
-class StarshipController implements IController{
+class VehicleController implements IController{
     Router: ()=> Router   
     Pathname: string;
 
     constructor(){
-        this.Pathname = "starships";
+        this.Pathname = "vehicles";
 
         this.Router = ()=>{
             const router = Router();
@@ -18,15 +18,15 @@ class StarshipController implements IController{
     }
 
     public async GetById(req: Request, res: Response): Promise<Response>{
-        const r = await Starship.getById(req.params.id);
+        const r = await Vehicle.getById(req.params.id);
         return res.json(r);
     }
 
     public async GetAll(req: Request, res: Response): Promise<Response>{
-        const r = await Starship.getAll();
+        const r = await Vehicle.getAll();
         return res.json(r);
     }
 
 }
 
-export default StarshipController;
+export default VehicleController;

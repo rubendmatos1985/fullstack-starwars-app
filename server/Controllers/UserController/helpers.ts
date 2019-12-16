@@ -5,13 +5,13 @@ import User from '../../models/User';
 import { Func1, Action2 } from '../../types/genricTypes';
 import bcrypt from 'bcrypt';
 import { asyncCompose } from '../../utils/asyncCompose';
-import { UserControllers } from '.';
+import { UserSubscriptionData } from './index';
 
 export type EmailFromRequest = string;
 
-interface UserDataWithBcryptSalt extends UserControllers.SignIn.UserSubscriptionData{ salt: string }
+interface UserDataWithBcryptSalt extends UserSubscriptionData{ salt: string }
 
-type PasswordEncrypter = (d: UserControllers.SignIn.UserSubscriptionData)=> UserControllers.SignIn.UserSubscriptionData
+type PasswordEncrypter = (d: UserSubscriptionData)=> UserSubscriptionData
 
 
 export const validateOnSignIn: (r: Request) => ValidationResult<any> = (req) => Joi.object({
@@ -26,7 +26,7 @@ export const extractMessageFromValidationResult: Func1<ValidationResult<any>, st
 )
 
 
-export const signInDataIsInvalid: Func1<Request, boolean> = compose(has('error'), validateOnSignIn)
+export const signInDataIsNotValid: Func1<Request, boolean> = compose(has('error'), validateOnSignIn)
 
 
 export const interruptFlowWithErrorMessage: Action2<Response, any> = (res) => (message) => (
@@ -50,6 +50,6 @@ export const encryptPassword:PasswordEncrypter = asyncCompose (
   async (obj: UserDataWithBcryptSalt)=> 
     ({ name: obj.name, email: obj.email, password: await bcrypt.hash(obj.password, obj.salt) }),
   
-  async (reqBody:UserControllers.SignIn.UserSubscriptionData)=> 
+  async (reqBody:UserSubscriptionData)=> 
     ({...reqBody, salt: await bcrypt.genSalt(10)})
  )

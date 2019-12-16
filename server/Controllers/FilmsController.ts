@@ -1,6 +1,6 @@
 import { Request, Response, Router, Application } from 'express';
-import { IFilmResponse } from '../../server/types/interfaces/Film';
-import Film from '../../server/models/film';
+import { IFilmResponse } from '../types/interfaces/Film';
+import Film from '../models/film';
 import { IController } from './Controller';
 
 class FilmsController implements IController{

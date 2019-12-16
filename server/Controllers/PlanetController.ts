@@ -1,6 +1,6 @@
 import { IController } from "./Controller";
 import { Router, Request, Response } from 'express';
-import Planet from '../../server/models/Planet';
+import Planet from '../models/Planet';
 
 class PlanetController implements IController{
     public Router: ()=> Router;

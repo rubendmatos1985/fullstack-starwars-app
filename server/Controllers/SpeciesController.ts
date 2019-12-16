@@ -1,5 +1,5 @@
 import { Router, Request, Response } from 'express';
-import Specie from '../../server/models/Specie';
+import Specie from '../models/Specie';
 import { IController } from './Controller';
 
 class SpeciesController implements IController {
