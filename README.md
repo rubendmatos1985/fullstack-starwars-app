@@ -14,6 +14,6 @@
  
  The app could be improved and add more functionalities and those stuff. Maybe in the future :)
  
- To run the app just clone the project and modify the knexfile.ts with your postgresql local connection data. 
+ To run the app just clone the project and modify the knexfile.ts with your postgres connection data. 
  Run "npm run build" in the project folder. Inside dist folder run knex migrate:latest, and then knex:seed run and then npm start. That's all.
  
