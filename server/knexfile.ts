@@ -1,4 +1,3 @@
-const s = require("./settings.js");
 module.exports = {
 
     client: 'pg',
@@ -7,7 +6,7 @@ module.exports = {
       port: "5432",
       host: "localhost",
       database: 'starwars',
-      password: "ruben28340",
+      password: "********",
  
   }
 };
