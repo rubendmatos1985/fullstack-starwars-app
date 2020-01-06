@@ -2,6 +2,7 @@ import { Request, Response, NextFunction } from 'express';
 import { Status } from './helpers';
 import User from '../models/User';
 import { UserFields } from '../types/interfaces/User';
+import { EntityTable } from '../types/Tables';
 
 export namespace Authentication {
   export const CheckUserIsLogged = (req: Request, res: Response, next: NextFunction) => {
@@ -25,12 +26,7 @@ export namespace Authentication {
     }
   }
   export async function UpdateUserStatus(req: Request, res: Response, next: NextFunction){
-    await User.update({ 
-      field: UserFields.LastConexion, 
-      value: new Date(),  
-      where: { [UserFields.ApiKey]: req.query.apiKey },
-      returning: [UserFields.Email, UserFields.LastConexion]
-    })
+    await User.updateUserLastConexion(req.query.apiKey)
     next()
   }
 }

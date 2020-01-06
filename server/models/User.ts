@@ -7,7 +7,18 @@ import uuid from "uuid/v1";
 import { update, IUpdateParams } from "../DB/update";
 
 export default (() => {
+  let state = {
+    users: {}
+  }
   const getById = getByIdQuery<EntityTable.User, IUserEntity>(EntityTable.User)
+
+  const updateUserLastConexion = (apiKey) =>
+    !state.users[apiKey] &&
+    knex(EntityTable.User)
+      .update(UserFields.LastConexion, new Date(), [UserFields.Email, UserFields.LastConexion])
+      .where({ [UserFields.ApiKey]: apiKey })
+      .then(v => { state.users[apiKey] = true })
+
   const create = ({ name, email, password }) =>
     knex(EntityTable.User)
       .returning(['id', 'name', 'email', 'api_key'])
@@ -22,12 +33,12 @@ export default (() => {
         api_key: uuid()
       })
       .then(r => r[0])
-      .catch(e => { console.log(e); return {}})
-  
+      .catch(e => { console.log(e); return {} })
+
   return {
     getById,
     getByField: _getByField(EntityTable.User),
-    update: (params: IUpdateParams)=> update<EntityTable.User>(params),
+    updateUserLastConexion,
     create
   }
 })()

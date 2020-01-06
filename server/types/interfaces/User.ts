@@ -1,3 +1,5 @@
+import { IEntity } from "./Entity";
+
 export enum PermissionKeys{
     Write='write',
     Read='read',
@@ -23,11 +25,9 @@ export enum UserFields{
 }
 
 
-export interface IUserEntity{
-    id: string
+export interface IUserEntity extends IEntity{
     name: string
     email: string
-    permissions?: PermissionKeys[],
     password: string,
     created: Date,
     updated: Date,

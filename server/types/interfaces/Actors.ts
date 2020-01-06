@@ -1,6 +1,7 @@
-export interface IActors{
-    id: string;
-    people_id: string;
+import { IEntity } from "./Entity";
+
+export interface IActors extends IEntity{
+    people_id: string
     film_id: string
 }
 
