@@ -1,6 +1,5 @@
-import { ProcessEnvOptions } from 'child_process';
-import Log from './logger';
 const sizeof = require("object-sizeof");
+
 export const memoize: (f: Function) => (a: any) => any = (fn) => {
   let state = {} as any;
   return  (...args: any) => {
