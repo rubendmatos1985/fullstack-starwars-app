@@ -12,8 +12,3 @@ export  interface IAuthenticationDBResponse {
     message: string | IUserEntity[]
   }
   
-  
-export  const getUserByApiKey: Func1<string, Promise<IAuthenticationDBResponse>> =
-    (apiKey: string) => User.getByField(UserFields.ApiKey)(apiKey)
-      .then(v => ({ status: Status.Successfull, message: v }))
-      .catch(e => ({ status: Status.Error, message: 'wrong api key' }));

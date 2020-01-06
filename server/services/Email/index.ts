@@ -1,8 +1,7 @@
 import sg  from '@sendgrid/mail';
 import { MailData } from '@sendgrid/helpers/classes/mail';
 import { Func1 } from '../../types/genricTypes';
-
-sg.setApiKey('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')
+sg.setApiKey(process.env.SENDGRID_API_KEY)
 
 
 const sender = (data:MailData):Promise<any> => sg.send(data);

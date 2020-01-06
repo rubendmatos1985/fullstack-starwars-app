@@ -1,7 +1,7 @@
 import { IController } from "../Controller";
 import { Router, Response, Request, NextFunction } from 'express';
 import { asyncCompose } from "../../utils/asyncCompose";
-import { ifElse, compose, not, isNil } from "ramda";
+import { ifElse, compose } from "ramda";
 import {
     interruptFlowWithErrorMessage,
     buildUserAlreadyExistsMessage,
@@ -14,6 +14,8 @@ import {
 } from "./helpers";
 import User from "../../models/User";
 import { sendEmail } from "../../services/Email";
+import { IDBResponse } from "../../DB";
+import { Status } from "../../middlewares/helpers";
 
 export interface RequestWithUserData extends Request { body: UserSubscriptionData }
 
@@ -24,10 +26,11 @@ export interface UserSubscriptionData {
 }
 
 class UserController implements IController {
-    Router: () => Router
-    Pathname: string;
+    public Router: () => Router
+    public Pathname: string;
 
     constructor() {
+        this.Pathname = "/user"
         this.Router = () => {
             const router = Router();
             router.post("/signin",
@@ -43,7 +46,7 @@ class UserController implements IController {
     private async HandleCreateUser(req: Request, res: Response, next: NextFunction): Promise<Response> {
         return asyncCompose(
             ifElse(
-                compose(not, isNil),
+               (dbResponse: IDBResponse)=> dbResponse.status === Status.Error,
                 compose(
                     interruptFlowWithErrorMessage(res),
                     buildUserAlreadyExistsMessage
@@ -71,7 +74,7 @@ class UserController implements IController {
         )(req)
     }
 
-    private async HandleSendEmail(req: Request, res: Response, next: NextFunction) {
+   private async HandleSendEmail(req: Request, res: Response, next: NextFunction) {
         await sendEmail({
             onSuccess: () => Promise.resolve({
                 status: 'successfull',
@@ -87,7 +90,7 @@ class UserController implements IController {
 
         return next()
     }
-    public SendResponseToUser(req: Request, res: Response, next: NextFunction): Response {
+    private SendResponseToUser(req: Request, res: Response, next: NextFunction): Response {
         return res.json(req.body)
     }
 }

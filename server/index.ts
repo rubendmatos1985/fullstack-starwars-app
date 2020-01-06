@@ -2,7 +2,7 @@ import express from 'express'
 import helmet from 'helmet';
 import Express, { Application } from 'express';
 import getPort from './utils/port-getter';
-import { Authentication } from  './middlewares/authenticationMiddlewares';
+import { Authentication } from  './middlewares/authentication';
 import FilmsController from './Controllers/FilmsController';
 import { IController } from './Controllers/Controller';
 import PeopleController from './Controllers/PeopleController';
@@ -34,11 +34,14 @@ App
     App.use(
       `/api/v1/${controller.Pathname}`, 
       Authentication.CheckKeyIsProvided,
-      Authentication.ValidateKey, 
+      Authentication.ValidateKey,
+      Authentication.UpdateUserStatus, 
       controller.Router()
     ));
 
-App.use("/user", new UserController().Router())
+// REGISTER USER CONTROLLER
+const userController = new UserController();    
+App.use(userController.Pathname, userController.Router())
 
 
 

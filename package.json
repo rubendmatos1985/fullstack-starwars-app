@@ -5,8 +5,8 @@
   "main": "index.js",
   "scripts": {
     "build": "rimraf dist && tsc",
-    "dev": "cross-env NODE_ENV=development nodemon --watch ./server/* --exec ts-node ./server/index.ts",
-    "start": "cross-env NODE_ENV=production node ./dist/index.js"
+    "dev": "cross-env NODE_ENV=development nodemon --watch ./server/* --exec ts-node --require dotenv/config ./server/index.ts",
+    "start": "cross-env NODE_ENV=production node --require dotenv/config ./dist/index.js"
   },
   "author": "ruben1985",
   "license": "MIT",
@@ -18,7 +18,7 @@
     "bcrypt": "^3.0.7",
     "connect-pg-simple": "^6.0.1",
     "cross-env": "^6.0.3",
-    "dotenv": "^8.1.0",
+    "dotenv": "^8.2.0",
     "es6-promise": "4.2.8",
     "express": "4.17.1",
     "express-session": "^1.16.2",

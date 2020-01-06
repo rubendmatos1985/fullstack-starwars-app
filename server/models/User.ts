@@ -1,11 +1,10 @@
 import { getByIdQuery } from "../DB/getById"
 import { EntityTable } from "../types/Tables"
-import { IUserEntity } from "../types/interfaces/User"
+import { IUserEntity, UserFields } from "../types/interfaces/User"
 import { getByField as _getByField } from '../DB/getByField';
 import { knex } from "../DB/index";
 import uuid from "uuid/v1";
-
-
+import { update, IUpdateParams } from "../DB/update";
 
 export default (() => {
   const getById = getByIdQuery<EntityTable.User, IUserEntity>(EntityTable.User)
@@ -24,10 +23,11 @@ export default (() => {
       })
       .then(r => r[0])
       .catch(e => { console.log(e); return {}})
-    
+  
   return {
     getById,
     getByField: _getByField(EntityTable.User),
+    update: (params: IUpdateParams)=> update<EntityTable.User>(params),
     create
   }
 })()
