@@ -1,12 +1,20 @@
-module.exports = {
+const {
+  DB_CLIENT,
+  DB_USER,
+  DB_PORT,
+  DB_HOST,
+  DB_NAME,
+  DB_PASSWORD
+} = process.env
 
-    client: process.env.DB_CLIENT,
-    connection: {
-      user: process.env.DB_USER,
-      port: process.env.DB_PORT,
-      host: process.env.DB_HOST,
-      database: process.env.DB_NAME,
-      password: process.env.DB_PASSWORD,
- 
+module.exports = {
+  client: DB_CLIENT,
+  connection: {
+    user: DB_USER,
+    port: DB_PORT,
+    host: DB_HOST,
+    database: DB_NAME,
+    password: DB_PASSWORD,
+
   }
 };
