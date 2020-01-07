@@ -11,11 +11,13 @@ import { StarshipEntityFields } from "../types/interfaces/Starship"
 import { StarshipPilotFieldsNames } from "../types/interfaces/StarshipPilot"
 import { getAll } from "../DB/getAll"
 import { knex } from "../DB"
+import { Func1, Func } from "../types/genricTypes"
+import { IPeopleViewModel } from "./ViewModels/PeopleViewModel"
 
 export default (() => {
-  const _getById = (id: string) => () =>
+  const getById:Func1<string, Func<Promise<IPeopleViewModel>>> = (id: string) => () =>
     knex
-      .where('people.id', id)
+      .where({id})
       .select(
         'people.*',
         'films.json_agg as films',
@@ -79,7 +81,7 @@ export default (() => {
       .join('people', 'people.id', 'films.people_id')
   return {
     getByField: (name: string) => (value: any) => ({ /*TO DO*/ }),
-    getById: _getById,
-    getAll: getAll(EntityTable.People, () => () => Promise.resolve()/* _getById */)
+    getById,
+    getAll: getAll(EntityTable.People, getById )
   }
 })()

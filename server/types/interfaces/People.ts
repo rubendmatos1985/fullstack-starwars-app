@@ -2,7 +2,7 @@ import { ISpecieEntity as Specie } from './Specie';
 import { ISubject, ISubjectFromApi } from './Subject';
 import { IFromForeignTables } from './FromForeignTables';
 
-interface IPeople extends ISubject{
+export interface IPeople extends ISubject{
   height: string
   mass: string
   hair_color: string

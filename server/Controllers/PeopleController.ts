@@ -1,6 +1,6 @@
 import { IController } from "./Controller";
 import { Router, Response, Request, NextFunction } from "express";
-import People from '../models/People';
+import PeopleRepository from '../models/PeopleRepository';
 import { IDBResponse } from "../DB";
 import { PeopleEntityFields } from "../types/interfaces/People";
 import { Status } from "../middlewares/helpers";
@@ -19,18 +19,18 @@ class PeopleController implements IController {
     }
 
     GetAll = async (req: Request, res: Response): Promise<Response> => {
-        const result = await People.getAll();
+        const result = await PeopleRepository.getAll();
         return res.json(result);
     }
 
     GetById = async (req: Request, res: Response): Promise<Response> => {
-        const result:any = await People.getById(req.query.id)();
-        People.getById(req.query.id)()
+        const result:any = await PeopleRepository.getById(req.query.id)();
+        PeopleRepository.getById(req.query.id)()
         return res.json(result);
     }
 
     GetByName = async (req: Request, res: Response): Promise<Response> => {
-        const result = await People.getByField(PeopleEntityFields.Name)(req.query.name)
+        const result = await PeopleRepository.getByField(PeopleEntityFields.Name)(req.query.name)
         return res.send(result)
     }
 
