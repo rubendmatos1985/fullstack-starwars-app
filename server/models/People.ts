@@ -14,11 +14,6 @@ export interface IPeople extends ISubject{
   edited: string
 }
 
-export interface IPeopleEntity extends IPeople{
-  species: IFromForeignTables
-  vehicles: IFromForeignTables[]
-  starships: IFromForeignTables[]
-}
 
 export interface IPeopleFromApi extends IPeople{
   species: string

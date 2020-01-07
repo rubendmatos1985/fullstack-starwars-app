@@ -1,11 +1,11 @@
 import * as Knex from "knex";
 import mapData from '../utils/mapData';
 import Api from '../original_starwars_api';
-import { IPeopleEntity, IPeopleFromApi } from '../models/People';
+import { IPeopleFromApi, IPeople } from '../models/People';
 import { Table } from "../types/Tables";
 
 export async function seed(knex: Knex): Promise<any> {
-    const data:IPeopleEntity[] = await mapData<IPeopleFromApi, IPeopleEntity>(Api.People, [
+    const data:IPeople[] = await mapData<IPeopleFromApi, IPeople>(Api.People, [
        "name",
        "height",
        "mass",
