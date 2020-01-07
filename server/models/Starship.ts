@@ -4,7 +4,7 @@ import { EntityTable, ManyToManyTable } from "../types/Tables"
 import { IStarshipResponse } from "../types/interfaces/Starship"
 import { FilmFieldsNames } from "../types/interfaces/Film"
 import { StarshipsInFilmsFields } from "../types/interfaces/StarshipsInFilms"
-import { PeopleEntityFields } from "../types/interfaces/People"
+import { PeopleEntityFields } from "./People"
 import { getAll } from "../DB/getAll"
 import { StarshipPilotFieldsNames } from "../types/interfaces/StarshipPilot"
 

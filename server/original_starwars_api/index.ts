@@ -1,5 +1,5 @@
 import fetchData from '../utils/fetchData';
-import { IPeopleFromApi } from '../types/interfaces/People';
+import { IPeopleFromApi } from '../models/People';
 import { IFilmFromApi } from '../types/interfaces/Film';
 import { IPlanetFromApi } from '../types/interfaces/Planet';
 import { IApiResponse } from './responseInterface';

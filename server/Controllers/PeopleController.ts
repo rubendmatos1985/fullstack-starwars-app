@@ -2,7 +2,7 @@ import { IController } from "./Controller";
 import { Router, Response, Request, NextFunction } from "express";
 import PeopleRepository from '../models/PeopleRepository';
 import { IDBResponse } from "../DB";
-import { PeopleEntityFields } from "../types/interfaces/People";
+import { PeopleEntityFields } from "../models/People";
 import { Status } from "../middlewares/helpers";
 
 

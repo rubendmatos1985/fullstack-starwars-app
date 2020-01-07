@@ -4,7 +4,7 @@ import Api from "../original_starwars_api";
 import { IVehicleFromApi, VehicleFieldsNames } from "../types/interfaces/Vehicle";
 import uuid from "uuid/v1";
 import { knex } from "../DB";
-import { IPeopleEntityFields } from "../types/interfaces/People";
+import { PeopleEntityFields } from "../models/People";
 import { flatten } from "ramda";
 import { ExecException } from "child_process";
 
@@ -29,9 +29,9 @@ const buildPilotRelation = async (vehicles: IVehicleFromApi[]) =>
         await Promise.all(
           v.pilots.map(async (url: string) =>
             await knex
-              .select(IPeopleEntityFields.Id)
+              .select(PeopleEntityFields.Id)
               .from(EntityTable.People)
-              .where(IPeopleEntityFields.Url, url)
+              .where(PeopleEntityFields.Url, url)
           )
         )
     }))

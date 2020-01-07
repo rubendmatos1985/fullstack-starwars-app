@@ -1,6 +1,6 @@
 import * as Knex from "knex";
 import { OneToManyTable, EntityTable, Table } from "../types/Tables";
-import { IPeopleFromApi, IPeopleEntityFields } from "../types/interfaces/People";
+import { IPeopleFromApi, PeopleEntityFields } from "../models/People";
 import Api from "../original_starwars_api";
 import { IPlanetFromApi } from "../types/interfaces/Planet";
 import { knex } from "../DB";
@@ -32,8 +32,8 @@ const buildRaceRelation = async (s: ISpecieFromApi[]): Promise<IRace[]> =>
 
         people: await Promise.all<{ id: string }[]>(
           sp.people.map(async (url: string) => await knex
-            .select(IPeopleEntityFields.Id)
-            .from(Table.People).where(IPeopleEntityFields.Url, url))
+            .select(PeopleEntityFields.Id)
+            .from(Table.People).where(PeopleEntityFields.Url, url))
         )
           .then(v => flatten(v).map(v => v.id))
 

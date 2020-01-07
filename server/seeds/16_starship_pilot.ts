@@ -3,7 +3,7 @@ import { ManyToManyTable, EntityTable } from "../types/Tables";
 import { IStarshipFromApi, StarshipEntityFields } from "../types/interfaces/Starship";
 import Api from "../original_starwars_api";
 import { knex } from "../DB";
-import { IPeopleEntityFields } from "../types/interfaces/People";
+import { PeopleEntityFields } from "../models/People";
 import { flatten } from "ramda";
 import uuid from "uuid/v1";
 import { StarshipPilot } from "../types/interfaces/StarshipPilot";
@@ -32,9 +32,9 @@ const buildStarshipPilot = async (starshipFromApi: IStarshipFromApi[]):Promise<S
           await Promise.all(
             starship.pilots.map(async (url: string) =>
               await knex
-                .select(IPeopleEntityFields.Id)
+                .select(PeopleEntityFields.Id)
                 .from(EntityTable.People)
-                .where(IPeopleEntityFields.Url, url)
+                .where(PeopleEntityFields.Url, url)
                 .then((obj) => obj.reduce((acc, curr) => [...acc, curr.id], []))
             )
           )

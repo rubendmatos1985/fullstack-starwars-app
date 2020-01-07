@@ -2,7 +2,7 @@ import { getByIdQuery } from "../DB/getById";
 import { asyncMemoize as Mem } from "../utils/memoize";
 import { ISpecieResponse } from "../types/interfaces/Specie";
 import { EntityTable, ManyToManyTable, OneToManyTable } from "../types/Tables";
-import { PeopleEntityFields } from "../types/interfaces/People";
+import { PeopleEntityFields } from "./People";
 import { SpeciesInFilmsFieldsName } from '../types/interfaces/SpeciesInFilms';
 import { RaceFields } from "../types/interfaces/Races";
 import { FilmFieldsNames } from "../types/interfaces/Film";

@@ -4,7 +4,7 @@ import { IFilmResponse } from '../types/interfaces/Film';
 import { getByIdQuery } from '../DB/getById';
 import { VehicleFieldsNames } from '../types/interfaces/Vehicle';
 import { VehiclesInFilmsFieldsNames } from '../types/interfaces/VehiclesInFilms';
-import { PeopleEntityFields } from '../types/interfaces/People';
+import { PeopleEntityFields } from './People';
 import { IActorsFieldsNames } from '../types/interfaces/Actors';
 import { getAll } from '../DB/getAll';
 export default(() => {

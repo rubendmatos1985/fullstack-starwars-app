@@ -1,5 +1,5 @@
 import { IFromForeignTables } from "../../types/interfaces/FromForeignTables";
-import { IPeople } from "../../types/interfaces/People";
+import { IPeople } from "../People";
 
 export interface IPeopleViewModel extends IPeople{
     species: IFromForeignTables[]
