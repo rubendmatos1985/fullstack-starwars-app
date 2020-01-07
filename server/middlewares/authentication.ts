@@ -2,14 +2,10 @@ import { Request, Response, NextFunction } from 'express';
 import { Status } from './helpers';
 import User from '../models/User';
 import { UserFields } from '../types/interfaces/User';
-import { EntityTable } from '../types/Tables';
 
 export namespace Authentication {
   export const CheckUserIsLogged = (req: Request, res: Response, next: NextFunction) => {
-
-    console.log("User is Logged");
-    console.log("Giving access");
-
+    // TO DO
     next();
   }
   export const CheckKeyIsProvided = (req: Request, res: Response, next: NextFunction) =>

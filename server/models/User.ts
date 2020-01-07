@@ -2,9 +2,9 @@ import { getByIdQuery } from "../DB/getById"
 import { EntityTable } from "../types/Tables"
 import { IUserEntity, UserFields } from "../types/interfaces/User"
 import { getByField as _getByField } from '../DB/getByField';
-import { knex } from "../DB/index";
+import { knex, IDBResponse } from "../DB/index";
 import uuid from "uuid/v1";
-import { update, IUpdateParams } from "../DB/update";
+import { Status } from "../middlewares/helpers";
 
 export default (() => {
   let state = {
@@ -18,7 +18,8 @@ export default (() => {
       .update(UserFields.LastConexion, new Date(), [UserFields.Email, UserFields.LastConexion])
       .where({ [UserFields.ApiKey]: apiKey })
       .then(v => { state.users[apiKey] = true })
-
+      .catch( e => { console.log(e) })
+      .finally(()=> ({ status: Status.Error, message: "error" }))
   const create = ({ name, email, password }) =>
     knex(EntityTable.User)
       .returning(['id', 'name', 'email', 'api_key'])
@@ -33,11 +34,17 @@ export default (() => {
         api_key: uuid()
       })
       .then(r => r[0])
-      .catch(e => { console.log(e); return {} })
+      .catch(e => { console.log(e) })
+      .finally(()=> ({message: "error" }))
 
+  const getByField = (field: UserFields)=>(value: any) => knex<IUserEntity>(EntityTable.User)
+    .where(field as any, value)
+    .then((v: any[]) => ({ status: Status.Successfull, message: v[0] }))
+    .catch((e: Error) => { console.log(e) })
+    .finally(()=> ({ status: Status.Error, message: "error" }))  
   return {
     getById,
-    getByField: _getByField(EntityTable.User),
+    getByField,
     updateUserLastConexion,
     create
   }

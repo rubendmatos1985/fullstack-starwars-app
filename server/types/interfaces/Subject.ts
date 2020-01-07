@@ -1,5 +1,6 @@
-export interface ISubject{
-  id: string
+import { IEntity } from "./Entity";
+
+export interface ISubject extends IEntity{
   name: string
   url: string
 }

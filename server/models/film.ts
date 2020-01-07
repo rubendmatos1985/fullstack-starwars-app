@@ -4,7 +4,7 @@ import { IFilmResponse } from '../types/interfaces/Film';
 import { getByIdQuery } from '../DB/getById';
 import { VehicleFieldsNames } from '../types/interfaces/Vehicle';
 import { VehiclesInFilmsFieldsNames } from '../types/interfaces/VehiclesInFilms';
-import { IPeopleEntityFields } from '../types/interfaces/People';
+import { PeopleEntityFields } from '../types/interfaces/People';
 import { IActorsFieldsNames } from '../types/interfaces/Actors';
 import { getAll } from '../DB/getAll';
 export default(() => {
@@ -22,7 +22,7 @@ export default(() => {
       },
       {
         tableName: EntityTable.People,
-        showFields: [IPeopleEntityFields.Id, IPeopleEntityFields.Name],
+        showFields: [PeopleEntityFields.Id, PeopleEntityFields.Name],
         fieldNameInResponse: 'actors',
         manyToManyTableName: ManyToManyTable.Actors,
         intersectEntityOn: IActorsFieldsNames.PeopleId,

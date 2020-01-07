@@ -2,7 +2,7 @@ import { getByIdQuery } from "../DB/getById";
 import { asyncMemoize as Mem } from "../utils/memoize";
 import { ISpecieResponse } from "../types/interfaces/Specie";
 import { EntityTable, ManyToManyTable, OneToManyTable } from "../types/Tables";
-import { IPeopleEntityFields } from "../types/interfaces/People";
+import { PeopleEntityFields } from "../types/interfaces/People";
 import { SpeciesInFilmsFieldsName } from '../types/interfaces/SpeciesInFilms';
 import { RaceFields } from "../types/interfaces/Races";
 import { FilmFieldsNames } from "../types/interfaces/Film";
@@ -21,7 +21,7 @@ export default (() => {
     },
     {
       tableName: EntityTable.People,
-      showFields: [IPeopleEntityFields.Id, IPeopleEntityFields.Name],
+      showFields: [PeopleEntityFields.Id, PeopleEntityFields.Name],
       fieldNameInResponse: 'people',
       manyToManyTableName: OneToManyTable.Race,
       intersectEntityOn: RaceFields.PeopleId,

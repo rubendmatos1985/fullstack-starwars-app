@@ -16,8 +16,6 @@ import User from "../../models/User";
 import { sendEmail } from "../../services/Email";
 import { IDBResponse } from "../../DB";
 import { Status } from "../../middlewares/helpers";
-import { EntityTable } from "../../types/Tables";
-import { UserFields } from "../../types/interfaces/User";
 
 export interface RequestWithUserData extends Request { body: UserSubscriptionData }
 

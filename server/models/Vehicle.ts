@@ -2,7 +2,7 @@ import { asyncMemoize as Mem } from "../utils/memoize"
 import { getByIdQuery } from "../DB/getById"
 import { IVehicleResponse } from "../types/interfaces/Vehicle"
 import { EntityTable, ManyToManyTable } from "../types/Tables"
-import { IPeopleEntityFields } from "../types/interfaces/People"
+import { PeopleEntityFields } from "../types/interfaces/People"
 import { PilotFieldNames } from "../types/interfaces/Pilot"
 import { FilmFieldsNames } from "../types/interfaces/Film"
 import { VehiclesInFilmsFieldsNames } from "../types/interfaces/VehiclesInFilms"
@@ -14,7 +14,7 @@ export default (() => {
     [
       {
         tableName: EntityTable.People,
-        showFields: [IPeopleEntityFields.Id, IPeopleEntityFields.Name],
+        showFields: [PeopleEntityFields.Id, PeopleEntityFields.Name],
         fieldNameInResponse: 'pilots',
         manyToManyTableName: ManyToManyTable.Pilot,
         intersectEntityOn: PilotFieldNames.PeopleId,

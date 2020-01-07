@@ -26,7 +26,7 @@ export interface IPeopleFromApi extends IPeople{
   starships: string[]
 }
 
-export enum IPeopleEntityFields{
+export enum PeopleEntityFields{
   Id = 'id',
   Name = 'name',
   Height = 'height',

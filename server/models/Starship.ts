@@ -4,7 +4,7 @@ import { EntityTable, ManyToManyTable } from "../types/Tables"
 import { IStarshipResponse } from "../types/interfaces/Starship"
 import { FilmFieldsNames } from "../types/interfaces/Film"
 import { StarshipsInFilmsFields } from "../types/interfaces/StarshipsInFilms"
-import { IPeopleEntityFields } from "../types/interfaces/People"
+import { PeopleEntityFields } from "../types/interfaces/People"
 import { getAll } from "../DB/getAll"
 import { StarshipPilotFieldsNames } from "../types/interfaces/StarshipPilot"
 
@@ -22,7 +22,7 @@ export default(() => {
       },
       {
         tableName: EntityTable.People,
-        showFields: [IPeopleEntityFields.Id, IPeopleEntityFields.Name],
+        showFields: [PeopleEntityFields.Id, PeopleEntityFields.Name],
         fieldNameInResponse: 'pilots',
         manyToManyTableName: ManyToManyTable.StarshipPilot,
         intersectEntityOn: StarshipPilotFieldsNames.PeopleId,

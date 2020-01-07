@@ -7,6 +7,7 @@ import bcrypt from 'bcrypt';
 import { asyncCompose } from '../../utils/asyncCompose';
 import { UserSubscriptionData } from './index';
 import { IDBResponse } from '../../DB';
+import { UserFields } from '../../types/interfaces/User';
 
 export type EmailFromRequest = string;
 
@@ -34,7 +35,7 @@ export const interruptFlowWithErrorMessage: Action2<Response, any> = (res) => (m
   res.status(403).send({ status: "Error", message })
 )
 
-export const getUserByEmail: Func1<EmailFromRequest, Promise<IDBResponse>> = User.getByField('email');
+export const getUserByEmail: Func1<EmailFromRequest, Promise<any>> = User.getByField(UserFields.Email);
 
 
 export const sendSuccessfullyResponse = (res: Response) => (objFromDB: any) =>
