@@ -24,13 +24,12 @@ class PeopleController implements IController {
     }
 
     GetById = async (req: Request, res: Response): Promise<Response> => {
-        const result:any = await PeopleRepository.getById(req.query.id)();
-        PeopleRepository.getById(req.query.id)()
+        const result:any = await PeopleRepository.getById(req.query.id);
         return res.json(result);
     }
 
     GetByName = async (req: Request, res: Response): Promise<Response> => {
-        const result = await PeopleRepository.getByField(PeopleEntityFields.Name)(req.query.name)
+        const result = await PeopleRepository.getByName(req.query.name)
         return res.send(result)
     }
 

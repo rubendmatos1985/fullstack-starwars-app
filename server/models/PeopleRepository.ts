@@ -14,10 +14,14 @@ import { knex } from "../DB"
 import { Func1, Func } from "../types/genricTypes"
 import { IPeopleViewModel } from "./ViewModels/PeopleViewModel"
 
-export default (() => {
-  const getById:Func1<string, Func<Promise<IPeopleViewModel>>> = (id: string) => () =>
-    knex
-      .where({id})
+export default (function () {
+  const get = (field?: string) => (value?: string): Promise<IPeopleViewModel> => {
+    const k = value && field 
+      ? field === 'name'
+        ? knex.where(field, 'like', `%${value}%`) 
+        : knex.where({ [field]: value }) 
+      : knex;
+    return k
       .select(
         'people.*',
         'films.json_agg as films',
@@ -79,9 +83,11 @@ export default (() => {
         'films.people_id'
       )
       .join('people', 'people.id', 'films.people_id')
+  }
+
   return {
-    getByField: (name: string) => (value: any) => ({ /*TO DO*/ }),
-    getById,
-    getAll: getAll(EntityTable.People, getById )
+    getByName: get('name'),
+    getById: get('id'),
+    getAll: get()
   }
 })()
