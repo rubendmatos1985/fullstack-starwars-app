@@ -1,32 +1,40 @@
 import { IController } from "./Controller";
 import { Router, Request, Response } from 'express';
-import Planet from '../models/Planet';
+import PlanetRepository from '../models/PlanetRepository';
 
-class PlanetController implements IController{
-    public Router: ()=> Router;
+class PlanetController implements IController {
+    public Router: () => Router;
 
     public Pathname: string;
 
-    constructor(){
-        this.Router = ()=>{
+    constructor() {
+        this.Router = () => {
             const router = Router();
-            router.get("/", this.GetAll)
-            router.get("/:id", this.GetById)
+            router.get("/", this.QueryParamsHandler)
             return router;
         }
         this.Pathname = "planets";
     }
 
-   public async GetAll(req:Request, res:Response){
-        const r = await Planet.getAll(); 
-        return res.json(r);
-   }
+    GetAll = (req: Request, res: Response) => {
+        //const r = await Planet.getAll(); 
+        return res.json({ t: "" });
+    }
 
-   public async GetById(req: Request, res: Response){
-       const r = await Planet.getById(req.params.id);
-       return res.json(r);
-   }
-    
+    GetById = async (req: Request, res: Response) => {
+        const r = await PlanetRepository.getById(req.query.id);
+        return res.json(r);
+    }
+    QueryParamsHandler = (req: Request, res: Response) => {
+        if (req.query.id) {
+            return this.GetById(req, res)
+        }
+        if (req.query.name) {
+            return // TO DO
+        }
+        return this.GetAll(req, res)
+    }
+
 }
 
 export default PlanetController;
