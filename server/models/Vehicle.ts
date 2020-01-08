@@ -1,4 +1,4 @@
-import { ISubjectFromApi, ISubject } from "../types/interfaces/Subject";
+import { ISubjectFromApi } from "../types/interfaces/Subject";
 import { ITransportFromApi, ITransportEntity } from "../types/interfaces/Transport";
 
 interface Vehicle { 
