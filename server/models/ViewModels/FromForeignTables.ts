@@ -1,3 +1,1 @@
-export interface IFromForeignTables{
-  name: string
-}
+export type IFromForeignTables = string
