@@ -1,39 +1,34 @@
-import { IController } from "./Controller";
+import { Controller } from "./Controller";
 import { Router, Response, Request, NextFunction } from "express";
 import PeopleRepository from '../models/PeopleRepository';
-import { IDBResponse } from "../DB";
-import { PeopleEntityFields } from "../models/People";
-import { Status } from "../middlewares/helpers";
 
-
-class PeopleController implements IController {
-    public Router: () => Router;
-    public Pathname: string;
+class PeopleController extends Controller {
     constructor() {
-        this.Router = () => {
-            const router = Router();
-            router.get("/", this.QueryParamsHandler);
-            return router;
+        const router  = () => {
+            const r = Router();
+            r.get("/", this.QueryParamsHandler);
+            return r;
         }
-        this.Pathname = "people";
+        const pathname = "people";
+        super(router, pathname)
     }
 
-    GetAll = async (req: Request, res: Response): Promise<Response> => {
+    async GetAll(req: Request, res: Response): Promise<Response>{
         const result = await PeopleRepository.getAll();
         return res.json(result);
     }
 
-    GetById = async (req: Request, res: Response): Promise<Response> => {
+   async GetById (req: Request, res: Response): Promise<Response>{
         const result:any = await PeopleRepository.getById(req.query.id);
         return res.json(result);
     }
 
-    GetByName = async (req: Request, res: Response): Promise<Response> => {
+    async GetByName(req: Request, res: Response): Promise<Response>{
         const result = await PeopleRepository.getByName(req.query.name)
         return res.send(result)
     }
 
-    QueryParamsHandler = (req: Request, res: Response, next: NextFunction): Promise<Response> =>  {
+    QueryParamsHandler(req: Request, res: Response, next: NextFunction): Promise<Response>{
         const params = Object.keys(req.query)
         if (params.some(k => k === "name")) {
             return this.GetByName(req, res)

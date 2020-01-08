@@ -1,22 +1,18 @@
 import { Request, Response, Router, Application } from 'express';
 import { IFilmViewModel } from '../models/Film';
 import FilmRepository from '../models/FilmRepository';
-import { IController } from './Controller';
+import { Controller } from './Controller';
 
-class FilmsController implements IController{
-  
-  public Router: ()=> Router;
-  
-  public Pathname: string
-  
+class FilmsController extends Controller{
   public constructor() {
-    this.Router = () => {
-      const router: Router = Router();
-      router.get("/", this.GetAll);
-      router.get("/:id", this.GetById)
-      return router;
+    const pathname = "films"
+    const router = () => {
+      const r: Router = Router();
+      r.get("/", this.GetAll);
+      r.get("/:id", this.GetById)
+      return r;
     }
-    this.Pathname = "films"
+    super(router, pathname)
   }
   
   public async GetAll(request: Request, response: Response): Promise<Response> {

@@ -1,31 +1,28 @@
-import { IController } from "./Controller";
+import { IController, Controller } from "./Controller";
 import { Router, Request, Response } from 'express';
 import PlanetRepository from '../models/PlanetRepository';
 
-class PlanetController implements IController {
-    public Router: () => Router;
-
-    public Pathname: string;
-
+class PlanetController extends Controller {
     constructor() {
-        this.Router = () => {
-            const router = Router();
-            router.get("/", this.QueryParamsHandler)
-            return router;
-        }
-        this.Pathname = "planets";
+        const pathname = 'planet';
+        const router = () => {
+            const r = Router();
+            r.get("/", this.QueryParamsHandler)
+            return r; 
+         }
+        super(router, pathname)
     }
 
-    GetAll = async (req: Request, res: Response) => {
+    async GetAll(req: Request, res: Response){
         const planets = await PlanetRepository.getAll()
         return res.json(planets);
     }
 
-    GetById = async (req: Request, res: Response) => {
+    async GetById(req: Request, res: Response){
         const r = await PlanetRepository.getById(req.query.id);
         return res.json(r);
     }
-    QueryParamsHandler = (req: Request, res: Response) => {
+    async QueryParamsHandler(req: Request, res: Response){
         if (req.query.id) {
             return this.GetById(req, res)
         }

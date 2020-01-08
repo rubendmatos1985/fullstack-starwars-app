@@ -1,35 +1,43 @@
 import { Router, Request, Response } from 'express';
 import Specie from '../models/SpecieRepository';
-import { IController } from './Controller';
+import { Controller } from './Controller';
 import { ISpecieViewModel } from '../models/ViewModels/SpecieViewModel';
 import SpecieRepository from '../models/SpecieRepository';
 
-class SpeciesController implements IController {
-    Router: () => Router;
-    public Pathname: string;
-
+class SpeciesController extends Controller {
     constructor() {
-        this.Router = ()=>{
-            const router: Router = Router();
-            router.get("/", this.GetAll);
-            router.get("/:id", this.GetById);
-            return router;
+        const pathname = 'specie';
+        const router = () => {
+            const r: Router = Router();
+            r.get("/", this.HandleQueryParams);
+            return r;
         }
-        this.Pathname = "species";
+        super(router, pathname)
     }
 
-    public async GetById(req: Request, res: Response):Promise<Response>{
-        const r:ISpecieViewModel[] = await Specie.getById(req.params.id);
+    public async GetById(req: Request, res: Response): Promise<Response> {
+        const r: ISpecieViewModel[] = await Specie.getById(req.params.id);
         return res.json(r);
     }
 
-    private async GetAll(req: Request, res: Response){
-        const r:ISpecieViewModel[] = await Specie.getAll();
+    private async GetAll(req: Request, res: Response): Promise<Response> {
+        const r: ISpecieViewModel[] = await Specie.getAll();
         return res.json(r);
     }
 
-    private async  GetByName(req: Request, res: Response){
-        const r:ISpecieViewModel[] = await SpecieRepository.getByName(req.query.name) 
+    private async  GetByName(req: Request, res: Response): Promise<Response> {
+        const r: ISpecieViewModel[] = await SpecieRepository.getByName(req.query.name)
+        return res.json(r)
+    }
+
+    private async HandleQueryParams(req: Request, res: Response) {
+        if (req.query.id) {
+            return this.GetById(req, res)
+        }
+        if (req.query.name) {
+            return this.GetByName(req, res)
+        }
+        return this.GetAll(req, res)
     }
 }
 

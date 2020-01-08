@@ -1,20 +1,18 @@
 import { Router, Request, Response } from 'express';
 import  Starship  from '../models/starship';
-import { IController } from './Controller';
+import { Controller } from './Controller';
 
-class StarshipController implements IController{
-    Router: ()=> Router   
-    Pathname: string;
-
+class StarshipController extends Controller{
     constructor(){
-        this.Pathname = "starships";
+        const pathname = "starships";
 
-        this.Router = ()=>{
-            const router = Router();
-            router.get("/", this.GetAll);
-            router.get("/:id", this.GetById);
-            return router;
+        const router = ()=>{
+            const r = Router();
+            r.get("/", this.GetAll);
+            r.get("/:id", this.GetById);
+            return r;
         }
+        super(router, pathname)
     }
 
     public async GetById(req: Request, res: Response): Promise<Response>{
@@ -25,6 +23,10 @@ class StarshipController implements IController{
     public async GetAll(req: Request, res: Response): Promise<Response>{
         const r = await Starship.getAll();
         return res.json(r);
+    }
+
+    public async GetByName(req: Request, res: Response){
+        // TO DO
     }
 
 }
