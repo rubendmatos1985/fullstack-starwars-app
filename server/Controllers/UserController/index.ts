@@ -65,10 +65,13 @@ class UserController extends Controller {
 
   private async HandleSendEmail(req: RequestWithUserData, res: Response, next: NextFunction) {
     try{
-      await sendEmail(
-        req.body.email, 
-        `Thanks for register. This is your API-key: ${req.body.apiKey} Please don't share it. ;)!`
-      )
+      await sendEmail({
+        from: "noreply@starwars_api_clone.com",
+        to: req.body.email,
+        subject: "your api key",
+        text: `Thanks for register. This is your API-key: ${req.body.apiKey} Please don't share it. ;)!` 
+      })
+        
       return next()
     }catch (e){
       console.log(e)
