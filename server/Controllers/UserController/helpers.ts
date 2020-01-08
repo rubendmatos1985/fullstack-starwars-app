@@ -7,7 +7,7 @@ import bcrypt from 'bcrypt';
 import { asyncCompose } from '../../utils/asyncCompose';
 import { UserSubscriptionData } from './index';
 import { IDBResponse } from '../../DB';
-import { UserFields } from '../../types/interfaces/User';
+import { UserFields } from '../../models/User';
 
 export type EmailFromRequest = string;
 

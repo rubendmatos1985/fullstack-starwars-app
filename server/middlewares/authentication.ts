@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import { Status } from './helpers';
 import User from '../models/UserRepository';
-import { UserFields } from '../types/interfaces/User';
+import { UserFields } from '../models/User';
 
 export namespace Authentication {
   export const CheckUserIsLogged = (req: Request, res: Response, next: NextFunction) => {

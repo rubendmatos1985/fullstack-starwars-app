@@ -1,6 +1,6 @@
 import { knex } from ".";
 import { EntityTable } from "../types/Tables";
-import { UserFields, IUserEntity } from "../types/interfaces/User";
+import { UserFields, IUserEntity } from "../models/User";
 import { IEntity } from "../types/interfaces/Entity";
 
 export interface IUpdateParams{

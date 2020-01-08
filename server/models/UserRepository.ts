@@ -1,6 +1,6 @@
 import { getByIdQuery } from "../DB/getById"
 import { EntityTable } from "../types/Tables"
-import { IUserEntity, UserFields } from "../types/interfaces/User"
+import { IUserEntity, UserFields } from "./User"
 import { getByField as _getByField } from '../DB/getByField';
 import { knex, IDBResponse } from "../DB/index";
 import uuid from "uuid/v1";

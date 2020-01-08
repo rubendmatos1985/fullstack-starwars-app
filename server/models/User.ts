@@ -1,4 +1,4 @@
-import { IEntity } from "./Entity";
+import { IEntity } from "../types/interfaces/Entity";
 
 export enum PermissionKeys{
     Write='write',
