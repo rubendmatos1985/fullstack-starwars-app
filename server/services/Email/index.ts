@@ -12,11 +12,10 @@ export interface ISendEmailParams{
 }
 
 
-export const sendEmail = (fns: ISendEmailParams)=> ({ email, apiKey }) => sender({
+export const sendEmail = (to:string, message: string)=>  sender({
     from: 'noreply@starwars.com',
-    to: email,
+    to,
     subject: 'Your api-key',
-    text: `Thanks for register. This is yout API-key: ${apiKey} Please don't share it. ;)!`
+    text: message
   })
-    .then(fns.onSuccess)
-    .catch(fns.onError)
+   

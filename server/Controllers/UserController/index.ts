@@ -13,7 +13,8 @@ export interface RequestWithUserData extends Request { body: UserSubscriptionDat
 export interface UserSubscriptionData {
   name: string,
   password: string,
-  email: string
+  email: string,
+  apiKey?: string
 }
 
 class UserController extends Controller {
@@ -62,21 +63,20 @@ class UserController extends Controller {
     next()
   }
 
-  private async HandleSendEmail(req: Request, res: Response, next: NextFunction) {
-    await sendEmail({
-      onSuccess: () => Promise.resolve({
-        status: 'successfull',
-        message: "Check your Email"
+  private async HandleSendEmail(req: RequestWithUserData, res: Response, next: NextFunction) {
+    try{
+      await sendEmail(
+        req.body.email, 
+        `Thanks for register. This is your API-key: ${req.body.apiKey} Please don't share it. ;)!`
+      )
+      return next()
+    }catch (e){
+      console.log(e)
+      return res.status(404).send({ 
+        status: "Error", 
+        message: "We had problems sending the email with your api_key. Please verify your email address" 
       })
-        .then(obj => { req.body = obj }),
-      onError: () => Promise.resolve({
-        status: 'error',
-        message: "Error sending email. We are working on it. Pleas try later"
-      })
-        .then(obj => { req.body = obj })
-    })(req.body)
-
-    return next()
+    }
   }
   private SendResponseToUser(req: Request, res: Response, next: NextFunction): Response {
     return res.json(req.body)
