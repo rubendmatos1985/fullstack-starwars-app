@@ -1,9 +1,6 @@
 import { IDBContext, knex } from ".";
 import { IStarshipViewModel } from "../models/ViewModels/StarshipViewModel";
 import { ManyToManyTable, EntityTable } from "../types/Tables";
-import { StarshipPilotFieldsNames } from "../types/interfaces/StarshipPilot";
-import { StarshipEntityFields } from "../models/Starship";
-import { StarshipsInFilmsFields } from "../types/interfaces/StarshipsInFilms";
 
 export const StarshipContext: IDBContext<IStarshipViewModel> =
   ({
@@ -15,7 +12,7 @@ export const StarshipContext: IDBContext<IStarshipViewModel> =
         : knex
       return k
         .select(
-          'starship.id as starship_id',
+          'starship.*',
           'pilots.json_agg as pilots',
           'films.json_agg as films'
         )
@@ -41,7 +38,7 @@ export const StarshipContext: IDBContext<IStarshipViewModel> =
         .join(
           function () {
             this
-              .select('starship.id as starship_id', knex.raw('json_agg(film.name)'))
+              .select('starship.id as starship_id', knex.raw('json_agg(film.title)'))
               .from(EntityTable.Starship)
               .leftJoin('starships_in_films', 'starships_in_films.starship_id', 'starship.id')
               .leftJoin('film', 'film.id', 'starships_in_films.film_id')
