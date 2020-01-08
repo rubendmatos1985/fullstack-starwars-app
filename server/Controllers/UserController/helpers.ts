@@ -1,7 +1,7 @@
 import Joi, { ValidationResult } from '@hapi/joi';
 import { Request, Response } from 'express';
 import { has, compose } from 'ramda';
-import User from '../../models/User';
+import User from '../../models/UserRepository';
 import { Func1, Action2 } from '../../types/genricTypes';
 import bcrypt from 'bcrypt';
 import { asyncCompose } from '../../utils/asyncCompose';

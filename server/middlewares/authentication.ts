@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import { Status } from './helpers';
-import User from '../models/User';
+import User from '../models/UserRepository';
 import { UserFields } from '../types/interfaces/User';
 
 export namespace Authentication {

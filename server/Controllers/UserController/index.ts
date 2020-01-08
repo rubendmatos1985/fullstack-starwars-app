@@ -12,7 +12,7 @@ import {
     extractMessageFromValidationResult,
     validateOnSignIn
 } from "./helpers";
-import User from "../../models/User";
+import User from "../../models/UserRepository";
 import { sendEmail } from "../../services/Email";
 import { IDBResponse } from "../../DB";
 import { Status } from "../../middlewares/helpers";
