@@ -1,6 +1,6 @@
 
 import { ISubject } from '../types/interfaces/Subject';
-import { IFromForeignTables } from '../types/interfaces/FromForeignTables';
+import { IFromForeignTables } from './ViewModels/FromForeignTables';
 
 
 export interface IPlanetEntity extends ISubject{

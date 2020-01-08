@@ -1,4 +1,4 @@
-import {IFromForeignTables} from '../types/interfaces/FromForeignTables';
+import {IFromForeignTables} from './ViewModels/FromForeignTables';
  export interface IFilmFromApi{
   title:          string
   episode_id:     number

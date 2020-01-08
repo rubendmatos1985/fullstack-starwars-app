@@ -1,6 +1,6 @@
 import { ISpecieEntity as Specie } from './Specie';
 import { ISubject, ISubjectFromApi } from '../types/interfaces/Subject';
-import { IFromForeignTables } from '../types/interfaces/FromForeignTables';
+import { IFromForeignTables } from './ViewModels/FromForeignTables';
 
 export interface IPeople extends ISubject{
   height: string

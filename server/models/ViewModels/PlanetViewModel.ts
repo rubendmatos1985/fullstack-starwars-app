@@ -1,5 +1,5 @@
 import { IPlanetEntity } from "../Planet";
-import { IFromForeignTables } from "../../types/interfaces/FromForeignTables";
+import { IFromForeignTables } from "./FromForeignTables";
 
 export interface IPlanetViewModel extends IPlanetEntity{
     residents:  IFromForeignTables[]

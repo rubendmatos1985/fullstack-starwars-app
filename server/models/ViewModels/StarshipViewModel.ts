@@ -1,5 +1,5 @@
 import { IStarshipEntity } from "../Starship";
-import { IFromForeignTables } from "../../types/interfaces/FromForeignTables";
+import { IFromForeignTables } from "./FromForeignTables";
 
 export interface IStarshipViewModel extends IStarshipEntity{
     pilots: IFromForeignTables[],

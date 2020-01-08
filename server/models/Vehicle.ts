@@ -1,6 +1,6 @@
 import { ISubjectFromApi, ISubject } from "../types/interfaces/Subject";
 import { ITransportFromApi, ITransportEntity } from "../types/interfaces/Transport";
-import { IFromForeignTables } from "../types/interfaces/FromForeignTables";
+import { IFromForeignTables } from "./ViewModels/FromForeignTables";
 
 interface Vehicle { 
   vehicle_class: string

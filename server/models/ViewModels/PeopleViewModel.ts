@@ -1,4 +1,4 @@
-import { IFromForeignTables } from "../../types/interfaces/FromForeignTables";
+import { IFromForeignTables } from "./FromForeignTables";
 import { IPeople } from "../People";
 
 export enum PeopleViewModelFields{
