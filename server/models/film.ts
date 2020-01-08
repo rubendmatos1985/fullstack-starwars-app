@@ -59,7 +59,7 @@ export interface Film {
 
 }
 
-export interface IFilmResponse extends Film{
+export interface IFilmViewModel extends Film{
   characters:    IFromForeignTables[],
   planets:       IFromForeignTables[],
   starships:     IFromForeignTables[],
