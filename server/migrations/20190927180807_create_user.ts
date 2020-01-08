@@ -1,5 +1,7 @@
+import { TableBuilder } from "knex"
+
 exports.up =  async function (knex){
-  return knex.schema.createTable('user', (t) => {
+  return knex.schema.createTable('user', (t:TableBuilder) => {
     t.uuid('id').primary().unique().notNullable()
     t.text('name')
     t.text('email')
@@ -8,6 +10,7 @@ exports.up =  async function (knex){
     t.date('updated')
     t.date('last_conexion'),
     t.uuid('api_key')
+    t.json("scopes").defaultTo(JSON.stringify(['read']))
   })
 }
 

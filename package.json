@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "migrations:create": "node migrationsBuilder.js",
-    "migrations:run:latest": "node migrationsRunner.js latest",
+    "migrations:run:latest": "npm run build && node migrationsRunner.js latest",
     "seeds:run": "npm run build && node seedsRunner",
     "seeds:make": "node seedsBuilder",
     "build": "rimraf dist && tsc",
