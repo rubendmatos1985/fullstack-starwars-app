@@ -1,11 +1,13 @@
 import Knex from 'knex';
 import { Status } from '../middlewares/helpers';
-export interface IDBResponse {
+export interface IDBResponse<T> {
     status: Status,
-    message: any
+    message: T | Error
 }
 export const knex: Knex = require('knex')(require('../knexfile'));
 
-export interface IDBContext<DBModel> {
-    get: (f?: string) => (value?: any) => Promise<DBModel[]>
+export interface IDBContext<T> {
+    get: (f?: string) => (value?: any) => Promise<IDBResponse<T[]> | any[]>
+    create?: any,
+    update?: any
   }

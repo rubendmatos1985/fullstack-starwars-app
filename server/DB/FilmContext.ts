@@ -1,5 +1,6 @@
 import { IDBContext, knex } from ".";
 import { IFilmViewModel } from "../models/Film";
+import { Status } from "../middlewares/helpers";
 
 export const FilmContext: IDBContext<IFilmViewModel> =
   ({
@@ -85,5 +86,7 @@ export const FilmContext: IDBContext<IFilmViewModel> =
             'species.film_id'
           )
           .join('film', 'film.id', 'characters.film_id')
+          .then((rs:IFilmViewModel[]) => ({ status: Status.Successfull, message: rs }))
+          .catch(e => ({ status: Status.Error, message: e }))
       }
   })

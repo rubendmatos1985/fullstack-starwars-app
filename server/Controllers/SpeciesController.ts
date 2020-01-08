@@ -3,6 +3,7 @@ import Specie from '../models/SpecieRepository';
 import { Controller } from './Controller';
 import { ISpecieViewModel } from '../models/ViewModels/SpecieViewModel';
 import SpecieRepository from '../models/SpecieRepository';
+import { IDBResponse } from '../DB';
 
 class SpeciesController extends Controller {
     constructor() {
@@ -16,18 +17,18 @@ class SpeciesController extends Controller {
     }
 
     public async GetById(req: Request, res: Response): Promise<Response> {
-        const r: ISpecieViewModel[] = await Specie.getById(req.params.id);
-        return res.json(r);
+        const {message}: IDBResponse<ISpecieViewModel[]> = await Specie.getById(req.params.id) 
+        return res.json(message);
     }
 
     private async GetAll(req: Request, res: Response): Promise<Response> {
-        const r: ISpecieViewModel[] = await Specie.getAll();
-        return res.json(r);
+        const { message }: IDBResponse<ISpecieViewModel[]> = await Specie.getAll() 
+        return res.json(message);
     }
 
     private async  GetByName(req: Request, res: Response): Promise<Response> {
-        const r: ISpecieViewModel[] = await SpecieRepository.getByName(req.query.name)
-        return res.json(r)
+        const { message }: IDBResponse<ISpecieViewModel[]> = await SpecieRepository.getByName(req.query.name)
+        return res.json(message)
     }
 
     private async HandleQueryParams(req: Request, res: Response) {
