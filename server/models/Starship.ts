@@ -10,7 +10,7 @@ interface IStarship{
 export interface IStarshipFromApi extends IStarship, ISubjectFromApi, ITransportFromApi{}
 export interface IStarshipEntity extends IStarship ,ISubject, ITransportEntity{}
 
-export interface IStarshipResponse extends IStarshipEntity{
+export interface IStarshipViewModel extends IStarshipEntity{
   pilots: IFromForeignTables[],
   films: IFromForeignTables[]
 }

@@ -1,7 +1,7 @@
 import { asyncMemoize as Mem } from "../utils/memoize"
 import { getByIdQuery } from "../DB/getById"
 import { EntityTable, ManyToManyTable } from "../types/Tables"
-import { IStarshipResponse } from "./Starship"
+import { IStarshipViewModel } from "./Starship"
 import { FilmFieldsNames } from "./Film"
 import { StarshipsInFilmsFields } from "../types/interfaces/StarshipsInFilms"
 import { PeopleEntityFields } from "./People"
@@ -9,7 +9,7 @@ import { getAll } from "../DB/getAll"
 import { StarshipPilotFieldsNames } from "../types/interfaces/StarshipPilot"
 
 export default(() => {
-  const _getById = Mem(getByIdQuery<EntityTable.Starship, IStarshipResponse>(
+  const _getById = Mem(getByIdQuery<EntityTable.Starship, IStarshipViewModel>(
     EntityTable.Starship,
     [
       {
