@@ -5,6 +5,7 @@ export default (() => {
   const { get } = SpecieContext;
   return {
     getById: get('id'),
-    getAll: get()
+    getAll: get(),
+    getByName: get('name')
   }
 })()

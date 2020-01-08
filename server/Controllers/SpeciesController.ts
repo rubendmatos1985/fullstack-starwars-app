@@ -1,6 +1,8 @@
 import { Router, Request, Response } from 'express';
 import Specie from '../models/SpecieRepository';
 import { IController } from './Controller';
+import { ISpecieViewModel } from '../models/ViewModels/SpecieViewModel';
+import SpecieRepository from '../models/SpecieRepository';
 
 class SpeciesController implements IController {
     Router: () => Router;
@@ -17,13 +19,17 @@ class SpeciesController implements IController {
     }
 
     public async GetById(req: Request, res: Response):Promise<Response>{
-        const r = await Specie.getById(req.params.id);
+        const r:ISpecieViewModel[] = await Specie.getById(req.params.id);
         return res.json(r);
     }
 
-    public async GetAll(req: Request, res: Response){
-        const r = await Specie.getAll();
+    private async GetAll(req: Request, res: Response){
+        const r:ISpecieViewModel[] = await Specie.getAll();
         return res.json(r);
+    }
+
+    private async  GetByName(req: Request, res: Response){
+        const r:ISpecieViewModel[] = await SpecieRepository.getByName(req.query.name) 
     }
 }
 
