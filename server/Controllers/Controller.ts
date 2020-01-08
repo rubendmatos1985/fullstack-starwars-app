@@ -6,13 +6,13 @@ export interface IController{
    Pathname: string
 }
 
-class MethodsBinder{
+class Binder {
    constructor(){
       autoBind(this)
    }
 }
 
-export class Controller extends MethodsBinder implements IController {
+export class Controller extends Binder implements IController {
    public Router: ()=> Router
    public Pathname: string
    constructor(router: ()=> Router, path: string){
