@@ -2,7 +2,7 @@ import * as Knex from "knex";
 import { OneToManyTable, EntityTable, Table } from "../types/Tables";
 import { IPeopleFromApi, PeopleEntityFields } from "../models/People";
 import Api from "../original_starwars_api";
-import { IPlanetFromApi } from "../types/interfaces/Planet";
+import { IPlanetFromApi } from "../models/Planet";
 import { knex } from "../DB";
 import { asyncCompose } from "../utils/asyncCompose";
 import { ISpecieFromApi, ISpecieEntityFields } from "../types/interfaces/Specie";

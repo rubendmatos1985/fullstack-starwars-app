@@ -2,7 +2,7 @@ import * as Knex from "knex";
 import { ManyToManyTable, EntityTable } from "../types/Tables";
 import { Resident, ResidentFields, PeopleFields, PlanetFields } from "../types/DB";
 import uuid from 'uuid/v1';
-import { IPlanetFromApi } from "../types/interfaces/Planet";
+import { IPlanetFromApi } from "../models/Planet";
 import Api from '../original_starwars_api';
 export async function seed(knex: Knex): Promise<any> {
   const residentsRelation: Array<{ people: { id: PeopleFields.id }[]; planet: { id: PlanetFields.id }[] }>

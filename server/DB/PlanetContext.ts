@@ -1,8 +1,8 @@
-import { knex } from "../DB";
-import { IPlanetViewModel } from "./ViewModels/PlanetViewModel";
+import { knex, IDBContext } from "."
+import { IPlanetViewModel } from "../models/ViewModels/PlanetViewModel"
 
-export default (function () {
-  const get = (field?: string) =>
+export const PlanetContext: IDBContext<IPlanetViewModel> = ({
+  get: (field?: string) =>
     function (value?: string): Promise<IPlanetViewModel[]> {
       const k = field && value
         ? field === 'name'
@@ -37,12 +37,4 @@ export default (function () {
         )
         .join('planet', 'planet.id', 'residents.planet_id')
     }
-  return {
-    getById: get('id'),
-
-    getByName: get('name'),
-
-    getAll: get()
-  }
-})()
-
+})

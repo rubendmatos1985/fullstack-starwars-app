@@ -1,7 +1,7 @@
 import Knex from 'knex';
 import mapData from '../utils/mapData';
 import Api from '../original_starwars_api';
-import { IPlanetFromApi, IPlanetEntity } from '../types/interfaces/Planet';
+import { IPlanetFromApi, IPlanetEntity } from '../models/Planet';
 import { Table } from '../types/Tables';
 import { Planet } from '../types/DB';
 

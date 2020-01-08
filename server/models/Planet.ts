@@ -1,11 +1,7 @@
 
-import { ISubject } from './Subject';
-import { IFromForeignTables } from './FromForeignTables';
+import { ISubject } from '../types/interfaces/Subject';
+import { IFromForeignTables } from '../types/interfaces/FromForeignTables';
 
-export interface IPlanet{
-  getById: (id: string)=> ()=> Promise<IPlanetResponse>
-
-}
 
 export interface IPlanetEntity extends ISubject{
   rotation_period: string
@@ -20,9 +16,4 @@ export interface IPlanetEntity extends ISubject{
 export interface IPlanetFromApi extends IPlanetEntity{
   residents: string[]
   films:     string[]
-}
-
-export interface IPlanetResponse extends IPlanetEntity{
-  residents:  IFromForeignTables[]
-  films:      IFromForeignTables[]
 }

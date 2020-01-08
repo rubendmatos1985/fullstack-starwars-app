@@ -1,4 +1,4 @@
-import { IPlanetEntity as Planet} from './Planet';
+import { IPlanetEntity as Planet} from '../../models/Planet';
 import { ISubject, ISubjectFromApi } from './Subject';
 import { IFromForeignTables } from './FromForeignTables';
 

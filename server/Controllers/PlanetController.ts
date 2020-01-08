@@ -16,9 +16,9 @@ class PlanetController implements IController {
         this.Pathname = "planets";
     }
 
-    GetAll = (req: Request, res: Response) => {
-        //const r = await Planet.getAll(); 
-        return res.json({ t: "" });
+    GetAll = async (req: Request, res: Response) => {
+        const planets = await PlanetRepository.getAll()
+        return res.json(planets);
     }
 
     GetById = async (req: Request, res: Response) => {

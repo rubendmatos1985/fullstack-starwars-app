@@ -5,3 +5,7 @@ export interface IDBResponse {
     message: any
 }
 export const knex: Knex = require('knex')(require('../knexfile'));
+
+export interface IDBContext<DBModel> {
+    get: (f?: string) => (value?: any) => Promise<DBModel[]>
+  }
