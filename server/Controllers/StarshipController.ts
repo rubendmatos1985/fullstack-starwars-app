@@ -26,7 +26,8 @@ class StarshipController extends Controller{
     }
 
     public async GetByName(req: Request, res: Response){
-        // TO DO
+        const r = await Starship.getByName(req.query.name)
+        return res.json(r)
     }
 
 }
