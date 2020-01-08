@@ -21,7 +21,7 @@ class VehicleController extends Controller {
 
   private async GetById(req: Request, res: Response): Promise<Response> {
     try {
-      const r = await Vehicle.getById(req.params.id);
+      const r = await Vehicle.getById(req.query.id);
       return res.json(r);
     } catch (e) {
       console.log(e)
