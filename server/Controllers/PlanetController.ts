@@ -1,4 +1,4 @@
-import { IController, Controller } from "./Controller";
+import { Controller } from "./Controller";
 import { Router, Request, Response } from 'express';
 import PlanetRepository from '../models/PlanetRepository';
 
