@@ -1,6 +1,6 @@
 import fetchData from '../utils/fetchData';
 import { IPeopleFromApi } from '../models/People';
-import { IFilmFromApi } from '../types/interfaces/Film';
+import { IFilmFromApi } from '../models/Film';
 import { IPlanetFromApi } from '../models/Planet';
 import { IApiResponse } from './responseInterface';
 import { asyncMemoize as Mem } from '../utils/memoize';

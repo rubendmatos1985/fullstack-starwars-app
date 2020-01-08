@@ -4,7 +4,7 @@ import { IVehicleResponse } from "../types/interfaces/Vehicle"
 import { EntityTable, ManyToManyTable } from "../types/Tables"
 import { PeopleEntityFields } from "./People"
 import { PilotFieldNames } from "../types/interfaces/Pilot"
-import { FilmFieldsNames } from "../types/interfaces/Film"
+import { FilmFieldsNames } from "./Film"
 import { VehiclesInFilmsFieldsNames } from "../types/interfaces/VehiclesInFilms"
 import { getAll } from "../DB/getAll"
 

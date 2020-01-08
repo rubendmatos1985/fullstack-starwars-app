@@ -1,55 +1,68 @@
-import { asyncMemoize as Mem } from '../utils/memoize';
-import { EntityTable, ManyToManyTable, Table } from '../types/Tables';
-import { IFilmResponse } from '../types/interfaces/Film';
-import { getByIdQuery } from '../DB/getById';
-import { VehicleFieldsNames } from '../types/interfaces/Vehicle';
-import { VehiclesInFilmsFieldsNames } from '../types/interfaces/VehiclesInFilms';
-import { PeopleEntityFields } from './People';
-import { IActorsFieldsNames } from '../types/interfaces/Actors';
-import { getAll } from '../DB/getAll';
-export default(() => {
-  const _getById = Mem(getByIdQuery<EntityTable.Film, IFilmResponse>(
-    EntityTable.Film,
-    [
-      {
-        tableName: EntityTable.Vehicle,
-        showFields: [VehicleFieldsNames.Id, VehicleFieldsNames.Name],
-        fieldNameInResponse: 'vehicles',
-        manyToManyTableName: ManyToManyTable.VehiclesInFilms,
-        intersectEntityOn: VehiclesInFilmsFieldsNames.VehicleId,
-        where: VehiclesInFilmsFieldsNames.VehicleId
+import {IFromForeignTables} from '../types/interfaces/FromForeignTables';
+ export interface IFilmFromApi{
+  title:          string
+  episode_id:     number
+  opening_crawl:  string
+  director:       string
+  producer:       string
+  release_date:   string
+  characters:     string[]
+  planets:        string[]
+  starships:      string[]
+  vehicles:       string[]
+  species:        string[]
+  created:        string
+  edited:         string
+  url:            string
+}
 
-      },
-      {
-        tableName: EntityTable.People,
-        showFields: [PeopleEntityFields.Id, PeopleEntityFields.Name],
-        fieldNameInResponse: 'actors',
-        manyToManyTableName: ManyToManyTable.Actors,
-        intersectEntityOn: IActorsFieldsNames.PeopleId,
-        where: IActorsFieldsNames.FilmId
-      },
-      {
-        tableName: EntityTable.Starship,
-        showFields: ['id', 'name'],
-        fieldNameInResponse: 'vehicles',
-        manyToManyTableName: ManyToManyTable.StarshipsInFilms,
-        intersectEntityOn: 'starship_id',
-        where: 'film_id'
-      },
-      {
-        tableName: EntityTable.Planet,
-        showFields: ['id', 'name'],
-        fieldNameInResponse: 'planets',
-        manyToManyTableName: ManyToManyTable.PlanetsInFilms,
-        intersectEntityOn: 'planet_id',
-        where: 'film_id'
-      }
-    ],
-  ))
-  return {
-    getById: _getById,
-    getAll: getAll(EntityTable.Film, _getById)
-  }
-})()
+export namespace FilmFields {
+  export type id = string;
+  export type title = string | null;
+  export type episode_id = number | null;
+  export type opening_crawl = string | null;
+  export type director = string | null;
+  export type producer = string | null;
+  export type release_date = string | null;
+  export type created = string | null;
+  export type edited = string | null;
+  export type url = string | null;
+  
+}
 
+
+export enum FilmFieldsNames{
+  Id = 'id',
+  Title = 'title',
+  EpisodeId =  'episode_id',
+  OpeningCrawl = 'opening_crawl',
+  Director = 'director',
+  Producer =  'producer',
+  ReleaseDate =  'release_date',
+  Created = 'created',
+  Edited = 'edited',
+  Url = 'url'
+}
+
+
+export interface Film {
+  id: FilmFields.id;
+  title: FilmFields.title;
+  episode_id: FilmFields.episode_id;
+  opening_crawl: FilmFields.opening_crawl;
+  director: FilmFields.director;
+  producer: FilmFields.producer;
+  release_date: FilmFields.release_date;
+  created: FilmFields.created;
+  edited: FilmFields.edited;
+  url: FilmFields.url;
+
+}
+
+export interface IFilmResponse extends Film{
+  characters:    IFromForeignTables[],
+  planets:       IFromForeignTables[],
+  starships:     IFromForeignTables[],
+  vehicles:      IFromForeignTables[]
+}
 

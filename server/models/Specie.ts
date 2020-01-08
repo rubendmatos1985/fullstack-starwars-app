@@ -5,7 +5,7 @@ import { EntityTable, ManyToManyTable, OneToManyTable } from "../types/Tables";
 import { PeopleEntityFields } from "./People";
 import { SpeciesInFilmsFieldsName } from '../types/interfaces/SpeciesInFilms';
 import { RaceFields } from "../types/interfaces/Races";
-import { FilmFieldsNames } from "../types/interfaces/Film";
+import { FilmFieldsNames } from "./Film";
 import { getAll } from "../DB/getAll";
 
 export default (() => {
