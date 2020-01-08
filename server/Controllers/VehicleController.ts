@@ -1,6 +1,6 @@
 import { Router, Response, Request } from 'express';
 import Vehicle from '../models/VehicleRepository';
-import { IController } from './Controller';
+import { Controller } from './Controller';
 import { Status } from '../middlewares/helpers';
 
 const failedMessage = {
@@ -8,22 +8,18 @@ const failedMessage = {
   message: "We are having problems please try later"
 }
 
-class VehicleController implements IController {
-  Router: () => Router
-  Pathname: string;
-
+class VehicleController extends Controller {
   constructor() {
-    this.Pathname = "vehicles";
-
-    this.Router = () => {
-      const router = Router();
-      router.get("/", this.GetAll);
-      router.get("/:id", this.GetById);
-      return router;
+    const pathname = "vehicles";
+    const router = () => {
+      const r = Router();
+      r.get("/", this.QueryParamsHandler);
+      return r;
     }
+    super(router, pathname)
   }
 
-  public async GetById(req: Request, res: Response): Promise<Response> {
+  private async GetById(req: Request, res: Response): Promise<Response> {
     try {
       const r = await Vehicle.getById(req.params.id);
       return res.json(r);
@@ -34,7 +30,7 @@ class VehicleController implements IController {
   }
 
 
-  public async GetAll(req: Request, res: Response): Promise<Response> {
+  private async GetAll(req: Request, res: Response): Promise<Response> {
     try {
       const r = await Vehicle.getAll();
       return res.json(r);
@@ -44,7 +40,7 @@ class VehicleController implements IController {
     }
   }
 
-  public async GetByName(req: Request, res: Response): Promise<Response> {
+  private async GetByName(req: Request, res: Response): Promise<Response> {
     try {
       const r = await Vehicle.getByName(req.query.name)
       return res.json(r)
@@ -54,7 +50,18 @@ class VehicleController implements IController {
     }
 
   }
+  private QueryParamsHandler(req: Request, res: Response){
+    if(req.query.name){
+      return this.GetByName(req, res)
+    }
+    if(req.query.id){
+      return this.GetById(req, res)
+    }
+    return this.GetAll(req, res)
+  }
+
 
 }
 
 export default VehicleController;
+
