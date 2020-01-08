@@ -6,7 +6,7 @@ import { IApiResponse } from './responseInterface';
 import { asyncMemoize as Mem } from '../utils/memoize';
 import { ExecException } from 'child_process';
 import { IStarshipFromApi } from '../models/Starship';
-import { IVehicleFromApi } from '../types/interfaces/Vehicle';
+import { IVehicleFromApi } from '../models/Vehicle';
 import { ISpecieFromApi } from '../models/Specie';
 interface IApi {
   People: () => Promise<IPeopleFromApi[]>;

@@ -1,5 +1,5 @@
 import { Router, Response, Request } from 'express';
-import Vehicle  from '../models/vehicle';
+import Vehicle  from '../models/VehicleRepository';
 import { IController } from './Controller';
 
 class VehicleController implements IController{

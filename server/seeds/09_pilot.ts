@@ -1,7 +1,7 @@
 import * as Knex from "knex";
 import { Table, EntityTable } from "../types/Tables";
 import Api from "../original_starwars_api";
-import { IVehicleFromApi, VehicleFieldsNames } from "../types/interfaces/Vehicle";
+import { IVehicleFromApi, VehicleFieldsNames } from "../models/Vehicle";
 import uuid from "uuid/v1";
 import { knex } from "../DB";
 import { PeopleEntityFields } from "../models/People";

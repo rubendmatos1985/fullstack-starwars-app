@@ -1,6 +1,6 @@
 import * as Knex from "knex";
 import { Table } from "../types/Tables";
-import { IVehicleFromApi, IVehicleEntity, VehicleFieldsNames } from "../types/interfaces/Vehicle";
+import { IVehicleFromApi, IVehicleEntity, VehicleFieldsNames } from "../models/Vehicle";
 import mapData from "../utils/mapData";
 import Api from "../original_starwars_api";
 

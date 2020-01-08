@@ -1,39 +1,39 @@
-import { asyncMemoize as Mem } from "../utils/memoize"
-import { getByIdQuery } from "../DB/getById"
-import { IVehicleResponse } from "../types/interfaces/Vehicle"
-import { EntityTable, ManyToManyTable } from "../types/Tables"
-import { PeopleEntityFields } from "./People"
-import { PilotFieldNames } from "../types/interfaces/Pilot"
-import { FilmFieldsNames } from "./Film"
-import { VehiclesInFilmsFieldsNames } from "../types/interfaces/VehiclesInFilms"
-import { getAll } from "../DB/getAll"
+import { ISubjectFromApi, ISubject } from "../types/interfaces/Subject";
+import { ITransportFromApi, ITransportEntity } from "../types/interfaces/Transport";
+import { IFromForeignTables } from "../types/interfaces/FromForeignTables";
 
-export default (() => {
-  const _getById = Mem(getByIdQuery<EntityTable.Vehicle, IVehicleResponse>(
-    EntityTable.Vehicle,
-    [
-      {
-        tableName: EntityTable.People,
-        showFields: [PeopleEntityFields.Id, PeopleEntityFields.Name],
-        fieldNameInResponse: 'pilots',
-        manyToManyTableName: ManyToManyTable.Pilot,
-        intersectEntityOn: PilotFieldNames.PeopleId,
-        where: PilotFieldNames.VehicleId
-      },
-      {
-        tableName: EntityTable.Film,
-        showFields: [FilmFieldsNames.Id, FilmFieldsNames.Title],
-        fieldNameInResponse: 'films',
-        manyToManyTableName: ManyToManyTable.VehiclesInFilms,
-        intersectEntityOn: VehiclesInFilmsFieldsNames.FilmId,
-        where: VehiclesInFilmsFieldsNames.VehicleId
-      }
+interface Vehicle { 
+  vehicle_class: string
+ }
 
-    ]
-  ))
+export interface IVehicleFromApi extends ISubjectFromApi, ITransportFromApi{
+  vehicle_class: string
+}
 
-  return {
-    getById: _getById,
-    getAll: getAll(EntityTable.Vehicle, _getById)
-  }
-})()
+export interface IVehicleEntity extends Vehicle, ISubjectFromApi, ITransportEntity{}
+
+export interface IVehicleViewModel extends IVehicleEntity{
+  pilots: IFromForeignTables[],
+  films: IFromForeignTables[]
+}
+
+
+export enum VehicleFieldsNames{
+  Id = 'id',
+  Name= 'name',
+  Model = 'model',
+  Manufacturer = 'manufacturer',
+  CostInCredits = 'cost_in_credits',
+  Lenght = 'length',
+  MaxAtmospheringSpeed = 'max_atmosphering_speed',
+  Crew = 'crew',
+  Passengers = 'passengers',
+  CargoCapacity = 'cargo_capacity',
+  Consumables = 'consumables',
+  VehicleClass = 'vehicle_class',
+  Url = 'url'
+}
+
+export interface VehicleFieldsNamesArray{
+  [key: number] : VehicleFieldsNames
+}
