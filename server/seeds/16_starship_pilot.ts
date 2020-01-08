@@ -1,6 +1,6 @@
 import * as Knex from "knex";
 import { ManyToManyTable, EntityTable } from "../types/Tables";
-import { IStarshipFromApi, StarshipEntityFields } from "../types/interfaces/Starship";
+import { IStarshipFromApi, StarshipEntityFields } from "../models/Starship";
 import Api from "../original_starwars_api";
 import { knex } from "../DB";
 import { PeopleEntityFields } from "../models/People";

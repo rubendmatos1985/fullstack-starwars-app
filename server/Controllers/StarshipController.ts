@@ -1,5 +1,5 @@
 import { Router, Request, Response } from 'express';
-import  Starship  from '../models/starship';
+import  Starship  from '../models/StarshipRepository';
 import { Controller } from './Controller';
 
 class StarshipController extends Controller{

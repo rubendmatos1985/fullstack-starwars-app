@@ -2,7 +2,7 @@ import * as Knex from "knex";
 import { ManyToManyTable, EntityTable } from "../types/Tables";
 import { StarshipPilotFieldsNames } from "../types/interfaces/StarshipPilot";
 import { PeopleEntityFields } from "../models/People";
-import { StarshipEntityFields } from "../types/interfaces/Starship";
+import { StarshipEntityFields } from "../models/Starship";
 
 
 export async function up(knex: Knex): Promise<any> {

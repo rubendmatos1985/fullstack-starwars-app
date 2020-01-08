@@ -22,12 +22,18 @@ class PlanetController extends Controller {
         const r = await PlanetRepository.getById(req.query.id);
         return res.json(r);
     }
+
+    async GetByName(req: Request, res: Response){
+        const r = await PlanetRepository.getByName(req.query.name);
+        return res.json(r);
+    }
+
     async QueryParamsHandler(req: Request, res: Response){
         if (req.query.id) {
             return this.GetById(req, res)
         }
         if (req.query.name) {
-            return // TO DO
+            return this.GetByName(req, res)
         }
         return this.GetAll(req, res)
     }
