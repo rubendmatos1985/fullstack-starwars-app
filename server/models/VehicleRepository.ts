@@ -4,6 +4,7 @@ export default (() => {
   const { get }  = VehicleContext
   return {
     getById: get('id'),
-    getAll: get()
+    getAll: get(),
+    getByName: get('name')
   }
 })()
