@@ -39,7 +39,11 @@ export default (() => {
 
   const getByField = (field: UserFields)=>(value: any) => knex<IUserEntity>(EntityTable.User)
     .where(field as any, value)
-    .then((v: any[]) => ({ status: Status.Successfull, message: v[0] }))
+    .then((v: any[]) => 
+    v[0]
+      ?  ({ status: Status.Successfull, message: v[0] })
+      :   ({ status: Status.Error, message: "error" })
+    )
     .catch((e: Error) => { console.log(e) })
     .finally(()=> ({ status: Status.Error, message: "error" }))  
   return {
