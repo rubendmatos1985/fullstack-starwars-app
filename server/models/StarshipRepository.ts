@@ -1,7 +1,7 @@
 import { asyncMemoize as Mem } from "../utils/memoize"
 import { getByIdQuery } from "../DB/getById"
 import { EntityTable, ManyToManyTable } from "../types/Tables"
-import { IStarshipViewModel } from "./Starship"
+import { IStarshipViewModel } from "./ViewModels/StarshipViewModel"
 import { FilmFieldsNames } from "./Film"
 import { StarshipsInFilmsFields } from "../types/interfaces/StarshipsInFilms"
 import { PeopleEntityFields } from "./People"
