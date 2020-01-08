@@ -1,6 +1,6 @@
 import { getByIdQuery } from "../DB/getById";
 import { asyncMemoize as Mem } from "../utils/memoize";
-import { ISpecieResponse } from "./Specie";
+import { ISpecieViewModel } from "./ViewModels/SpecieViewModel";
 import { EntityTable, ManyToManyTable, OneToManyTable } from "../types/Tables";
 import { PeopleEntityFields } from "./People";
 import { SpeciesInFilmsFieldsName } from '../types/interfaces/SpeciesInFilms';
@@ -9,7 +9,7 @@ import { FilmFieldsNames } from "./Film";
 import { getAll } from "../DB/getAll";
 
 export default (() => {
-  const _getById = Mem(getByIdQuery<EntityTable.Specie, ISpecieResponse>(
+  const _getById = Mem(getByIdQuery<EntityTable.Specie, ISpecieViewModel>(
     EntityTable.Specie, [
     {
       tableName: EntityTable.Film,

@@ -42,9 +42,3 @@ export enum ISpecieEntityFields{
   Language = 'language',
   Url = 'url'
 }
-
-
-export interface ISpecieResponse extends ISpecieEntity{
-  people: IFromForeignTables[],
-  films: IFromForeignTables[]
-}
