@@ -1,6 +1,6 @@
 import * as Knex from "knex";
 import mapData from "../utils/mapData";
-import { ISpecieFromApi, ISpecieEntity, ISpecieEntityFields as Specie } from "../types/interfaces/Specie";
+import { ISpecieFromApi, ISpecieEntity, ISpecieEntityFields as Specie } from "../models/Specie";
 import Api from "../original_starwars_api";
 import { Table } from "../types/Tables";
 

@@ -5,7 +5,7 @@ import Api from "../original_starwars_api";
 import { IPlanetFromApi } from "../models/Planet";
 import { knex } from "../DB";
 import { asyncCompose } from "../utils/asyncCompose";
-import { ISpecieFromApi, ISpecieEntityFields } from "../types/interfaces/Specie";
+import { ISpecieFromApi, ISpecieEntityFields } from "../models/Specie";
 import { flatten } from "ramda";
 import { IRace } from "../types/interfaces/Races";
 import uuid from "uuid/v1";

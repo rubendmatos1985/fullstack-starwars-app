@@ -7,7 +7,7 @@ import { asyncMemoize as Mem } from '../utils/memoize';
 import { ExecException } from 'child_process';
 import { IStarshipFromApi } from '../types/interfaces/Starship';
 import { IVehicleFromApi } from '../types/interfaces/Vehicle';
-import { ISpecieFromApi } from '../types/interfaces/Specie';
+import { ISpecieFromApi } from '../models/Specie';
 interface IApi {
   People: () => Promise<IPeopleFromApi[]>;
   Film: () => Promise<IFilmFromApi[]>;

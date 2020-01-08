@@ -1,6 +1,6 @@
 import { getByIdQuery } from "../DB/getById";
 import { asyncMemoize as Mem } from "../utils/memoize";
-import { ISpecieResponse } from "../types/interfaces/Specie";
+import { ISpecieResponse } from "./Specie";
 import { EntityTable, ManyToManyTable, OneToManyTable } from "../types/Tables";
 import { PeopleEntityFields } from "./People";
 import { SpeciesInFilmsFieldsName } from '../types/interfaces/SpeciesInFilms';

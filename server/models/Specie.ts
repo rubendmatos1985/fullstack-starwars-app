@@ -1,6 +1,6 @@
-import { IPlanetEntity as Planet} from '../../models/Planet';
-import { ISubject, ISubjectFromApi } from './Subject';
-import { IFromForeignTables } from './FromForeignTables';
+import { IPlanetEntity as Planet} from './Planet';
+import { ISubject, ISubjectFromApi } from '../types/interfaces/Subject';
+import { IFromForeignTables } from '../types/interfaces/FromForeignTables';
 
 export interface ISpecieEntity extends ISubject{
   classification: string

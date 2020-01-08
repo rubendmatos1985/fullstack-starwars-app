@@ -1,4 +1,4 @@
-import { ISpecieEntity as Specie } from '../types/interfaces/Specie';
+import { ISpecieEntity as Specie } from './Specie';
 import { ISubject, ISubjectFromApi } from '../types/interfaces/Subject';
 import { IFromForeignTables } from '../types/interfaces/FromForeignTables';
 
