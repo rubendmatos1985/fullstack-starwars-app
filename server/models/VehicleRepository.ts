@@ -1,6 +1,6 @@
 import { asyncMemoize as Mem } from "../utils/memoize"
 import { getByIdQuery } from "../DB/getById"
-import { IVehicleViewModel } from "./Vehicle"
+import { IVehicleViewModel } from "./ViewModels/VehicleViewModel"
 import { EntityTable, ManyToManyTable } from "../types/Tables"
 import { PeopleEntityFields } from "./People"
 import { PilotFieldNames } from "../types/interfaces/Pilot"
