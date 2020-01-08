@@ -1,6 +1,6 @@
 import { Request, Response, Router, Application } from 'express';
-import { IFilmResponse } from '../models/Film';
-import Film from '../models/FilmRepository';
+import { IFilmViewModel } from '../models/Film';
+import FilmRepository from '../models/FilmRepository';
 import { IController } from './Controller';
 
 class FilmsController implements IController{
@@ -20,12 +20,12 @@ class FilmsController implements IController{
   }
   
   public async GetAll(request: Request, response: Response): Promise<Response> {
-    const result: IFilmResponse[] = await Film.getAll();
+    const result: IFilmViewModel[] = await FilmRepository.getAll();
     return response.json(result);
   }
 
   public async GetById(request: Request, response: Response): Promise<Response> {
-    const result: IFilmResponse = await Film.getById(request.params.id)();
+    const result: IFilmViewModel[] = await FilmRepository.getById(request.params.id);
     return response.json(result);
   }
 }
