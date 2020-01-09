@@ -98,5 +98,9 @@ export const FilmContext: IDBContext<IFilmViewModel> =
           .join('film', 'film.id', 'characters.film_id')
           .then((rs: IFilmViewModel[]) => ({ status: Status.Successfull, message: rs }))
           .catch(e => ({ status: Status.Error, message: e }))
+      },
+
+      delete: ()=> {
+        
       }
   })

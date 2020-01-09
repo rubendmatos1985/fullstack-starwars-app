@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "migrations:create": "node migrationsBuilder.js",
+    "migrations:make": "node migrationsBuilder.js",
     "migrations:run:latest": "npm run build && node migrationsRunner.js latest",
     "seeds:run": "npm run build && node seedsRunner",
     "seeds:make": "node seedsBuilder",

@@ -1,6 +1,10 @@
 const dotenv = require("dotenv").config();
+const readline = require('readline')
+const rl = readline.createInterface({
+    input: process.stdin,
+    output: process.stdout
+  });
 
-const migrationName = process.argv[2] 
 
 const knex = require("knex")({
     client: process.env.DB_CLIENT,
@@ -14,4 +18,9 @@ const knex = require("knex")({
 
 })
 
-knex.migrate.make(migrationName, { directory: "./server/migrations"})
+rl.question("Write a name for the migration: ", (answer)=>{
+    knex.migrate
+        .make(answer, { directory: "./server/migrations", extension: "ts" })
+        .then(v => rl.close())
+    
+})
