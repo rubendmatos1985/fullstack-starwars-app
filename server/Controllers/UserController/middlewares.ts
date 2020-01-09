@@ -7,7 +7,7 @@ import { IUserEntity } from "../../models/User";
 import { Status } from "../../middlewares/helpers";
 import UserRepository from '../../models/UserRepository'
 import { EncryptPassword } from "./helpers";
-
+import bcrypt from 'bcrypt';
 export async function ValidateUserInput(req: RequestWithUserData, res: Response, next: NextFunction) {
     const { error } = UserValidators.SignInData(req)
     if (error) {
@@ -18,7 +18,7 @@ export async function ValidateUserInput(req: RequestWithUserData, res: Response,
     next()
   }
   
-  export async function HandleSendSignInEmail(req: RequestWithUserData, res: Response, next: NextFunction) {
+  export async function SendSignInEmail(req: RequestWithUserData, res: Response, next: NextFunction) {
     try {
       const { apiKey, email } = req.body
       await EmailServiceProvider.SendApiKeyEmail(apiKey, email)
@@ -32,25 +32,28 @@ export async function ValidateUserInput(req: RequestWithUserData, res: Response,
     }
   }
 
-  export async function HandleCreateUser(req: Request, res: Response, next: NextFunction): Promise<Response> {
+  export async function VerifyUserAlreadyExists(req: Request, res: Response, next: NextFunction): Promise<Response|void>{
     const user: IDBResponse<IUserEntity[]> = await UserRepository.getByEmail(req.body.email)
     if (user.status === Status.Successfull) {
       return res
         .status(404)
         .send({ status: "Error", message: `user with email ${req.body.email} already exists` })
     }
-    try {
-      const { email, name } = req.body;
-      const password = await EncryptPassword(req.body.password)
-      const newUser: IUserEntity = await UserRepository.create({ name, email, password })
-      req.body.apiKey = newUser.api_key
-      next();
-    } catch (e) {
-      console.log(e)
-      return res
-        .status(404)
-        .json({ status: Status.Error, message: "Sorry, we are having problems to process your request" })
-    }
+    return next()
   }
 
+ 
+export async function HandleUpdateUserValidation(req: Request, res: Response, next: NextFunction){
+  const dbUser:IDBResponse<IUserEntity[]> = await UserRepository.getByApiKey(req.query.apiKey)
+  if(dbUser.status === Status.Successfull){
+    const passwordIsValid:boolean = await bcrypt.compare(req.body.password, dbUser.message[0].password)
+    if(passwordIsValid){
+      return next()
+    }
+     return res.status(404).send({status: Status.Error, message: "your password or email is not valid"})
+    
+  }else{
+    return res.status(404).send({status: Status.Error, message: "your password or email is not valid"})
+  }
+}
   

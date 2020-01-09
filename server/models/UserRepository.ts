@@ -13,11 +13,11 @@ export default (() => {
   const { get, update, create } = UserContext
 
   return {
-    getById: get('id') as (v?: string)=> Promise<IDBResponse<IUserEntity[]>>,
+    getById: get('id') as (v?: string) => Promise<IDBResponse<IUserEntity[]>>,
 
-    getByName: get('name') as (v?: string)=> Promise<IDBResponse<IUserEntity[]>>,
+    getByName: get('name') as (v?: string) => Promise<IDBResponse<IUserEntity[]>>,
 
-    getByEmail: get('email') as (v?: string)=> Promise<IDBResponse<IUserEntity[]>>,
+    getByEmail: get('email') as (v?: string) => Promise<IDBResponse<IUserEntity[]>>,
 
     updateUserLastConexion: (apiKey) => (
       !state.users[apiKey] &&
@@ -27,8 +27,12 @@ export default (() => {
         .finally(() => ({ status: Status.Error, message: "error" }))
     ),
 
-    getByApiKey: get('api_key'),
-    
+    getByApiKey: get('api_key') as (k: string)=> Promise<IDBResponse<IUserEntity[]>>,
+
+    getByPassword: get('password'),
+
+    updateUserData: (data: IUserEntity) => update(data),
+
     create
   }
 })()

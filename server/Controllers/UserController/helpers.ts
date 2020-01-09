@@ -6,3 +6,5 @@
     const password: string = await bcrypt.hash(p, salt);
     return password;
   }
+
+

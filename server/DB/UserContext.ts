@@ -17,6 +17,7 @@ export interface IUpdateUserArguments {
   newValue: string
 }
 
+
 export const UserContext: IDBContext<IUserEntity> =
   ({
     get: (field: string) =>
@@ -49,9 +50,18 @@ export const UserContext: IDBContext<IUserEntity> =
         .then((r) => ({ status: Status.Successfull, message: r }))
         .catch((e) => ({ status: Status.Error, message: e })),
 
-    update: ({ identifierKey, identifierValue, fieldKey, newValue }: IUpdateUserArguments) =>
-      knex('user')
-        .where({ [identifierKey]: identifierValue })
-        .update({ [fieldKey]: newValue }, ['id', 'name'])
+    update: (data: IUpdateUserArguments | IUserEntity) => {
+      if (Object.keys(data).some(k => k === 'identifierKey')) {
+        const { identifierKey, identifierValue, fieldKey, newValue } = data as IUpdateUserArguments
+        return knex('user')
+          .where({ [identifierKey]: identifierValue })
+          .update({ [fieldKey]: newValue }, ['id', 'name'])
+      }
+      const d = data as IUserEntity
+      return knex('user')
+        .update(d)
+        .where({ 'api_key': d.api_key })
+        .returning(['name', 'email'])
+    }
 
   })
