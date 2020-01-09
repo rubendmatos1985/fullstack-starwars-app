@@ -1,4 +1,4 @@
-import { IDBContext, knex } from ".";
+import { IDBContext, knex, IDBResponse } from ".";
 import { IFilmViewModel } from "../models/Film";
 import { Status } from "../middlewares/helpers";
 
@@ -100,7 +100,51 @@ export const FilmContext: IDBContext<IFilmViewModel> =
           .catch(e => ({ status: Status.Error, message: e }))
       },
 
-      delete: ()=> {
-        
+    // DELETE WILL ALWAYS DELETE A RELATION
+    // NOT AN ATHOMIC VALUE
+    remove: (columnName: string) => (ids:string[]): Promise<IDBResponse<string>> => {
+      const successMessage =
+        ({
+          status: Status.Successfull,
+          message: `item(s) with name ${columnName} and id(s) equals to ${JSON.stringify(ids)} deleted successfully`
+        })
+      const relationName = mapKeyNameToTableRelation(columnName);
+      if (relationName) {
+        return knex(relationName.tableName)
+          .del()
+          .whereIn(relationName.columnName, ids)
+          .then(v => successMessage)
+          .catch(e => ({ status: Status.Error, message: e }))
       }
+      return Promise.resolve({ status: Status.Error, message: "Wrong field name" })
+    }
   })
+
+
+interface MapKeyNameToTableRelationResult {
+  tableName: string
+  columnName: string
+}
+
+
+// TAKE AN INPUT STRING AND MAPS IT 
+// TO AN OBJECT WITH CORRESPONDANT 
+// TABLE AND COLUMN NAME
+
+function mapKeyNameToTableRelation(name: string): MapKeyNameToTableRelationResult | undefined {
+  switch (name) {
+    case 'characters':
+      return { tableName: 'actors', columnName: 'people_id' }
+    case 'planets':
+      return { tableName: 'planets_in_films', columnName: 'planet_id' }
+    case 'starships':
+      return { tableName: 'starships_in_films', columnName: 'starship_id' }
+    case 'vehicles':
+      return { tableName: 'vehicles_in_films', columnName: 'vehicle_id' }
+    case 'species':
+      return { tableName: 'species_in_films', columnName: 'specie_id' }
+    default:
+      return undefined
+  }
+}
+
