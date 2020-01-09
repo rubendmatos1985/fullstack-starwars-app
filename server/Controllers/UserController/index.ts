@@ -41,7 +41,7 @@ class UserController extends Controller {
         this.UpdateUserData
       )
       r.patch(
-        '/update/refresh',
+        '/update/refresh-api-key',
         Authentication.CheckKeyIsProvided,
         Authentication.ValidateKey,
         HandleUpdateUserValidation,

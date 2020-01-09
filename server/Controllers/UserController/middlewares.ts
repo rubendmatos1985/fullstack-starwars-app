@@ -47,7 +47,8 @@ export async function HandleUpdateUserValidation(req: Request, res: Response, ne
   const dbUser:IDBResponse<IUserEntity[]> = await UserRepository.getByApiKey(req.query.apiKey)
   if(dbUser.status === Status.Successfull){
     const passwordIsValid:boolean = await bcrypt.compare(req.body.password, dbUser.message[0].password)
-    if(passwordIsValid){
+    const emailIsValid: boolean = UserValidators.SafeCompare(req.body.email, dbUser.message[0].email)
+    if(passwordIsValid && emailIsValid){
       return next()
     }
      return res.status(404).send({status: Status.Error, message: "your password or email is not valid"})

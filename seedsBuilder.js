@@ -1,5 +1,12 @@
 const dotenv = require('dotenv');
+const readline = require('readline')
 dotenv.config();
+
+const rl = readline.createInterface({
+    input: process.stdin,
+    output: process.stdout
+  });
+
 
 const knex = require('knex')({
     client: process.env.DB_CLIENT,
@@ -12,7 +19,13 @@ const knex = require('knex')({
     }
 })
 
-knex.seed.make(process.argv[2], { extension: 'ts', directory: './server/seeds' })
+rl.question('Write the name of the seed file: ', (answer)=>{
+    knex.seed
+        .make(answer, { extension: 'ts', directory: './server/seeds' })
+        .then(v => rl.close())
+  
+})
+
 
 
 
