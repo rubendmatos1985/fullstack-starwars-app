@@ -1,5 +1,5 @@
 import { Request, Response, Router, Application } from 'express';
-import { IFilmViewModel } from '../models/Film';
+import { IFilmViewModel } from '../models/ViewModels/FilmViewModel';
 import FilmRepository from '../models/FilmRepository';
 import { Controller } from './Controller';
 import { IDBResponse } from '../DB';

@@ -1,5 +1,5 @@
 import { IDBContext, knex, IDBResponse } from ".";
-import { IFilmViewModel } from "../models/Film";
+import { IFilmViewModel } from "../models/ViewModels/FilmViewModel";
 import { Status } from "../middlewares/helpers";
 
 export const FilmContext: IDBContext<IFilmViewModel> =
