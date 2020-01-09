@@ -23,7 +23,9 @@ export const FilmContext: IDBContext<IFilmViewModel> =
           .from(
             function () {
               this
-                .select('film.id as film_id', knex.raw('json_agg(people.name)'))
+                .select('film.id as film_id', knex.raw(`json_agg(
+                   json_build_object('id', people.id, 'name', people.name)
+                 )`))
                 .from('film')
                 .leftJoin('actors', 'actors.film_id', 'film.id')
                 .leftJoin('people', 'people.id', 'actors.people_id')
@@ -35,7 +37,9 @@ export const FilmContext: IDBContext<IFilmViewModel> =
           .join(
             function () {
               this
-                .select('film.id as film_id', knex.raw('json_agg(planet.name)'))
+                .select('film.id as film_id', knex.raw(`json_agg(
+                  json_build_object('id', planet.id, 'name', planet.name)
+                )`))
                 .from('film')
                 .leftJoin('planets_in_films', 'planets_in_films.film_id', 'film.id')
                 .leftJoin('planet', 'planet.id', 'planets_in_films.planet_id')
@@ -48,7 +52,9 @@ export const FilmContext: IDBContext<IFilmViewModel> =
           .join(
             function () {
               this
-                .select('film.id as film_id', knex.raw('json_agg(starship.name)'))
+                .select('film.id as film_id', knex.raw(`json_agg(
+                  json_build_object('id', starship.id, 'name', starship.name)
+                  )`))
                 .from('film')
                 .leftJoin('starships_in_films', 'starships_in_films.film_id', 'film.id')
                 .leftJoin('starship', 'starship.id', 'starships_in_films.starship_id')
@@ -61,7 +67,9 @@ export const FilmContext: IDBContext<IFilmViewModel> =
           .join(
             function () {
               this
-                .select('film.id as film_id', knex.raw('json_agg(vehicle.name)'))
+                .select('film.id as film_id', knex.raw(`json_agg(
+                  json_build_object('id', vehicle.id, 'name', vehicle.name)
+                )`))
                 .from('film')
                 .leftJoin('vehicles_in_films', 'vehicles_in_films.film_id', 'film_id')
                 .leftJoin('vehicle', 'vehicle.id', 'vehicles_in_films.vehicle_id')
@@ -74,7 +82,9 @@ export const FilmContext: IDBContext<IFilmViewModel> =
           .join(
             function () {
               this
-                .select('film.id as film_id', knex.raw('json_agg(specie.name)'))
+                .select('film.id as film_id', knex.raw(`json_agg(
+                  json_build_object('id', specie.id, 'name', specie.name))
+                `))
                 .from('film')
                 .leftJoin('species_in_films', 'species_in_films.film_id', 'film.id')
                 .leftJoin('specie', 'specie.id', 'species_in_films.specie_id')
@@ -86,7 +96,7 @@ export const FilmContext: IDBContext<IFilmViewModel> =
             'species.film_id'
           )
           .join('film', 'film.id', 'characters.film_id')
-          .then((rs:IFilmViewModel[]) => ({ status: Status.Successfull, message: rs }))
+          .then((rs: IFilmViewModel[]) => ({ status: Status.Successfull, message: rs }))
           .catch(e => ({ status: Status.Error, message: e }))
       }
   })
