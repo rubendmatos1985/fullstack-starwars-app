@@ -56,29 +56,29 @@ class FilmsController extends Controller {
   }
 
   private async DeleteFromFilm(req: DeleteItemsRequest, res: Response) {
-    const fieldNames = [ "characters", "vehicles", "planets", "species", "starships" ]
-    const removers = [ 
-      FilmRepository.removeCharacters, 
-      FilmRepository.removeVehicles, 
-      FilmRepository.removePlanets, 
+    const fieldNames = ["characters", "vehicles", "planets", "species", "starships"]
+    const removers = [
+      FilmRepository.removeCharacters,
+      FilmRepository.removeVehicles,
+      FilmRepository.removePlanets,
       FilmRepository.removeSpecies,
-      FilmRepository.removeStarships 
+      FilmRepository.removeStarships
     ]
     return await Promise.all(
       new Array(fieldNames.length)
-      .fill(this.RemoveItemHandler(req, res))
-      .map((fn, i) => fn(fieldNames[i], removers[i]))
+        .fill(this.RemoveItemHandler(req, res))
+        .map((fn, i) => fn(fieldNames[i], removers[i]))
     )
   }
 
   private RemoveItemHandler(req: Request, res: Response) {
-    return async (field:string, remover: (ids: string[]) => IDBResponse<any>) => {
+    return async (field: string, remover: (ids: string[]) => IDBResponse<any>) => {
       const fail = (message) => res.status(404).send({ status: "error", message })
-      
+
       const redirectUrl = (`/api/v1/films?id=${req.query.id}&apiKey=${req.query.apiKey}`);
-      
+
       const { fieldName, itemIds } = req.body;
-      
+
       if (fieldName === field) {
         const { status, message } = await remover(itemIds)
         if (status === Status.Successfull) {
