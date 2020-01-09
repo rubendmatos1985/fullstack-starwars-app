@@ -5,34 +5,39 @@ import { getByField as _getByField } from '../DB/getByField';
 import { knex, IDBResponse } from "../DB/index";
 import { Status } from "../middlewares/helpers";
 import { UserContext } from "../DB/UserContext";
+import uuid = require("uuid");
 
 export default (() => {
-  let state = {
-    users: {}
-  }
   const { get, update, create } = UserContext
 
   return {
-    getById: get('id') as (v?: string) => Promise<IDBResponse<IUserEntity[]>>,
+    getById: get('id') as (v: string) => Promise<IDBResponse<IUserEntity[]>>,
 
-    getByName: get('name') as (v?: string) => Promise<IDBResponse<IUserEntity[]>>,
+    getByName: get('name') as (v: string) => Promise<IDBResponse<IUserEntity[]>>,
 
-    getByEmail: get('email') as (v?: string) => Promise<IDBResponse<IUserEntity[]>>,
-
+    getByEmail: get('email') as (v: string) => Promise<IDBResponse<IUserEntity[]>>,
+    
+    getByApiKey: get('api_key') as (k: string)=> Promise<IDBResponse<IUserEntity[]>>,
+    
+    getByPassword: get('password'),
+    
     updateUserLastConexion: (apiKey) => (
-      !state.users[apiKey] &&
-      update({ identifierKey: 'apiKey', identifierValue: apiKey, fieldKey: 'last_conexion', fieldValue: new Date() })
-        .then(v => { state.users[apiKey] = true })
+      update({ identifierKey: 'api_key', identifierValue: apiKey, fieldKey: 'last_conexion', fieldValue: new Date() })
+        .then(v => v)
         .catch(e => { console.log(e) })
         .finally(() => ({ status: Status.Error, message: "error" }))
     ),
 
-    getByApiKey: get('api_key') as (k: string)=> Promise<IDBResponse<IUserEntity[]>>,
-
-    getByPassword: get('password'),
-
     updateUserData: (data: IUserEntity) => update(data),
 
-    create
+    changeApiKey: (oldApiKey: string)=> 
+      update({ 
+        identifierKey:'api_key', 
+        identifierValue: oldApiKey,
+        fieldKey: 'api_key',
+        newValue: uuid() 
+      }),
+      create
+
   }
 })()

@@ -11,7 +11,7 @@ import { Authentication } from '../../middlewares/authentication'
 import UserRepository from "../../models/UserRepository";
 import { EncryptPassword } from "./helpers";
 import { IUserEntity } from "../../models/User";
-import { EmailServiceProvider } from "../../services/Email";
+import { EmailServiceProvider, sendEmail } from "../../services/Email";
 import { IDBResponse } from "../../DB";
 export interface RequestWithUserData extends Request { body: UserSubscriptionData }
 
@@ -40,6 +40,13 @@ class UserController extends Controller {
         HandleUpdateUserValidation,
         this.UpdateUserData
       )
+      r.patch(
+        '/update/refresh',
+        Authentication.CheckKeyIsProvided,
+        Authentication.ValidateKey,
+        HandleUpdateUserValidation,
+        this.RefreshApiKey
+      )
       return r;
     }
     super(router, pathname)
@@ -50,7 +57,6 @@ class UserController extends Controller {
       const { email, name } = req.body;
       const password = await EncryptPassword(req.body.password)
       const user:IDBResponse<IUserEntity[]> = await UserRepository.create({ name, email, password })
-      console.log(user)
       await EmailServiceProvider.SendApiKeyEmail(user.message[0].api_key, email)
 
       return res.json({ status: Status.Successfull, message: "Please check your Email" })
@@ -72,8 +78,22 @@ class UserController extends Controller {
     })
     return res.json(result)
   }
-}
+  
+  private async RefreshApiKey(req: Request, res: Response, next: NextFunction){
+    try{
+      const { message } = await UserRepository.changeApiKey(req.query.apiKey)
+      return res.json({ 
+        status: Status.Successfull, 
+        message: `${ message[0].name } Your api_key was changed successfully` 
+      })
 
+    }catch(e){
+      return res.status(404).send({ status: "Error", message: "There was an error please try later" })
+    }
+
+  }
+}
+  
 export default UserController;
 
 

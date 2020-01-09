@@ -54,14 +54,20 @@ export const UserContext: IDBContext<IUserEntity> =
       if (Object.keys(data).some(k => k === 'identifierKey')) {
         const { identifierKey, identifierValue, fieldKey, newValue } = data as IUpdateUserArguments
         return knex('user')
+          .update({ [fieldKey]: newValue }, ['name', 'email', 'api_key'])
           .where({ [identifierKey]: identifierValue })
-          .update({ [fieldKey]: newValue }, ['id', 'name'])
+          .then((r) => ({ status: Status.Successfull, message: r }))
+          .catch((e) => ({ status: Status.Error, message: e }))
+
       }
       const d = data as IUserEntity
       return knex('user')
         .update(d)
         .where({ 'api_key': d.api_key })
-        .returning(['name', 'email'])
+        .returning(['name', 'email', 'api_key'])
+        .then((r) => ({ status: Status.Successfull, message: r }))
+        .catch((e) => ({ status: Status.Error, message: e }))
     }
+
 
   })
