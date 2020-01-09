@@ -1,6 +1,7 @@
 import { IDBContext, knex, IDBResponse } from ".";
 import { IFilmViewModel } from "../models/ViewModels/FilmViewModel";
 import { Status } from "../middlewares/helpers";
+import uuid = require("uuid");
 
 export const FilmContext: IDBContext<IFilmViewModel> =
   ({
@@ -102,7 +103,7 @@ export const FilmContext: IDBContext<IFilmViewModel> =
 
     // DELETE WILL ALWAYS DELETE A RELATION
     // NOT AN ATHOMIC VALUE
-    remove: (columnName: string) => (ids:string[]): Promise<IDBResponse<string>> => {
+    remove: (columnName: string) => (ids: string[]): Promise<IDBResponse<string>> => {
       const successMessage =
         ({
           status: Status.Successfull,
@@ -117,20 +118,41 @@ export const FilmContext: IDBContext<IFilmViewModel> =
           .catch(e => ({ status: Status.Error, message: e }))
       }
       return Promise.resolve({ status: Status.Error, message: "Wrong field name" })
+    },
+
+    // ADD WILL ADD A FOREIGN RELATION
+    // NOT AN ATHOMIC VALUE
+    add: (columnName: string) => (filmId: string, itemIds: string[]):Promise<IDBResponse<string>> => {
+      const relation: MapKeyNameToTableRelationResult = mapKeyNameToTableRelation(columnName);
+      if (relation) {
+        return knex(relation.tableName)
+          .insert(
+            itemIds.map(itemId =>
+              ({
+                id: uuid(),
+                film_id: filmId,
+                [relation.columnName]: itemId
+              }))
+          )
+          .then(v => ({ status: Status.Successfull, message: `table ${relation.tableName} updated successfully` }))
+          .catch(e => ({ status: Status.Error, message: e }))
+      }
+      return Promise.resolve({ status: Status.Error, message: "film do not have this field" })
     }
   })
 
 
-interface MapKeyNameToTableRelationResult {
-  tableName: string
-  columnName: string
-}
 
+// HELPERS
 
 // TAKE AN INPUT STRING AND MAPS IT 
 // TO AN OBJECT WITH CORRESPONDANT 
 // TABLE AND COLUMN NAME
 
+interface MapKeyNameToTableRelationResult {
+  tableName: string
+  columnName: string
+}
 function mapKeyNameToTableRelation(name: string): MapKeyNameToTableRelationResult | undefined {
   switch (name) {
     case 'characters':

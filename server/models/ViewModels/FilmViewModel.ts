@@ -7,3 +7,10 @@ export interface IFilmViewModel extends Film{
     starships:     IFromForeignTables[],
     vehicles:      IFromForeignTables[]
   }
+
+export enum FilmViewModelForeignFields{
+   Characters = "characters",
+   Planets = "planets",
+   Starships = "starships",
+   Vehicles = "vehicles"
+}
