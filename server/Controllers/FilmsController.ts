@@ -9,21 +9,37 @@ class FilmsController extends Controller{
     const pathname = "films"
     const router = () => {
       const r: Router = Router();
-      r.get("/", this.GetAll);
-      r.get("/:id", this.GetById)
+      r.get("/", this.HandleQueryParams);
       return r;
     }
     super(router, pathname)
   }
   
-  public async GetAll(request: Request, response: Response): Promise<Response> {
+  private async GetAll(request: Request, response: Response): Promise<Response> {
     const result: IDBResponse<IFilmViewModel[]> | any = await FilmRepository.getAll();
     return response.json(result.message);
   }
 
-  public async GetById(request: Request, response: Response): Promise<Response> {
-    const result: IDBResponse<IFilmViewModel[]> | any = await FilmRepository.getById(request.params.id);
+  private async GetById(request: Request, response: Response): Promise<Response> {
+    const result: IDBResponse<IFilmViewModel[]> | any = await FilmRepository.getById(request.query.id);
     return response.json(result.message);
+  }
+
+  private async GetByName(request: Request, response: Response):Promise<Response>{
+    const result: IDBResponse<IFilmViewModel[]> | any = await FilmRepository.getByName(request.query.id);
+    return response.json(result.message);
+  }
+
+  private async HandleQueryParams(req:Request, res:Response){
+    if(req.query.id){
+      return this.GetById(req, res)
+    }
+
+    if(req.query.name){
+      return this.GetByName(req, res)
+    }
+
+    return this.GetAll(req, res)
   }
 }
 
