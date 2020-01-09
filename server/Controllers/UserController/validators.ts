@@ -18,12 +18,20 @@ export namespace UserValidators {
     else{
       // ALWAYS RETURN FALSE
       // BUT AVOID TIMING ATTACK
-      const bigger:string = s1.length >= s2.length ? s1 : s2;
-      return bigger
-        .split('')
-        .map((v, i)=> v === s2[i])
-        .every(v => v) && s1.length === s2.length
-       
+      let smaller;
+      let bigger;
+      if(s1.length >= s2.length){
+        bigger = s1;
+        smaller = s2
+      }else{
+        bigger = s2;
+        smaller = s1;
+      }
+      
+      while(bigger.length > smaller.length){
+        smaller += '0'
+      }
+      return crypto.timingSafeEqual(Buffer.from(bigger), Buffer.from(smaller)) 
     }
   } 
 

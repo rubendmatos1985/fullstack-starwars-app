@@ -42,19 +42,19 @@ export async function ValidateUserInput(req: RequestWithUserData, res: Response,
     return next()
   }
 
- 
 export async function HandleUpdateUserValidation(req: Request, res: Response, next: NextFunction){
+  const fail = ()=> res.status(404).send({status: Status.Error, message: "your password or email is not valid"}) 
   const dbUser:IDBResponse<IUserEntity[]> = await UserRepository.getByApiKey(req.query.apiKey)
   if(dbUser.status === Status.Successfull){
     const passwordIsValid:boolean = await bcrypt.compare(req.body.password, dbUser.message[0].password)
-    const emailIsValid: boolean = UserValidators.SafeCompare(req.body.email, dbUser.message[0].email)
+    const emailIsValid: boolean = UserValidators.SafeCompare(dbUser.message[0].email, req.body.email)
     if(passwordIsValid && emailIsValid){
       return next()
     }
-     return res.status(404).send({status: Status.Error, message: "your password or email is not valid"})
+     return fail()
     
   }else{
-    return res.status(404).send({status: Status.Error, message: "your password or email is not valid"})
+    return fail()
   }
 }
   
