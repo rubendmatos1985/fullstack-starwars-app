@@ -1,4 +1,4 @@
 export interface IFromForeignTables {
-    id: string
-    name: string
+  id: string;
+  name: string;
 }
