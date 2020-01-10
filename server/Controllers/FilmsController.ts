@@ -8,16 +8,14 @@ import { Controller } from './Controller';
 import { IDBResponse } from '../DB';
 import { Status } from '../middlewares/helpers';
 import { Film } from '../models/Film';
+import { IAddItemsRequestBody, AddItemHandlerForDomain, fail } from './commons';
 
 interface IDeleteItemsRequestBody {
   fieldName: string;
   itemIds: string[];
 }
 
-interface IAddItemsRequestBody {
-  fieldName: string;
-  itemIds: string[];
-}
+
 
 interface DeleteItemsRequest extends Request {
   body: IDeleteItemsRequestBody;
@@ -51,10 +49,6 @@ class FilmsController extends Controller {
       return r;
     };
     super(router, pathname);
-  }
-
-  private fail(res: Response, message: string): Response {
-    return res.status(404).send({ status: 'error', message });
   }
 
   private async GetAll(
@@ -121,6 +115,7 @@ class FilmsController extends Controller {
   }
 
   private async AddToFilm(req: AddItemsRequest, res: Response) {
+    const addItemHandler = AddItemHandlerForDomain('film');
     const fieldNames: FilmViewModelForeignFields[] = [
       'characters',
       'vehicles',
@@ -138,7 +133,7 @@ class FilmsController extends Controller {
 
     return await Promise.all(
       new Array(fieldNames.length)
-        .fill(this.AddItemHandler(req, res))
+        .fill(addItemHandler(req, res))
         .map((fn, i) => fn(fieldNames[i], adders[i]))
     );
   }
@@ -155,25 +150,7 @@ class FilmsController extends Controller {
         if (status === Status.Successfull) {
           return res.redirect(redirectUrl);
         }
-        return this.fail(res, message);
-      }
-    };
-  }
-
-  private AddItemHandler(req: AddItemsRequest, res: Response) {
-    return async (
-      field: FilmViewModelForeignFields,
-      adder: (filmId: string, itemIds: string[]) => IDBResponse<any>
-    ): Promise<Response | void> => {
-      const redirectUrl = `/api/v1/films?id=${req.query.id}&apiKey=${req.query.apiKey}`;
-      const { fieldName, itemIds } = req.body;
-      if (fieldName === field) {
-        const { status, message } = await adder(req.query.id, itemIds);
-        if (status === Status.Successfull) {
-          return res.redirect(redirectUrl);
-        } else {
-          return this.fail(res, message);
-        }
+        return fail(res, message);
       }
     };
   }
@@ -186,7 +163,7 @@ class FilmsController extends Controller {
     if (status === Status.Successfull) {
       return res.redirect(redirectUrl);
     } else {
-      return this.fail(res, message);
+      return fail(res, message);
     }
   }
 }

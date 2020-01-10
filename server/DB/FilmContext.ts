@@ -3,6 +3,12 @@ import { IFilmViewModel } from '../models/ViewModels/FilmViewModel';
 import { Status } from '../middlewares/helpers';
 import uuid = require('uuid');
 import { Film } from '../models/Film';
+import {
+  RelationData,
+  getIdsRelatedToThisEntity,
+  validateCandidates,
+  insertItemsIfNotAlreadyStored
+} from './commons';
 
 export const FilmContext: IDBContext<IFilmViewModel> = {
   Get: (field?: string) =>
@@ -133,58 +139,68 @@ export const FilmContext: IDBContext<IFilmViewModel> = {
 
   // REMOVE WILL ALWAYS DELETE A RELATION
   // NOT AN ATHOMIC VALUE
-  Remove: (columnName: string) => (
-    ids: string[]
-  ): Promise<IDBResponse<string>> => {
-    const successMessage = {
-      status: Status.Successfull,
-      message: `item(s) with name ${columnName} 
+  RemoveItem: (columnName: string) =>
+    function(ids: string[]): Promise<IDBResponse<string>> {
+      const successMessage = {
+        status: Status.Successfull,
+        message: `item(s) with name ${columnName} 
         and id(s) equals to ${JSON.stringify(ids)} 
         deleted successfully`
-    };
-    const relationName = mapKeyNameToTableRelation(columnName);
-    if (relationName) {
-      return knex(relationName.tableName)
-        .del()
-        .whereIn(relationName.columnName, ids)
-        .then((v) => successMessage)
-        .catch((e) => ({ status: Status.Error, message: e }));
-    }
-    return Promise.resolve({
-      status: Status.Error,
-      message: 'Wrong field name'
-    });
-  },
+      };
+      const relationData = buildRelationDataFromColumnName(columnName);
+      if (relationData) {
+        return knex(relationData.tableName)
+          .del()
+          .whereIn(relationData.columnName, ids)
+          .then((v) => successMessage)
+          .catch((e) => ({ status: Status.Error, message: e }));
+      }
+      return Promise.resolve({
+        status: Status.Error,
+        message: 'Wrong field name'
+      });
+    },
 
   // ADD WILL ADD A FOREIGN RELATION
   // NOT AN ATHOMIC VALUE
-  Add: (columnName: string) => async (
-    filmId: string,
-    itemIds: string[]
-  ): Promise<IDBResponse<string>> => {
-    const relation: MapKeyNameToTableRelationResult = mapKeyNameToTableRelation(
-      columnName
-    );
-    if (!relation) {
-      return Promise.resolve({
-        status: Status.Error,
-        message: 'film do not have this field'
-      });
-    }
-    const storedIds: string[] = await getIdsFromDB(relation, filmId);
+  AddItems: (columnName: string) =>
+    async function(
+      filmId: string,
+      itemIds: string[]
+    ): Promise<IDBResponse<string>> {
+      const relationData: RelationData = buildRelationDataFromColumnName(
+        columnName
+      );
+      if (!relationData) {
+        return Promise.resolve({
+          status: Status.Error,
+          message: 'film do not have this field'
+        });
+      }
+      const storedIds: string[] = await getIdsRelatedToThisEntity(
+        'film_id',
+        filmId,
+        relationData
+      );
 
-    const enteredIdsAreValid: boolean = await validateCandidates(
-      relation.entityTableName,
-      itemIds
-    );
-    if (!enteredIdsAreValid) {
-      return Promise.resolve({
-        status: Status.Error,
-        message: 'Parameter itemIds has invalid values'
-      });
-    }
-    return insertItemsIfNotAlreadyStored(relation, filmId, itemIds, storedIds);
-  },
+      const enteredIdsAreValid: boolean = await validateCandidates(
+        relationData.entityTableName,
+        itemIds
+      );
+      if (!enteredIdsAreValid) {
+        return Promise.resolve({
+          status: Status.Error,
+          message: 'Parameter itemIds has invalid values'
+        });
+      }
+      return insertItemsIfNotAlreadyStored(
+        filmId,
+        'film_id',
+        itemIds,
+        storedIds,
+        relationData
+        );
+    },
 
   Update: (film: Film) =>
     knex('film')
@@ -203,17 +219,11 @@ export const FilmContext: IDBContext<IFilmViewModel> = {
 // HELPERS
 
 // TAKE AN INPUT STRING AND MAPS IT
-// TO AN OBJECT WITH CORRESPONDANT
-// TABLE AND COLUMN NAME
-
-interface MapKeyNameToTableRelationResult {
-  tableName: string;
-  columnName: string;
-  entityTableName: string;
-}
-function mapKeyNameToTableRelation(
+// TO AN OBJECT WITH THE CORRESPONDANT
+// RELATION DATA
+function buildRelationDataFromColumnName(
   name: string
-): MapKeyNameToTableRelationResult | undefined {
+): RelationData | undefined {
   switch (name) {
     case 'characters':
       return {
@@ -250,59 +260,4 @@ function mapKeyNameToTableRelation(
   }
 }
 
-function getIdsFromDB(
-  relation: MapKeyNameToTableRelationResult,
-  filmId: string
-): Promise<string[]> {
-  return knex
-    .select(relation.columnName)
-    .from(relation.tableName)
-    .where('film_id', filmId)
-    .then((v: any[]) => v.map((o) => o[relation.columnName]));
-}
 
-function validateCandidates(
-  entityName: string,
-  ids: string[]
-): Promise<boolean> {
-  return knex
-    .select('id')
-    .from(entityName)
-    .whereIn('id', ids)
-    .then((storedIds: string[]) => ids.length === storedIds.length)
-    .catch((e) => false);
-}
-
-function itemsAlreadyStored(itemIds: string[], storedIds: string[]): boolean {
-  return itemIds
-    .map((id) => storedIds.findIndex((storedId) => storedId === id))
-    .some((idx) => idx >= 0);
-}
-
-function insertItemsIfNotAlreadyStored(
-  relation: MapKeyNameToTableRelationResult,
-  filmId: string,
-  itemIds: string[],
-  storedIds: string[]
-): Promise<IDBResponse<string>> {
-  if (!itemsAlreadyStored(itemIds, storedIds)) {
-    return knex(relation.tableName)
-      .insert(
-        itemIds.map((itemId) => ({
-          id: uuid(),
-          film_id: filmId,
-          [relation.columnName]: itemId
-        }))
-      )
-      .then((v) => ({
-        status: Status.Successfull,
-        message: `table ${relation.tableName} updated successfully`
-      }))
-      .catch((e) => ({ status: Status.Error, message: e }));
-  } else {
-    return Promise.resolve({
-      status: Status.Error,
-      message: `Element(s) with id(s) ${itemIds} already stored`
-    });
-  }
-}

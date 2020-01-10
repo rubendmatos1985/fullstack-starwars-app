@@ -1,21 +1,21 @@
 import { FilmContext } from "../DB/FilmContext";
 
 export default (() => {
-  const { Get, Remove, Add, Update }  = FilmContext;
+  const { Get, RemoveItem, AddItems, Update }  = FilmContext;
   return {
     GetById                           : Get("id"),
     GetByName                         : Get("name"),
     GetAll                            : Get(),
-    RemoveCharacters                  : Remove("characters"),
-    RemovePlanets                     : Remove("planets"),
-    RemoveStarships                   : Remove("starships"),
-    RemoveVehicles                    : Remove("vehicles"),
-    RemoveSpecies                     : Remove("species"),
-    AddCharacters                     : Add("characters"),
-    AddPlanets                        : Add("planets"),
-    AddStarships                      : Add("starships"),
-    AddVehicles                       : Add("vehicles"),
-    AddSpecies                        : Add("species"),
+    RemoveCharacters                  : RemoveItem("characters"),
+    RemovePlanets                     : RemoveItem("planets"),
+    RemoveStarships                   : RemoveItem("starships"),
+    RemoveVehicles                    : RemoveItem("vehicles"),
+    RemoveSpecies                     : RemoveItem("species"),
+    AddCharacters                     : AddItems("characters"),
+    AddPlanets                        : AddItems("planets"),
+    AddStarships                      : AddItems("starships"),
+    AddVehicles                       : AddItems("vehicles"),
+    AddSpecies                        : AddItems("species"),
     Update, 
   };
 })();
