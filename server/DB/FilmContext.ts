@@ -188,7 +188,7 @@ export const FilmContext: IDBContext<IFilmViewModel> = {
 
   Update: (film: Film) =>
     knex('film')
-      .where({ film_id: film.id })
+      .where({ id: film.id })
       .update(film)
       .then(() => ({
         status: Status.Successfull,
@@ -196,7 +196,7 @@ export const FilmContext: IDBContext<IFilmViewModel> = {
       }))
       .catch((e) => ({
         status: Status.Error,
-        message: e
+        message: 'Invalid input format or field name'
       }))
 };
 

@@ -6,6 +6,6 @@
   ],
   "rules": {
     "prettier": true,
-    "function-paren-newline": ["error", "never"]
+    "function-paren-newline": ["error", { "minItems": 3 }]
   }
 }

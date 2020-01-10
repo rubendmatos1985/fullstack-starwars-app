@@ -25,10 +25,18 @@ interface DeleteItemsRequest extends Request {
 
 interface AddItemsRequest extends Request {
   body: IAddItemsRequestBody;
+  query: {
+    id: string;
+    apiKey: string;
+  };
 }
 
 interface UpdateContentRequest extends Request {
   body: Film;
+  query: {
+    id: string;
+    apiKey: string;
+  };
 }
 
 class FilmsController extends Controller {
@@ -39,6 +47,7 @@ class FilmsController extends Controller {
       r.get('/', this.HandleQueryParams);
       r.post('/delete', this.DeleteFromFilm);
       r.post('/add', this.AddToFilm);
+      r.post('/update', this.UpdateFilmContent);
       return r;
     };
     super(router, pathname);
@@ -139,7 +148,7 @@ class FilmsController extends Controller {
     return async (
       field: FilmViewModelForeignFields,
       remover: (ids: string[]) => IDBResponse<any>
-    ) => {
+    ): Promise<Response | void> => {
       const { fieldName, itemIds } = req.body;
       if (fieldName === field) {
         const { status, message } = await remover(itemIds);
@@ -155,21 +164,25 @@ class FilmsController extends Controller {
     return async (
       field: FilmViewModelForeignFields,
       adder: (filmId: string, itemIds: string[]) => IDBResponse<any>
-    ) => {
+    ): Promise<Response | void> => {
       const redirectUrl = `/api/v1/films?id=${req.query.id}&apiKey=${req.query.apiKey}`;
       const { fieldName, itemIds } = req.body;
       if (fieldName === field) {
         const { status, message } = await adder(req.query.id, itemIds);
         if (status === Status.Successfull) {
           return res.redirect(redirectUrl);
+        } else {
+          return this.fail(res, message);
         }
-        return this.fail(res, message);
       }
     };
   }
   private async UpdateFilmContent(req: UpdateContentRequest, res: Response) {
     const redirectUrl = `/api/v1/films?id=${req.query.id}&apiKey=${req.query.apiKey}`;
-    const { status, message } = await FilmRepository.Update(req.body);
+    const { status, message } = await FilmRepository.Update({
+      id: req.query.id,
+      ...req.body
+    } as Film);
     if (status === Status.Successfull) {
       return res.redirect(redirectUrl);
     } else {
