@@ -1,13 +1,13 @@
-import { Request, Response, Router } from "express";
+import { Request, Response, Router } from 'express';
 import {
   IFilmViewModel,
   FilmViewModelForeignFields
-} from "../models/ViewModels/FilmViewModel";
-import FilmRepository from "../models/FilmRepository";
-import { Controller } from "./Controller";
-import { IDBResponse } from "../DB";
-import { Status } from "../middlewares/helpers";
-import { Film } from "../models/Film";
+} from '../models/ViewModels/FilmViewModel';
+import FilmRepository from '../models/FilmRepository';
+import { Controller } from './Controller';
+import { IDBResponse } from '../DB';
+import { Status } from '../middlewares/helpers';
+import { Film } from '../models/Film';
 
 interface IDeleteItemsRequestBody {
   fieldName: string;
@@ -33,19 +33,19 @@ interface UpdateContentRequest extends Request {
 
 class FilmsController extends Controller {
   public constructor() {
-    const pathname = "films";
+    const pathname = 'films';
     const router = () => {
       const r: Router = Router();
-      r.get("/", this.HandleQueryParams);
-      r.post("/delete", this.DeleteFromFilm);
-      r.post("/add", this.AddToFilm);
+      r.get('/', this.HandleQueryParams);
+      r.post('/delete', this.DeleteFromFilm);
+      r.post('/add', this.AddToFilm);
       return r;
     };
     super(router, pathname);
   }
 
   private fail(res: Response, message: string): Response {
-    return res.status(404).send({ status: "error", message });
+    return res.status(404).send({ status: 'error', message });
   }
 
   private async GetAll(
@@ -90,11 +90,11 @@ class FilmsController extends Controller {
 
   private async DeleteFromFilm(req: DeleteItemsRequest, res: Response) {
     const fieldNames: FilmViewModelForeignFields[] = [
-      "characters",
-      "vehicles",
-      "planets",
-      "species",
-      "starships"
+      'characters',
+      'vehicles',
+      'planets',
+      'species',
+      'starships'
     ] as FilmViewModelForeignFields[];
 
     const removers = [
@@ -113,11 +113,11 @@ class FilmsController extends Controller {
 
   private async AddToFilm(req: AddItemsRequest, res: Response) {
     const fieldNames: FilmViewModelForeignFields[] = [
-      "characters",
-      "vehicles",
-      "planets",
-      "species",
-      "starships"
+      'characters',
+      'vehicles',
+      'planets',
+      'species',
+      'starships'
     ] as FilmViewModelForeignFields[];
     const adders = [
       FilmRepository.AddCharacters,

@@ -165,36 +165,25 @@ export const FilmContext: IDBContext<IFilmViewModel> = {
     const relation: MapKeyNameToTableRelationResult = mapKeyNameToTableRelation(
       columnName
     );
-    if (relation) {
-      const storedIds: string[] = await getStoredIdsFromRelation(
-        relation,
-        filmId
-      );
-      if (!itemsAlreadyStored(itemIds, storedIds)) {
-        return knex(relation.tableName)
-          .insert(
-            itemIds.map((itemId) => ({
-              id: uuid(),
-              film_id: filmId,
-              [relation.columnName]: itemId
-            }))
-          )
-          .then((v) => ({
-            status: Status.Successfull,
-            message: `table ${relation.tableName} updated successfully`
-          }))
-          .catch((e) => ({ status: Status.Error, message: e }));
-      } else {
-        return Promise.resolve({
-          status: Status.Error,
-          message: `Element(s) with id(s) ${itemIds} already stored`
-        });
-      }
+    if (!relation) {
+      return Promise.resolve({
+        status: Status.Error,
+        message: 'film do not have this field'
+      });
     }
-    return Promise.resolve({
-      status: Status.Error,
-      message: 'film do not have this field'
-    });
+    const storedIds: string[] = await getIdsFromDB(relation, filmId);
+
+    const enteredIdsAreValid: boolean = await validateCandidates(
+      relation.entityTableName,
+      itemIds
+    );
+    if (!enteredIdsAreValid) {
+      return Promise.resolve({
+        status: Status.Error,
+        message: 'Parameter itemIds has invalid values'
+      });
+    }
+    return insertItemsIfNotAlreadyStored(relation, filmId, itemIds, storedIds);
   },
 
   Update: (film: Film) =>
@@ -220,27 +209,48 @@ export const FilmContext: IDBContext<IFilmViewModel> = {
 interface MapKeyNameToTableRelationResult {
   tableName: string;
   columnName: string;
+  entityTableName: string;
 }
 function mapKeyNameToTableRelation(
   name: string
 ): MapKeyNameToTableRelationResult | undefined {
   switch (name) {
     case 'characters':
-      return { tableName: 'actors', columnName: 'people_id' };
+      return {
+        tableName: 'actors',
+        columnName: 'people_id',
+        entityTableName: 'people'
+      };
     case 'planets':
-      return { tableName: 'planets_in_films', columnName: 'planet_id' };
+      return {
+        tableName: 'planets_in_films',
+        columnName: 'planet_id',
+        entityTableName: 'planet'
+      };
     case 'starships':
-      return { tableName: 'starships_in_films', columnName: 'starship_id' };
+      return {
+        tableName: 'starships_in_films',
+        columnName: 'starship_id',
+        entityTableName: 'starship'
+      };
     case 'vehicles':
-      return { tableName: 'vehicles_in_films', columnName: 'vehicle_id' };
+      return {
+        tableName: 'vehicles_in_films',
+        columnName: 'vehicle_id',
+        entityTableName: 'vehicle'
+      };
     case 'species':
-      return { tableName: 'species_in_films', columnName: 'specie_id' };
+      return {
+        tableName: 'species_in_films',
+        columnName: 'specie_id',
+        entityTableName: 'specie'
+      };
     default:
       return undefined;
   }
 }
 
-function getStoredIdsFromRelation(
+function getIdsFromDB(
   relation: MapKeyNameToTableRelationResult,
   filmId: string
 ): Promise<string[]> {
@@ -251,8 +261,48 @@ function getStoredIdsFromRelation(
     .then((v: any[]) => v.map((o) => o[relation.columnName]));
 }
 
+function validateCandidates(
+  entityName: string,
+  ids: string[]
+): Promise<boolean> {
+  return knex
+    .select('id')
+    .from(entityName)
+    .whereIn('id', ids)
+    .then((storedIds: string[]) => ids.length === storedIds.length)
+    .catch((e) => false);
+}
+
 function itemsAlreadyStored(itemIds: string[], storedIds: string[]): boolean {
   return itemIds
     .map((id) => storedIds.findIndex((storedId) => storedId === id))
     .some((idx) => idx >= 0);
+}
+
+function insertItemsIfNotAlreadyStored(
+  relation: MapKeyNameToTableRelationResult,
+  filmId: string,
+  itemIds: string[],
+  storedIds: string[]
+): Promise<IDBResponse<string>> {
+  if (!itemsAlreadyStored(itemIds, storedIds)) {
+    return knex(relation.tableName)
+      .insert(
+        itemIds.map((itemId) => ({
+          id: uuid(),
+          film_id: filmId,
+          [relation.columnName]: itemId
+        }))
+      )
+      .then((v) => ({
+        status: Status.Successfull,
+        message: `table ${relation.tableName} updated successfully`
+      }))
+      .catch((e) => ({ status: Status.Error, message: e }));
+  } else {
+    return Promise.resolve({
+      status: Status.Error,
+      message: `Element(s) with id(s) ${itemIds} already stored`
+    });
+  }
 }
