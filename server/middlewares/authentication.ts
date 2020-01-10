@@ -14,7 +14,7 @@ export namespace Authentication {
       : res.send({ status: 'error', message: 'You must provide an api key' })
   
   export async function ValidateKey(req: Request, res: Response, next: NextFunction): Promise<void> {
-    const dbResponse: any = await User.getByApiKey(req.query.apiKey)
+    const dbResponse: any = await User.GetByApiKey(req.query.apiKey)
     if (dbResponse.status === Status.Successfull) {
       next();
     } else {
@@ -22,7 +22,7 @@ export namespace Authentication {
     }
   }
   export async function UpdateUserStatus(req: Request, res: Response, next: NextFunction){
-    await User.updateUserLastConexion(req.query.apiKey)
+    await User.UpdateUserLastConexion(req.query.apiKey)
     next()
   }
 }

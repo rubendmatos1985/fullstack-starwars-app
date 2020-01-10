@@ -1,10 +1,10 @@
 import { VehicleContext } from "../DB/VehicleContext"
 
 export default (() => {
-  const { get }  = VehicleContext
+  const { Get }   = VehicleContext
   return {
-    getById: get('id'),
-    getAll: get(),
-    getByName: get('name')
+    getById       : Get('id'),
+    getAll        : Get(),
+    getByName     : Get('name')
   }
 })()

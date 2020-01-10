@@ -51,7 +51,7 @@ class FilmsController extends Controller {
   ): Promise<Response> {
     const result:
       | IDBResponse<IFilmViewModel[]>
-      | any = await FilmRepository.getAll();
+      | any = await FilmRepository.GetAll();
     return response.json(result.message);
   }
 
@@ -61,7 +61,7 @@ class FilmsController extends Controller {
   ): Promise<Response> {
     const result:
       | IDBResponse<IFilmViewModel[]>
-      | any = await FilmRepository.getById(request.query.id);
+      | any = await FilmRepository.GetById(request.query.id);
     return response.json(result.message);
   }
 
@@ -71,7 +71,7 @@ class FilmsController extends Controller {
   ): Promise<Response> {
     const result:
       | IDBResponse<IFilmViewModel[]>
-      | any = await FilmRepository.getByName(request.query.id);
+      | any = await FilmRepository.GetByName(request.query.id);
     return response.json(result.message);
   }
 
@@ -97,11 +97,11 @@ class FilmsController extends Controller {
     ] as FilmViewModelForeignFields[];
 
     const removers = [
-      FilmRepository.removeCharacters,
-      FilmRepository.removeVehicles,
-      FilmRepository.removePlanets,
-      FilmRepository.removeSpecies,
-      FilmRepository.removeStarships
+      FilmRepository.RemoveCharacters,
+      FilmRepository.RemoveVehicles,
+      FilmRepository.RemovePlanets,
+      FilmRepository.RemoveSpecies,
+      FilmRepository.RemoveStarships
     ];
     return await Promise.all(
       new Array(fieldNames.length)
@@ -119,11 +119,11 @@ class FilmsController extends Controller {
       "starships"
     ] as FilmViewModelForeignFields[];
     const adders = [
-      FilmRepository.addCharacters,
-      FilmRepository.addVehicles,
-      FilmRepository.addPlanets,
-      FilmRepository.addSpecies,
-      FilmRepository.addStarships
+      FilmRepository.AddCharacters,
+      FilmRepository.AddVehicles,
+      FilmRepository.AddPlanets,
+      FilmRepository.AddSpecies,
+      FilmRepository.AddStarships
     ];
 
     return await Promise.all(
@@ -162,11 +162,8 @@ class FilmsController extends Controller {
     ) => {
       const fail = message =>
         res.status(404).send({ status: "error", message });
-
       const redirectUrl = `/api/v1/films?id=${req.query.id}&apiKey=${req.query.apiKey}`;
-
       const { fieldName, itemIds, filmId } = req.body;
-
       if (fieldName === field) {
         const { status, message } = await adder(filmId, itemIds);
         if (status === Status.Successfull) {
@@ -180,3 +177,6 @@ class FilmsController extends Controller {
 }
 
 export default FilmsController;
+
+
+

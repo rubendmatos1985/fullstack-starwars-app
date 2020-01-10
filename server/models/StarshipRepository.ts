@@ -1,10 +1,10 @@
 import { StarshipContext } from "../DB/StarshipContext"
 
 export default(() => {
-  const { get } = StarshipContext
+  const { Get }   = StarshipContext
   return {
-    getById: get('id'),
-    getAll: get(),
-    getByName: get('name')
+    getById       : Get('id'),
+    getAll        : Get(),
+    getByName     : Get('name')
   }
 })()

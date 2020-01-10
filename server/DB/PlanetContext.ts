@@ -2,7 +2,7 @@ import { knex, IDBContext } from ".";
 import { IPlanetViewModel } from "../models/ViewModels/PlanetViewModel";
 
 export const PlanetContext: IDBContext<IPlanetViewModel> = {
-  get: (field?: string) =>
+  Get: (field?: string) =>
     function(value?: string): Promise<IPlanetViewModel[]> {
       const k =
         field && value

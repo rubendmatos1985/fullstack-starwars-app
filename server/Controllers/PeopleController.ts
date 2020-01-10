@@ -14,17 +14,17 @@ class PeopleController extends Controller {
   }
 
   async GetAll(req: Request, res: Response): Promise<Response> {
-    const result = await PeopleRepository.getAll();
+    const result = await PeopleRepository.GetAll();
     return res.json(result);
   }
 
   async GetById(req: Request, res: Response): Promise<Response> {
-    const result: any = await PeopleRepository.getById(req.query.id);
+    const result: any = await PeopleRepository.GetById(req.query.id);
     return res.json(result);
   }
 
   async GetByName(req: Request, res: Response): Promise<Response> {
-    const result = await PeopleRepository.getByName(req.query.name);
+    const result = await PeopleRepository.GetByName(req.query.name);
     return res.send(result);
   }
 

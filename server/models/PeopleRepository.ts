@@ -1,11 +1,11 @@
-import { PeopleContext } from "../DB/PeopleContext"
+import { PeopleContext } from "../DB/PeopleContext";
 
-export default (function () {
-  const { get } = PeopleContext
+export default (function() {
+  const { Get }   = PeopleContext;
 
   return {
-    getByName: get('name'),
-    getById: get('id'),
-    getAll: get()
-  }
-})()
+    GetByName     : Get("name"),
+    GetById       : Get("id"),
+    GetAll        : Get()
+  };
+})();

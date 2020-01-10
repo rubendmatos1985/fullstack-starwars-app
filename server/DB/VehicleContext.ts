@@ -2,7 +2,7 @@ import { IDBContext, knex } from ".";
 import { IVehicleViewModel } from "../models/ViewModels/VehicleViewModel";
 
 export const VehicleContext: IDBContext<IVehicleViewModel> = {
-  get: (field?: string) =>
+  Get: (field?: string) =>
     function(value?: string) {
       const k =
         field && value

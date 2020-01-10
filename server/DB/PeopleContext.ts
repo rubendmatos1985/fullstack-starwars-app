@@ -2,7 +2,7 @@ import { knex, IDBContext } from ".";
 import { IPeopleViewModel } from "../models/ViewModels/PeopleViewModel";
 
 export const PeopleContext: IDBContext<IPeopleViewModel> = {
-  get: field => (value): Promise<IPeopleViewModel[]> => {
+  Get: field => (value): Promise<IPeopleViewModel[]> => {
     const k =
       value && field
         ? field === "name"

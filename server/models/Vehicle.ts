@@ -2,11 +2,11 @@ import { ISubjectFromApi } from "../types/interfaces/Subject";
 import { ITransportFromApi, ITransportEntity } from "../types/interfaces/Transport";
 
 interface Vehicle { 
-  vehicle_class: string
+  vehicle_class           : string
  }
 
 export interface IVehicleFromApi extends ISubjectFromApi, ITransportFromApi{
-  vehicle_class: string
+  vehicle_class           : string
 }
 
 export interface IVehicleEntity extends Vehicle, ISubjectFromApi, ITransportEntity{}
@@ -14,21 +14,21 @@ export interface IVehicleEntity extends Vehicle, ISubjectFromApi, ITransportEnti
 
 
 export enum VehicleFieldsNames{
-  Id = 'id',
-  Name= 'name',
-  Model = 'model',
-  Manufacturer = 'manufacturer',
-  CostInCredits = 'cost_in_credits',
-  Lenght = 'length',
-  MaxAtmospheringSpeed = 'max_atmosphering_speed',
-  Crew = 'crew',
-  Passengers = 'passengers',
-  CargoCapacity = 'cargo_capacity',
-  Consumables = 'consumables',
-  VehicleClass = 'vehicle_class',
-  Url = 'url'
+  Id                      = 'id',
+  Name                    = 'name',
+  Model                   = 'model',
+  Manufacturer            = 'manufacturer',
+  CostInCredits           = 'cost_in_credits',
+  Lenght                  = 'length',
+  MaxAtmospheringSpeed    = 'max_atmosphering_speed',
+  Crew                    = 'crew',
+  Passengers              = 'passengers',
+  CargoCapacity           = 'cargo_capacity',
+  Consumables             = 'consumables',
+  VehicleClass            = 'vehicle_class',
+  Url                     = 'url'
 }
 
-export interface VehicleFieldsNamesArray{
-  [key: number] : VehicleFieldsNames
+export interface VehicleFieldsNamesArray {
+  [key: number]: VehicleFieldsNames;
 }

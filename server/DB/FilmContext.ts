@@ -2,9 +2,10 @@ import { IDBContext, knex, IDBResponse } from ".";
 import { IFilmViewModel } from "../models/ViewModels/FilmViewModel";
 import { Status } from "../middlewares/helpers";
 import uuid = require("uuid");
+import { Film } from "../models/Film";
 
 export const FilmContext: IDBContext<IFilmViewModel> = {
-  get: (field?: string) =>
+  Get: (field?: string) =>
     function(value?: any) {
       const k =
         field && value
@@ -130,9 +131,9 @@ export const FilmContext: IDBContext<IFilmViewModel> = {
         .catch(e => ({ status: Status.Error, message: e }));
     },
 
-  // DELETE WILL ALWAYS DELETE A RELATION
+  // REMOVE WILL ALWAYS DELETE A RELATION
   // NOT AN ATHOMIC VALUE
-  remove: (columnName: string) => (
+  Remove: (columnName: string) => (
     ids: string[]
   ): Promise<IDBResponse<string>> => {
     const successMessage = {
@@ -157,7 +158,7 @@ export const FilmContext: IDBContext<IFilmViewModel> = {
 
   // ADD WILL ADD A FOREIGN RELATION
   // NOT AN ATHOMIC VALUE
-  add: (columnName: string) => (
+  Add: (columnName: string) => (
     filmId: string,
     itemIds: string[]
   ): Promise<IDBResponse<string>> => {
@@ -183,7 +184,13 @@ export const FilmContext: IDBContext<IFilmViewModel> = {
       status: Status.Error,
       message: "film do not have this field"
     });
-  }
+  },
+
+  Update: (film: Film)=>(
+    knex('film')
+      .where({ film_id: film.id })
+      .update(film)
+  )
 };
 
 // HELPERS

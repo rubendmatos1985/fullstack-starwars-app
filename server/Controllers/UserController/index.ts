@@ -56,7 +56,7 @@ class UserController extends Controller {
     try {
       const { email, name } = req.body;
       const password = await EncryptPassword(req.body.password)
-      const user:IDBResponse<IUserEntity[]> = await UserRepository.create({ name, email, password })
+      const user:IDBResponse<IUserEntity[]> = await UserRepository.Create({ name, email, password })
       await EmailServiceProvider.SendApiKeyEmail(user.message[0].api_key, email)
 
       return res.json({ status: Status.Successfull, message: "Please check your Email" })
@@ -71,7 +71,7 @@ class UserController extends Controller {
   private async UpdateUserData(req: Request, res: Response, next: NextFunction) {
     const newData = req.body;
     const pass = await EncryptPassword(req.body.password)
-    const result = await UserRepository.updateUserData({
+    const result = await UserRepository.UpdateUserData({
       ...newData,
       api_key: req.query.apiKey,
       password: pass
@@ -81,7 +81,7 @@ class UserController extends Controller {
   
   private async RefreshApiKey(req: Request, res: Response, next: NextFunction){
     try{
-      const { message } = await UserRepository.changeApiKey(req.query.apiKey)
+      const { message } = await UserRepository.ChangeApiKey(req.query.apiKey)
       return res.json({ 
         status: Status.Successfull, 
         message: `${ message[0].name } Your api_key was changed successfully` 

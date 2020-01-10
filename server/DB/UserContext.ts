@@ -18,7 +18,7 @@ export interface IUpdateUserArguments {
 }
 
 export const UserContext: IDBContext<IUserEntity> = {
-  get: (field: string) =>
+  Get: (field: string) =>
     function(value: string) {
       const k = field && value ? knex.where(field, value) : knex;
       return k
@@ -31,7 +31,7 @@ export const UserContext: IDBContext<IUserEntity> = {
         )
         .catch(e => ({ status: Status.Error, message: e }));
     },
-  create: ({ name, email, password }: ICreateUserArguments) =>
+  Create: ({ name, email, password }: ICreateUserArguments) =>
     knex(EntityTable.User)
       .returning(["id", "name", "email", "api_key"])
       .insert({
@@ -47,7 +47,7 @@ export const UserContext: IDBContext<IUserEntity> = {
       .then(r => ({ status: Status.Successfull, message: r }))
       .catch(e => ({ status: Status.Error, message: e })),
 
-  update: (data: IUpdateUserArguments | IUserEntity) => {
+  Update: (data: IUpdateUserArguments | IUserEntity) => {
     if (Object.keys(data).some(k => k === "identifierKey")) {
       const {
         identifierKey,

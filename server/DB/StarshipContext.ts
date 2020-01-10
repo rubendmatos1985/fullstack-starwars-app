@@ -3,7 +3,7 @@ import { IStarshipViewModel } from "../models/ViewModels/StarshipViewModel";
 import { ManyToManyTable, EntityTable } from "../types/Tables";
 
 export const StarshipContext: IDBContext<IStarshipViewModel> = {
-  get: (field?: string) =>
+  Get: (field?: string) =>
     function(value?: string) {
       const k =
         field && value

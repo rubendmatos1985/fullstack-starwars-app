@@ -1,13 +1,12 @@
 import { PlanetContext } from "../DB/PlanetContext";
 
-export default (function () {
-  const {get} = PlanetContext 
+export default (function() {
+  const { Get }   = PlanetContext;
   return {
-    getById: get('id'),
+    getById       : Get("id"),
+    getByName     : Get("name"),
+    getAll        : Get()
+  };
+})();
 
-    getByName: get('name'),
-
-    getAll: get()
-  }
-})()
 

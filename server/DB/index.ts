@@ -7,9 +7,9 @@ export interface IDBResponse<T> {
 export const knex: Knex = require("knex")(require("../knexfile"));
 
 export interface IDBContext<T> {
-  get: (f?: string) => (value?: any) => Promise<IDBResponse<T[]> | any[]>;
-  create?: any;
-  update?: any;
-  remove?: any;
-  add?: any;
+  Get: (f?: string) => (value?: any) => Promise<IDBResponse<T[]> | any[]>;
+  Create?: any;
+  Update?: any;
+  Remove?: any;
+  Add?: any;
 }
