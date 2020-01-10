@@ -1,5 +1,5 @@
 import { Router, Response, Request } from "express";
-import Vehicle from "../models/VehicleRepository";
+import VehicleRepository from "../models/VehicleRepository";
 import { Controller } from "./Controller";
 import { Status } from "../middlewares/helpers";
 
@@ -21,7 +21,7 @@ class VehicleController extends Controller {
 
   private async GetById(req: Request, res: Response): Promise<Response> {
     try {
-      const r = await Vehicle.getById(req.query.id);
+      const r = await VehicleRepository.getById(req.query.id);
       return res.json(r);
     } catch (e) {
       console.log(e);
@@ -31,7 +31,7 @@ class VehicleController extends Controller {
 
   private async GetAll(req: Request, res: Response): Promise<Response> {
     try {
-      const r = await Vehicle.getAll();
+      const r = await VehicleRepository.getAll();
       return res.json(r);
     } catch (e) {
       console.log(e);
@@ -41,7 +41,7 @@ class VehicleController extends Controller {
 
   private async GetByName(req: Request, res: Response): Promise<Response> {
     try {
-      const r = await Vehicle.getByName(req.query.name);
+      const r = await VehicleRepository.getByName(req.query.name);
       return res.json(r);
     } catch (e) {
       console.log(e);
