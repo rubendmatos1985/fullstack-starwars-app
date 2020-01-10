@@ -138,9 +138,9 @@ export const FilmContext: IDBContext<IFilmViewModel> = {
   ): Promise<IDBResponse<string>> => {
     const successMessage = {
       status: Status.Successfull,
-      message: `item(s) with name ${columnName} and id(s) equals to ${JSON.stringify(
-        ids
-      )} deleted successfully`
+      message: `item(s) with name ${columnName} 
+        and id(s) equals to ${JSON.stringify(ids)} 
+        deleted successfully`
     };
     const relationName = mapKeyNameToTableRelation(columnName);
     if (relationName) {
@@ -186,11 +186,10 @@ export const FilmContext: IDBContext<IFilmViewModel> = {
     });
   },
 
-  Update: (film: Film)=>(
-    knex('film')
+  Update: (film: Film) =>
+    knex("film")
       .where({ film_id: film.id })
       .update(film)
-  )
 };
 
 // HELPERS
