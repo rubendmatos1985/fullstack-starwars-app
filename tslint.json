@@ -1,2 +1,5 @@
-"extends":[ "tslint:recommended", "tslint-react"],
-"rules":{}
+"extends":[ "tslint:recommended", "tslint-react", "tslint-config-prettier", "tslint-plugin-prettier"],
+"rules":{
+    "prettier": true
+    "function-paren-newline": ["error", "never"]
+}

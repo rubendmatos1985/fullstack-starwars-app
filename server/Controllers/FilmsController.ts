@@ -17,7 +17,6 @@ interface IDeleteItemsRequestBody {
 interface IAddItemsRequestBody {
   fieldName: string;
   itemIds: string[];
-  filmId: string;
 }
 
 interface DeleteItemsRequest extends Request {
@@ -43,6 +42,10 @@ class FilmsController extends Controller {
       return r;
     };
     super(router, pathname);
+  }
+
+  private fail(res: Response, message: string): Response {
+    return res.status(404).send({ status: "error", message });
   }
 
   private async GetAll(
@@ -79,11 +82,9 @@ class FilmsController extends Controller {
     if (req.query.id) {
       return this.GetById(req, res);
     }
-
     if (req.query.name) {
       return this.GetByName(req, res);
     }
-
     return this.GetAll(req, res);
   }
 
@@ -134,23 +135,18 @@ class FilmsController extends Controller {
   }
 
   private RemoveItemHandler(req: Request, res: Response) {
+    const redirectUrl = `/api/v1/films?id=${req.query.id}&apiKey=${req.query.apiKey}`;
     return async (
       field: FilmViewModelForeignFields,
       remover: (ids: string[]) => IDBResponse<any>
     ) => {
-      const fail = message =>
-        res.status(404).send({ status: "error", message });
-
-      const redirectUrl = `/api/v1/films?id=${req.query.id}&apiKey=${req.query.apiKey}`;
-
       const { fieldName, itemIds } = req.body;
-
       if (fieldName === field) {
         const { status, message } = await remover(itemIds);
         if (status === Status.Successfull) {
           return res.redirect(redirectUrl);
         }
-        return fail(message);
+        return this.fail(res, message);
       }
     };
   }
@@ -160,20 +156,25 @@ class FilmsController extends Controller {
       field: FilmViewModelForeignFields,
       adder: (filmId: string, itemIds: string[]) => IDBResponse<any>
     ) => {
-      const fail = message =>
-        res.status(404).send({ status: "error", message });
       const redirectUrl = `/api/v1/films?id=${req.query.id}&apiKey=${req.query.apiKey}`;
-      const { fieldName, itemIds, filmId } = req.body;
+      const { fieldName, itemIds } = req.body;
       if (fieldName === field) {
-        const { status, message } = await adder(filmId, itemIds);
+        const { status, message } = await adder(req.query.id, itemIds);
         if (status === Status.Successfull) {
           return res.redirect(redirectUrl);
         }
-        return fail(message);
+        return this.fail(res, message);
       }
     };
   }
-  private UpdateFilmContent(req: UpdateContentRequest, res: Response) {}
+  private async UpdateFilmContent(req: UpdateContentRequest, res: Response) {
+    const redirectUrl = `/api/v1/films?id=${req.query.id}&apiKey=${req.query.apiKey}`;
+    const { status, message } = await FilmRepository.Update(req.body);
+    if (status === Status.Successfull) {
+      return res.redirect(redirectUrl);
+    } else {
+      return this.fail(res, message);
+    }
+  }
 }
-
 export default FilmsController;

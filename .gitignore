@@ -3,3 +3,4 @@
 /dist
 /server/settings.js
 *.env
+.prettierrc

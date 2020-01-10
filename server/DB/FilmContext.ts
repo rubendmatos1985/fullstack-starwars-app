@@ -1,134 +1,134 @@
-import { IDBContext, knex, IDBResponse } from ".";
-import { IFilmViewModel } from "../models/ViewModels/FilmViewModel";
-import { Status } from "../middlewares/helpers";
-import uuid = require("uuid");
-import { Film } from "../models/Film";
+import { IDBContext, knex, IDBResponse } from '.';
+import { IFilmViewModel } from '../models/ViewModels/FilmViewModel';
+import { Status } from '../middlewares/helpers';
+import uuid = require('uuid');
+import { Film } from '../models/Film';
 
 export const FilmContext: IDBContext<IFilmViewModel> = {
   Get: (field?: string) =>
     function(value?: any) {
       const k =
         field && value
-          ? field === "name"
-            ? knex.where(field, "like", `%${value}%`)
+          ? field === 'name'
+            ? knex.where(field, 'like', `%${value}%`)
             : knex.where(field, value)
           : knex;
       return k
         .select(
-          "film.*",
-          "characters.json_agg as characters",
-          "planets.json_agg as planets",
-          "starships.json_agg as starships",
-          "vehicles.json_agg as vehicles",
-          "species.json_agg as species"
+          'film.*',
+          'characters.json_agg as characters',
+          'planets.json_agg as planets',
+          'starships.json_agg as starships',
+          'vehicles.json_agg as vehicles',
+          'species.json_agg as species'
         )
         .from(function() {
           this.select(
-            "film.id as film_id",
+            'film.id as film_id',
             knex.raw(`json_agg(
                    json_build_object('id', people.id, 'name', people.name)
                  )`)
           )
-            .from("film")
-            .leftJoin("actors", "actors.film_id", "film.id")
-            .leftJoin("people", "people.id", "actors.people_id")
-            .groupBy("film.id")
-            .as("characters");
+            .from('film')
+            .leftJoin('actors', 'actors.film_id', 'film.id')
+            .leftJoin('people', 'people.id', 'actors.people_id')
+            .groupBy('film.id')
+            .as('characters');
         })
         .join(
           function() {
             this.select(
-              "film.id as film_id",
+              'film.id as film_id',
               knex.raw(`json_agg(
                   json_build_object('id', planet.id, 'name', planet.name)
                 )`)
             )
-              .from("film")
+              .from('film')
               .leftJoin(
-                "planets_in_films",
-                "planets_in_films.film_id",
-                "film.id"
+                'planets_in_films',
+                'planets_in_films.film_id',
+                'film.id'
               )
-              .leftJoin("planet", "planet.id", "planets_in_films.planet_id")
-              .groupBy("film.id")
-              .as("planets");
+              .leftJoin('planet', 'planet.id', 'planets_in_films.planet_id')
+              .groupBy('film.id')
+              .as('planets');
           },
-          "characters.film_id",
-          "planets.film_id"
+          'characters.film_id',
+          'planets.film_id'
         )
         .join(
           function() {
             this.select(
-              "film.id as film_id",
+              'film.id as film_id',
               knex.raw(`json_agg(
                   json_build_object('id', starship.id, 'name', starship.name)
                   )`)
             )
-              .from("film")
+              .from('film')
               .leftJoin(
-                "starships_in_films",
-                "starships_in_films.film_id",
-                "film.id"
+                'starships_in_films',
+                'starships_in_films.film_id',
+                'film.id'
               )
               .leftJoin(
-                "starship",
-                "starship.id",
-                "starships_in_films.starship_id"
+                'starship',
+                'starship.id',
+                'starships_in_films.starship_id'
               )
-              .groupBy("film.id")
-              .as("starships");
+              .groupBy('film.id')
+              .as('starships');
           },
-          "characters.film_id",
-          "starships.film_id"
+          'characters.film_id',
+          'starships.film_id'
         )
         .join(
           function() {
             this.select(
-              "film.id as film_id",
+              'film.id as film_id',
               knex.raw(`json_agg(
                   json_build_object('id', vehicle.id, 'name', vehicle.name)
                 )`)
             )
-              .from("film")
+              .from('film')
               .leftJoin(
-                "vehicles_in_films",
-                "vehicles_in_films.film_id",
-                "film_id"
+                'vehicles_in_films',
+                'vehicles_in_films.film_id',
+                'film_id'
               )
-              .leftJoin("vehicle", "vehicle.id", "vehicles_in_films.vehicle_id")
-              .groupBy("film.id")
-              .as("vehicles");
+              .leftJoin('vehicle', 'vehicle.id', 'vehicles_in_films.vehicle_id')
+              .groupBy('film.id')
+              .as('vehicles');
           },
-          "characters.film_id",
-          "vehicles.film_id"
+          'characters.film_id',
+          'vehicles.film_id'
         )
         .join(
           function() {
             this.select(
-              "film.id as film_id",
+              'film.id as film_id',
               knex.raw(`json_agg(
                   json_build_object('id', specie.id, 'name', specie.name))
                 `)
             )
-              .from("film")
+              .from('film')
               .leftJoin(
-                "species_in_films",
-                "species_in_films.film_id",
-                "film.id"
+                'species_in_films',
+                'species_in_films.film_id',
+                'film.id'
               )
-              .leftJoin("specie", "specie.id", "species_in_films.specie_id")
-              .groupBy("film.id")
-              .as("species");
+              .leftJoin('specie', 'specie.id', 'species_in_films.specie_id')
+              .groupBy('film.id')
+              .as('species');
           },
-          "characters.film_id",
-          "species.film_id"
+          'characters.film_id',
+          'species.film_id'
         )
-        .join("film", "film.id", "characters.film_id")
+        .join('film', 'film.id', 'characters.film_id')
         .then((rs: IFilmViewModel[]) => ({
           status: Status.Successfull,
           message: rs
         }))
-        .catch(e => ({ status: Status.Error, message: e }));
+        .catch((e) => ({ status: Status.Error, message: e }));
     },
 
   // REMOVE WILL ALWAYS DELETE A RELATION
@@ -147,18 +147,18 @@ export const FilmContext: IDBContext<IFilmViewModel> = {
       return knex(relationName.tableName)
         .del()
         .whereIn(relationName.columnName, ids)
-        .then(v => successMessage)
-        .catch(e => ({ status: Status.Error, message: e }));
+        .then((v) => successMessage)
+        .catch((e) => ({ status: Status.Error, message: e }));
     }
     return Promise.resolve({
       status: Status.Error,
-      message: "Wrong field name"
+      message: 'Wrong field name'
     });
   },
 
   // ADD WILL ADD A FOREIGN RELATION
   // NOT AN ATHOMIC VALUE
-  Add: (columnName: string) => (
+  Add: (columnName: string) => async (
     filmId: string,
     itemIds: string[]
   ): Promise<IDBResponse<string>> => {
@@ -166,30 +166,49 @@ export const FilmContext: IDBContext<IFilmViewModel> = {
       columnName
     );
     if (relation) {
-      return knex(relation.tableName)
-        .insert(
-          itemIds.map(itemId => ({
-            id: uuid(),
-            film_id: filmId,
-            [relation.columnName]: itemId
+      const storedIds: string[] = await getStoredIdsFromRelation(
+        relation,
+        filmId
+      );
+      if (!itemsAlreadyStored(itemIds, storedIds)) {
+        return knex(relation.tableName)
+          .insert(
+            itemIds.map((itemId) => ({
+              id: uuid(),
+              film_id: filmId,
+              [relation.columnName]: itemId
+            }))
+          )
+          .then((v) => ({
+            status: Status.Successfull,
+            message: `table ${relation.tableName} updated successfully`
           }))
-        )
-        .then(v => ({
-          status: Status.Successfull,
-          message: `table ${relation.tableName} updated successfully`
-        }))
-        .catch(e => ({ status: Status.Error, message: e }));
+          .catch((e) => ({ status: Status.Error, message: e }));
+      } else {
+        return Promise.resolve({
+          status: Status.Error,
+          message: `Element(s) with id(s) ${itemIds} already stored`
+        });
+      }
     }
     return Promise.resolve({
       status: Status.Error,
-      message: "film do not have this field"
+      message: 'film do not have this field'
     });
   },
 
   Update: (film: Film) =>
-    knex("film")
+    knex('film')
       .where({ film_id: film.id })
       .update(film)
+      .then(() => ({
+        status: Status.Successfull,
+        message: `film ${film.id} updated successfully`
+      }))
+      .catch((e) => ({
+        status: Status.Error,
+        message: e
+      }))
 };
 
 // HELPERS
@@ -206,17 +225,34 @@ function mapKeyNameToTableRelation(
   name: string
 ): MapKeyNameToTableRelationResult | undefined {
   switch (name) {
-    case "characters":
-      return { tableName: "actors", columnName: "people_id" };
-    case "planets":
-      return { tableName: "planets_in_films", columnName: "planet_id" };
-    case "starships":
-      return { tableName: "starships_in_films", columnName: "starship_id" };
-    case "vehicles":
-      return { tableName: "vehicles_in_films", columnName: "vehicle_id" };
-    case "species":
-      return { tableName: "species_in_films", columnName: "specie_id" };
+    case 'characters':
+      return { tableName: 'actors', columnName: 'people_id' };
+    case 'planets':
+      return { tableName: 'planets_in_films', columnName: 'planet_id' };
+    case 'starships':
+      return { tableName: 'starships_in_films', columnName: 'starship_id' };
+    case 'vehicles':
+      return { tableName: 'vehicles_in_films', columnName: 'vehicle_id' };
+    case 'species':
+      return { tableName: 'species_in_films', columnName: 'specie_id' };
     default:
       return undefined;
   }
+}
+
+function getStoredIdsFromRelation(
+  relation: MapKeyNameToTableRelationResult,
+  filmId: string
+): Promise<string[]> {
+  return knex
+    .select(relation.columnName)
+    .from(relation.tableName)
+    .where('film_id', filmId)
+    .then((v: any[]) => v.map((o) => o[relation.columnName]));
+}
+
+function itemsAlreadyStored(itemIds: string[], storedIds: string[]): boolean {
+  return itemIds
+    .map((id) => storedIds.findIndex((storedId) => storedId === id))
+    .some((idx) => idx >= 0);
 }
