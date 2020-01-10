@@ -50,12 +50,10 @@ export async function VerifyUserAlreadyExists(
     req.body.email
   );
   if (user.status === Status.Successfull) {
-    return res
-      .status(404)
-      .send({
-        status: "Error",
-        message: `user with email ${req.body.email} already exists`
-      });
+    return res.status(404).send({
+      status: "Error",
+      message: `user with email ${req.body.email} already exists`
+    });
   }
   return next();
 }
@@ -66,12 +64,10 @@ export async function HandleUpdateUserValidation(
   next: NextFunction
 ) {
   const fail = () =>
-    res
-      .status(404)
-      .send({
-        status: Status.Error,
-        message: "your password or email is not valid"
-      });
+    res.status(404).send({
+      status: Status.Error,
+      message: "your password or email is not valid"
+    });
   const dbUser: IDBResponse<IUserEntity[]> = await UserRepository.GetByApiKey(
     req.query.apiKey
   );

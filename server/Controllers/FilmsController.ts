@@ -177,6 +177,3 @@ class FilmsController extends Controller {
 }
 
 export default FilmsController;
-
-
-
