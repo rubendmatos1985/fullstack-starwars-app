@@ -15,13 +15,15 @@ export interface IAddItemsRequestBody {
   itemsIds: string[];
 }
 
+export type Adder = (filmId: string, itemIds: string[]) => IDBResponse<any>;
+
 export const fail = (res: Response, message: string): Response =>
   res.status(404).send({ status: 'error', message });
 
 export const AddItemHandlerForDomain = (domain: string) => {
   return (req: AddItemsRequest, res: Response) => async (
-    field: FilmViewModelForeignFields,
-    adder: (filmId: string, itemIds: string[]) => IDBResponse<any>
+    field: string,
+    adder: Adder
   ): Promise<Response | void> => {
     const redirectUrl = `/api/v1/${domain}?id=${req.query.id}&apiKey=${req.query.apiKey}`;
     const { fieldName, itemsIds } = req.body;
@@ -35,3 +37,21 @@ export const AddItemHandlerForDomain = (domain: string) => {
     }
   };
 };
+
+export const RemoveItemHandlerForDomain = (domain: string) =>
+  function(req: Request, res: Response) {
+    const redirectUrl = `/api/v1/${domain}?id=${req.query.id}&apiKey=${req.query.apiKey}`;
+    return async (
+      field: string,
+      remover: (ids: string[]) => IDBResponse<any>
+    ): Promise<Response | void> => {
+      const { fieldName, itemIds } = req.body;
+      if (fieldName === field) {
+        const { status, message } = await remover(itemIds);
+        if (status === Status.Successfull) {
+          return res.redirect(redirectUrl);
+        }
+        return fail(res, message);
+      }
+    };
+  };

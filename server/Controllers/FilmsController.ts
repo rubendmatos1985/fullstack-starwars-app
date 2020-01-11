@@ -39,7 +39,6 @@ interface UpdateContentRequest extends Request {
 
 class FilmsController extends Controller {
   public constructor() {
-    const pathname = 'films';
     const router = () => {
       const r: Router = Router();
       r.get('/', this.HandleQueryParams);
@@ -48,7 +47,8 @@ class FilmsController extends Controller {
       r.post('/update', this.UpdateFilmContent);
       return r;
     };
-    super(router, pathname);
+    super(router);
+    this.Pathname = 'films';
   }
 
   private async GetAll(
@@ -115,7 +115,7 @@ class FilmsController extends Controller {
   }
 
   private async AddToFilm(req: AddItemsRequest, res: Response) {
-    const addItemHandler = AddItemHandlerForDomain('film');
+    const addItemHandler = AddItemHandlerForDomain(this.Pathname);
     const fieldNames: FilmViewModelForeignFields[] = [
       'characters',
       'vehicles',
@@ -139,7 +139,7 @@ class FilmsController extends Controller {
   }
 
   private RemoveItemHandler(req: Request, res: Response) {
-    const redirectUrl = `/api/v1/films?id=${req.query.id}&apiKey=${req.query.apiKey}`;
+    const redirectUrl = `/api/v1/${this.Pathname}?id=${req.query.id}&apiKey=${req.query.apiKey}`;
     return async (
       field: FilmViewModelForeignFields,
       remover: (ids: string[]) => IDBResponse<any>
@@ -155,7 +155,7 @@ class FilmsController extends Controller {
     };
   }
   private async UpdateFilmContent(req: UpdateContentRequest, res: Response) {
-    const redirectUrl = `/api/v1/films?id=${req.query.id}&apiKey=${req.query.apiKey}`;
+    const redirectUrl = `/api/v1/${this.Pathname}?id=${req.query.id}&apiKey=${req.query.apiKey}`;
     const { status, message } = await FilmRepository.Update({
       id: req.query.id,
       ...req.body

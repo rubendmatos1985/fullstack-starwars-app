@@ -14,6 +14,7 @@ export enum PeopleViewModelFields {
   Created   = "created",
   Edited    = "edited",
   Url       = "url",
+  Films     = "films",
   Species   = "species",
   Vehicles  = "vehicles",
   Starships = "starships"
@@ -23,4 +24,13 @@ export interface IPeopleViewModel extends IPeople {
   species   : IFromForeignTables[];
   vehicles  : IFromForeignTables[];
   starships : IFromForeignTables[];
+  films     : IFromForeignTables[]
+}
+
+export enum PeopleViewModelForeignFields{
+  Species   = "species",
+  Vehicles  = "vehicles",
+  Starships = "starships",
+  Films     = "films",
+ 
 }

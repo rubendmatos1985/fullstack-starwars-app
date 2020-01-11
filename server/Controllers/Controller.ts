@@ -2,7 +2,7 @@ import { Router } from "express";
 import autoBind = require("auto-bind");
 
 export interface IController {
-  Router(): Router;
+  Router: ()=> Router;
   Pathname: string;
 }
 
@@ -15,9 +15,8 @@ class Binder {
 export class Controller extends Binder implements IController {
   public Router: () => Router;
   public Pathname: string;
-  constructor(router: () => Router, path: string) {
+  constructor(router: () => Router) {
     super();
     this.Router = router;
-    this.Pathname = path;
   }
 }

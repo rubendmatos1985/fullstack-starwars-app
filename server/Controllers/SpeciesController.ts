@@ -1,19 +1,19 @@
-import { Router, Request, Response } from "express";
-import Specie from "../models/SpecieRepository";
-import { Controller } from "./Controller";
-import { ISpecieViewModel } from "../models/ViewModels/SpecieViewModel";
-import SpecieRepository from "../models/SpecieRepository";
-import { IDBResponse } from "../DB";
+import { Router, Request, Response } from 'express';
+import Specie from '../models/SpecieRepository';
+import { Controller } from './Controller';
+import { ISpecieViewModel } from '../models/ViewModels/SpecieViewModel';
+import SpecieRepository from '../models/SpecieRepository';
+import { IDBResponse } from '../DB';
 
 class SpeciesController extends Controller {
   constructor() {
-    const pathname = "specie";
     const router = () => {
       const r: Router = Router();
-      r.get("/", this.HandleQueryParams);
+      r.get('/', this.HandleQueryParams);
       return r;
     };
-    super(router, pathname);
+    super(router);
+    this.Pathname = 'specie';
   }
 
   public async GetById(req: Request, res: Response): Promise<Response> {

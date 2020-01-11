@@ -10,13 +10,13 @@ const failedMessage = {
 
 class VehicleController extends Controller {
   constructor() {
-    const pathname = "vehicles";
     const router = () => {
       const r = Router();
       r.get("/", this.QueryParamsHandler);
       return r;
     };
-    super(router, pathname);
+    super(router);
+    this.Pathname = 'vehicle'
   }
 
   private async GetById(req: Request, res: Response): Promise<Response> {
@@ -24,7 +24,6 @@ class VehicleController extends Controller {
       const r = await VehicleRepository.getById(req.query.id);
       return res.json(r);
     } catch (e) {
-      console.log(e);
       return res.json(failedMessage);
     }
   }
@@ -34,7 +33,6 @@ class VehicleController extends Controller {
       const r = await VehicleRepository.getAll();
       return res.json(r);
     } catch (e) {
-      console.log(e);
       return res.json(failedMessage);
     }
   }
@@ -44,7 +42,6 @@ class VehicleController extends Controller {
       const r = await VehicleRepository.getByName(req.query.name);
       return res.json(r);
     } catch (e) {
-      console.log(e);
       return res.json(failedMessage);
     }
   }

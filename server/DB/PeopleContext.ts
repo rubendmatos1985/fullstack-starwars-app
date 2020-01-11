@@ -76,7 +76,7 @@ export const PeopleContext: IDBContext<IPeopleViewModel> = {
       .join('people', 'people.id', 'films.people_id');
   },
   // REMOVE JUST FOREGIN TABLES
-  RemoveItem: (columnName: string) =>
+  RemoveItems: (columnName: string) =>
     async function(ids: string[]): Promise<IDBResponse<string>> {
       const successMessage = {
         status: Status.Successfull,

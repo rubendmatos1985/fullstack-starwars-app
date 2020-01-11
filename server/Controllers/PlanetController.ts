@@ -4,13 +4,13 @@ import PlanetRepository from "../models/PlanetRepository";
 
 class PlanetController extends Controller {
   constructor() {
-    const pathname = "planet";
     const router = () => {
       const r = Router();
       r.get("/", this.QueryParamsHandler);
       return r;
     };
-    super(router, pathname);
+    super(router);
+    this.Pathname = 'planet'
   }
 
   async GetAll(req: Request, res: Response) {

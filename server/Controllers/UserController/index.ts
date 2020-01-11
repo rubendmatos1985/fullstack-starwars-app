@@ -1,18 +1,18 @@
-import { Controller } from "../Controller";
-import { Router, Response, Request, NextFunction } from "express";
+import { Controller } from '../Controller';
+import { Router, Response, Request, NextFunction } from 'express';
 import {
   ValidateUserInput,
   VerifyUserAlreadyExists,
   SendSignInEmail,
   HandleUpdateUserValidation
-} from "./middlewares";
-import { Status } from "../../middlewares/helpers";
-import { Authentication } from "../../middlewares/authentication";
-import UserRepository from "../../models/UserRepository";
-import { EncryptPassword } from "./helpers";
-import { IUserEntity } from "../../models/User";
-import { EmailServiceProvider, sendEmail } from "../../services/Email";
-import { IDBResponse } from "../../DB";
+} from './middlewares';
+import { Status } from '../../middlewares/helpers';
+import { Authentication } from '../../middlewares/authentication';
+import UserRepository from '../../models/UserRepository';
+import { EncryptPassword } from './helpers';
+import { IUserEntity } from '../../models/User';
+import { EmailServiceProvider, sendEmail } from '../../services/Email';
+import { IDBResponse } from '../../DB';
 export interface RequestWithUserData extends Request {
   body: UserSubscriptionData;
 }
@@ -26,24 +26,23 @@ export interface UserSubscriptionData {
 
 class UserController extends Controller {
   constructor() {
-    const pathname = "/user";
     const router = () => {
       const r = Router();
       r.post(
-        "/signin",
+        '/signin',
         ValidateUserInput,
         VerifyUserAlreadyExists,
         this.SignIn
       );
       r.patch(
-        "/update",
+        '/update',
         Authentication.CheckKeyIsProvided,
         Authentication.ValidateKey,
         HandleUpdateUserValidation,
         this.UpdateUserData
       );
       r.patch(
-        "/update/refresh-api-key",
+        '/update/refresh-api-key',
         Authentication.CheckKeyIsProvided,
         Authentication.ValidateKey,
         HandleUpdateUserValidation,
@@ -51,7 +50,8 @@ class UserController extends Controller {
       );
       return r;
     };
-    super(router, pathname);
+    super(router);
+    this.Pathname = 'user';
   }
 
   private async SignIn(
@@ -74,16 +74,13 @@ class UserController extends Controller {
 
       return res.json({
         status: Status.Successfull,
-        message: "Please check your Email"
+        message: 'Please check your Email'
       });
     } catch (e) {
-      console.log(e);
-      return res
-        .status(404)
-        .json({
-          status: Status.Error,
-          message: "Sorry, we are having problems to process your request"
-        });
+      return res.status(404).json({
+        status: Status.Error,
+        message: 'Sorry, we are having problems to process your request'
+      });
     }
   }
 
@@ -110,12 +107,10 @@ class UserController extends Controller {
         message: `${message[0].name} Your api_key was changed successfully`
       });
     } catch (e) {
-      return res
-        .status(404)
-        .send({
-          status: "Error",
-          message: "There was an error please try later"
-        });
+      return res.status(404).send({
+        status: 'Error',
+        message: 'There was an error please try later'
+      });
     }
   }
 }

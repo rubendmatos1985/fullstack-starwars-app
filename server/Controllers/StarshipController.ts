@@ -1,17 +1,18 @@
-import { Router, Request, Response } from "express";
-import Starship from "../models/StarshipRepository";
-import { Controller } from "./Controller";
+import { Router, Request, Response } from 'express';
+import Starship from '../models/StarshipRepository';
+import { Controller } from './Controller';
 
 class StarshipController extends Controller {
   constructor() {
-    const pathname = "starship";
+    const pathname = 'starship';
 
     const router = () => {
       const r = Router();
-      r.get("/", this.HandleQueryParams);
+      r.get('/', this.HandleQueryParams);
       return r;
     };
-    super(router, pathname);
+    super(router);
+    this.Pathname = 'starship';
   }
 
   private async GetById(req: Request, res: Response): Promise<Response> {

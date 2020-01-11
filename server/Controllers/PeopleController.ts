@@ -1,18 +1,22 @@
 import { Controller } from './Controller';
 import { Router, Response, Request, NextFunction } from 'express';
 import PeopleRepository from '../models/PeopleRepository';
-import { AddItemHandlerForDomain } from './commons';
+import { AddItemHandlerForDomain, RemoveItemHandlerForDomain } from './commons';
+import { PeopleViewModelForeignFields } from '../models/ViewModels/PeopleViewModel';
 
 class PeopleController extends Controller {
+  foreignFields: PeopleViewModelForeignFields[];
   constructor() {
-    const router = () => {
+    super(router);
+    function router() {
       const r = Router();
-      r.get('/', this.QueryParamsHandler);
+      r.get('/', this.GetQueryParamsHandler);
       r.post('/add', this.AddToPeople);
+      r.post('/delete', this.RemoveFromPeople);
       return r;
-    };
-    const pathname = 'people';
-    super(router, pathname);
+    }
+    this.Pathname = 'people';
+    this.foreignFields = [];
   }
 
   async GetAll(req: Request, res: Response): Promise<Response> {
@@ -30,7 +34,7 @@ class PeopleController extends Controller {
     return res.send(result);
   }
 
-  private QueryParamsHandler(
+  private GetQueryParamsHandler(
     req: Request,
     res: Response,
     next: NextFunction
@@ -47,8 +51,13 @@ class PeopleController extends Controller {
   }
 
   private async AddToPeople(req: Request, res: Response) {
-    const addItemHandler = AddItemHandlerForDomain('people');
-    const fieldNames: string[] = ['films', 'vehicles', 'starships', 'species'];
+    const addItemHandler = AddItemHandlerForDomain(this.Pathname);
+    const fieldNames: PeopleViewModelForeignFields[] = [
+      'films',
+      'vehicles',
+      'starships',
+      'species'
+    ] as PeopleViewModelForeignFields[];
     const adders: any[] = [
       PeopleRepository.AddFilms,
       PeopleRepository.AddVehicles,
@@ -58,8 +67,13 @@ class PeopleController extends Controller {
     return await Promise.all(
       new Array(fieldNames.length)
         .fill(addItemHandler(req, res))
-        .map((fn, i) => fn(fieldNames[i], adders[i]))
+        .map((adder, i) => adder(fieldNames[i], adders[i]))
     );
+  }
+
+  private async RemoveFromPeople() {
+    const removeItemHandler = RemoveItemHandlerForDomain(this.Pathname);
+    const foreignFields: PeopleViewModelForeignFields[] = [] as PeopleViewModelForeignFields[];
   }
 }
 
