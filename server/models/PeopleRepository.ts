@@ -1,20 +1,20 @@
 import { PeopleContext } from "../DB/PeopleContext";
 
 export default (function() {
-  const { Get, AddItems, RemoveItems, Update }  = PeopleContext;
+  const { Get, Add, Remove, Update }  = PeopleContext;
 
   return {
     GetByName                           : Get("name"),
     GetById                             : Get("id"),
     GetAll                              : Get(),
-    AddFilms                            : AddItems('films'),
-    AddVehicles                         : AddItems('vehicles'),
-    AddStarships                        : AddItems('starships'),
-    AddSpecies                          : AddItems('species'),
-    RemoveFilms                         : RemoveItems('films'),
-    RemoveVehicles                      : RemoveItems('vehicles'),
-    RemoveStarships                     : RemoveItems('starships'),
-    RemoveSpecies                       : RemoveItems('species'),
+    AddFilms                            : Add('films'),
+    AddVehicles                         : Add('vehicles'),
+    AddStarships                        : Add('starships'),
+    AddSpecies                          : Add('species'),
+    RemoveFilms                         : Remove('films'),
+    RemoveVehicles                      : Remove('vehicles'),
+    RemoveStarships                     : Remove('starships'),
+    RemoveSpecies                       : Remove('species'),
     Update
   };
 })();

@@ -10,6 +10,6 @@ export interface IDBContext<T> {
   Get: (f?: string) => (value?: any) => Promise<IDBResponse<T[]> | any[]>;
   Create?: any;
   Update?: any;
-  RemoveItems?: any;
-  AddItems?: any;
+  Remove?: any;
+  Add?: any;
 }

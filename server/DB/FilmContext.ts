@@ -139,7 +139,7 @@ export const FilmContext: IDBContext<IFilmViewModel> = {
 
   // REMOVE WILL ALWAYS DELETE A RELATION
   // NOT AN ATHOMIC VALUE
-  RemoveItems: (columnName: string) =>
+  Remove: (columnName: string) =>
     function(ids: string[]): Promise<IDBResponse<string>> {
       const successMessage = {
         status: Status.Successfull,
@@ -164,7 +164,7 @@ export const FilmContext: IDBContext<IFilmViewModel> = {
 
   // ADD WILL ADD A FOREIGN RELATION
   // NOT AN ATHOMIC VALUE
-  AddItems: (columnName: string) =>
+  Add: (columnName: string) =>
     async function(
       filmId: string,
       itemIds: string[]
