@@ -85,13 +85,13 @@ export const PeopleContext: IDBContext<IPeopleViewModel> = {
   // REMOVE JUST FOREGIN TABLES
   Remove: (columnName: string) =>
     async function(ids: string[]): Promise<IDBResponse<string>> {
-      const successMessage = {
+      const successMessage:IDBResponse<string> = {
         status: Status.Successfull,
         message: `item(s) with name ${columnName} 
         and id(s) equals to ${JSON.stringify(ids)} 
         deleted successfully`
       };
-      const relation: RelationData | undefined = mapKeyNameToTableRelation(
+      const relation: RelationData | undefined = buildRelationContextFromField(
         columnName
       );
       if (relation) {
@@ -112,7 +112,7 @@ export const PeopleContext: IDBContext<IPeopleViewModel> = {
       peopleId: string,
       itemsIds: string[]
     ): Promise<IDBResponse<string>> {
-      const relation = mapKeyNameToTableRelation(columnName);
+      const relation = buildRelationContextFromField(columnName);
       if (!relation) {
         return Promise.resolve({
           status: Status.Error,
@@ -151,7 +151,7 @@ export const PeopleContext: IDBContext<IPeopleViewModel> = {
       .catch(e => ({ status: Status.Error, message: e }))
 };
 
-function mapKeyNameToTableRelation(name: string): RelationData | undefined {
+function buildRelationContextFromField(name: string): RelationData | undefined {
   switch (name) {
     case 'films':
       return {

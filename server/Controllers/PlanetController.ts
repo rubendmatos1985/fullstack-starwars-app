@@ -1,15 +1,20 @@
 import { Controller } from './Controller';
 import { Router, Request, Response } from 'express';
 import PlanetRepository from '../models/PlanetRepository';
-import { AddItemHandlerForDomain } from './commons';
+import { AddItemHandlerForDomain, RemoveItemHandlerForDomain, UpdateEntityRequest, fail } from './commons';
 import { Status } from '../middlewares/helpers';
+import { Planet } from '../types/DB';
+import { IDBResponse } from '../DB';
+import PeopleRepository from '../models/PeopleRepository';
 
 class PlanetController extends Controller {
   constructor() {
     const router = () => {
       const r = Router();
       r.get('/', this.QueryParamsHandler);
-      r.post('/add', this.AddItemToPlanet)
+      r.post('/add', this.AddItem)
+      r.post('/delete', this.RemoveItem)
+      r.post('/update', this.Update)
       return r;
     };
     super(router);
@@ -40,7 +45,7 @@ class PlanetController extends Controller {
     }
     return this.GetAll(req, res);
   }
-  async AddItemToPlanet(req: Request, res: Response) {
+  async AddItem(req: Request, res: Response) {
     const addItemHandler = AddItemHandlerForDomain(this.Pathname);
     const fieldNames: string[] = ['films', 'residents'];
     const adders = [PlanetRepository.AddFilms, PlanetRepository.AddResidents];
@@ -50,6 +55,33 @@ class PlanetController extends Controller {
         .map((handler, i) => handler(fieldNames[i], adders[i]))
     )
     .catch(e => ({ status: Status.Error, message: "Error" }));
+  }
+
+  async RemoveItem(req: Request, res: Response){
+    const removeItemHandler = RemoveItemHandlerForDomain(this.Pathname)
+    const fieldNames: string[] = ['films', 'residents'];
+    const removers = [
+      PlanetRepository.RemoveFilms,
+      PlanetRepository.RemoveResidents
+    ]
+    return await Promise.all(
+      new Array(fieldNames.length)
+        .fill(removeItemHandler(req, res))
+        .map((handler, i) => handler(fieldNames[i], removers[i]))
+    )
+    .catch(e => ({ status: Status.Error, message: "Error" }));
+  }
+  private async Update(req: UpdateEntityRequest<Planet>, res: Response) {
+    const redirectUrl = `/api/v1/${this.Pathname}?id=${req.query.id}&apiKey=${req.query.apiKey}`;
+    const result: IDBResponse<string> = await PlanetRepository.Update({
+      id: req.query.id,
+      ...req.body
+    });
+    if (result.status === Status.Successfull) {
+      return res.redirect(redirectUrl);
+    } else {
+      return fail(res, "Request body has invalid data");
+    }
   }
 }
 

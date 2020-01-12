@@ -18,8 +18,8 @@ class PeopleController extends Controller {
     function router() {
       const r = Router();
       r.get('/', this.GetQueryParamsHandler);
-      r.post('/add', this.AddToPeople);
-      r.post('/delete', this.RemoveFromPeople);
+      r.post('/add', this.AddItem);
+      r.post('/delete', this.RemoveItem);
       r.post('/update', this.Update);
       return r;
     }
@@ -57,7 +57,7 @@ class PeopleController extends Controller {
     return this.GetAll(req, res);
   }
 
-  private async AddToPeople(req: Request, res: Response) {
+  private async AddItem(req: Request, res: Response) {
     const addItemHandler = AddItemHandlerForDomain(this.Pathname);
     const fieldNames: PeopleViewModelForeignFields[] = [
       'films',
@@ -78,7 +78,7 @@ class PeopleController extends Controller {
     );
   }
 
-  private async RemoveFromPeople(req: Request, res: Response) {
+  private async RemoveItem(req: Request, res: Response) {
     const removeItemHandler = RemoveItemHandlerForDomain(this.Pathname);
     const fieldNames: PeopleViewModelForeignFields[] = [
       'films',

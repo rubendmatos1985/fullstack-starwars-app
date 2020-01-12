@@ -1,7 +1,6 @@
 import { IDBContext, knex, IDBResponse } from '.';
 import { IFilmViewModel } from '../models/ViewModels/FilmViewModel';
 import { Status } from '../middlewares/helpers';
-import uuid = require('uuid');
 import { Film } from '../models/Film';
 import {
   RelationData,
@@ -141,13 +140,13 @@ export const FilmContext: IDBContext<IFilmViewModel> = {
   // NOT AN ATHOMIC VALUE
   Remove: (columnName: string) =>
     function(ids: string[]): Promise<IDBResponse<string>> {
-      const successMessage = {
+      const successMessage:IDBResponse<string> = {
         status: Status.Successfull,
         message: `item(s) with name ${columnName} 
         and id(s) equals to ${JSON.stringify(ids)} 
         deleted successfully`
       };
-      const relationData = buildRelationDataFromColumnName(columnName);
+      const relationData = buildRelationContextFromField(columnName);
       if (relationData) {
         console.log(ids)
         return knex(relationData.tableName)
@@ -169,7 +168,7 @@ export const FilmContext: IDBContext<IFilmViewModel> = {
       filmId: string,
       itemIds: string[]
     ): Promise<IDBResponse<string>> {
-      const relationData: RelationData = buildRelationDataFromColumnName(
+      const relationData: RelationData = buildRelationContextFromField(
         columnName
       );
       if (!relationData) {
@@ -222,7 +221,7 @@ export const FilmContext: IDBContext<IFilmViewModel> = {
 // TAKE AN INPUT STRING AND MAPS IT
 // TO AN OBJECT WITH THE CORRESPONDANT
 // RELATION DATA
-function buildRelationDataFromColumnName(
+function buildRelationContextFromField(
   name: string
 ): RelationData | undefined {
   switch (name) {
