@@ -11,7 +11,7 @@ import { Planet } from '../types/DB';
 
 export const PlanetContext: IDBContext<IPlanetViewModel> = {
   Get: (field?: string) =>
-    function(value?: string): Promise<IPlanetViewModel[]> {
+    function(value?: string) {
       const k =
         field && value
           ? field === 'name'

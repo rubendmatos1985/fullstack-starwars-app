@@ -11,7 +11,7 @@ import { People } from '../types/DB';
 import uuid = require('uuid');
 
 export const PeopleContext: IDBContext<IPeopleViewModel> = {
-  Get: (field) => (value): Promise<IPeopleViewModel[]> => {
+  Get: (field) => (value) => {
     const k =
       value && field
         ? field === 'name'

@@ -1,10 +1,22 @@
-import { StarshipContext } from "../DB/StarshipContext"
+import { StarshipContext } from '../DB/StarshipContext';
+import { IDBResponse } from '../DB';
+import { IStarshipViewModel } from './ViewModels/StarshipViewModel';
 
-export default(() => {
-  const { Get }   = StarshipContext
+type Getter = (id: string) => Promise<IDBResponse<IStarshipViewModel[]>>;
+type GetterWithNoArgs = () => Promise<IDBResponse<IStarshipViewModel[]>>;
+type Adder = (ids: string[]) => Promise<IDBResponse<IStarshipViewModel[]>>;
+type Remover = (ids: string[]) => Promise<IDBResponse<string>>;
+
+export default (() => {
+  const { Get, Add, Remove, Update } = StarshipContext;
   return {
-    getById       : Get('id'),
-    getAll        : Get(),
-    getByName     : Get('name')
-  }
-})()
+    getById         : Get('id') as Getter,
+    getAll          : Get() as GetterWithNoArgs,
+    getByName       : Get('name') as Getter,
+    AddPilots       : Add('pilots') as Adder,
+    AddFilms        : Add('films') as Adder,
+    RemovePilots    : Remove('pilots') as Remover,
+    RemoveFilms     : Remove('films') as Remover,
+    Update
+  };
+})();

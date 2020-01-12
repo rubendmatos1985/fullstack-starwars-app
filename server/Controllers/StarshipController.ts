@@ -1,14 +1,26 @@
 import { Router, Request, Response } from 'express';
-import Starship from '../models/StarshipRepository';
 import { Controller } from './Controller';
+import { IDBResponse } from '../DB';
+import { Status } from '../middlewares/helpers';
+import {
+  DeleteItemsRequest,
+  RemoveItemHandlerForDomain,
+  AddItemsRequest,
+  AddItemHandlerForDomain,
+  UpdateEntityRequest,
+  fail
+} from './commons';
+import StarshipRepository from '../models/StarshipRepository';
+import { Starship } from '../types/DB';
 
 class StarshipController extends Controller {
   constructor() {
-    const pathname = 'starship';
-
     const router = () => {
       const r = Router();
       r.get('/', this.HandleQueryParams);
+      r.post('/add', this.AddItem)
+      r.post('/delete', this.RemoveItem),
+      r.post('/update', this.Update)
       return r;
     };
     super(router);
@@ -16,17 +28,20 @@ class StarshipController extends Controller {
   }
 
   private async GetById(req: Request, res: Response): Promise<Response> {
-    const r = await Starship.getById(req.params.id);
-    return res.json(r);
+    const { status, message } = await StarshipRepository.getById(req.query.id);
+    if (status === Status.Successfull) {
+      return res.json(message);
+    }
+    return res.json({ status: 'error', message: 'Id provided is wrong' });
   }
 
   private async GetAll(req: Request, res: Response): Promise<Response> {
-    const r = await Starship.getAll();
+    const r = await StarshipRepository.getAll();
     return res.json(r);
   }
 
   private async GetByName(req: Request, res: Response) {
-    const r = await Starship.getByName(req.query.name);
+    const r = await StarshipRepository.getByName(req.query.name);
     return res.json(r);
   }
 
@@ -38,6 +53,42 @@ class StarshipController extends Controller {
       return this.GetById(req, res);
     }
     return this.GetAll(req, res);
+  }
+  private async RemoveItem(req: DeleteItemsRequest, res: Response) {
+    const removeItemHandler = RemoveItemHandlerForDomain(this.Pathname);
+    const fieldNames: string[] = ['films', 'pilots'] as string[];
+
+    const removers = [
+      StarshipRepository.RemoveFilms,
+      StarshipRepository.RemovePilots
+    ];
+    return await Promise.all(
+      new Array(fieldNames.length)
+        .fill(removeItemHandler(req, res))
+        .map((handler, i) => handler(fieldNames[i], removers[i]))
+    );
+  }
+  async AddItem(req: AddItemsRequest, res: Response) {
+    const addItemHandler = AddItemHandlerForDomain(this.Pathname);
+    const fieldNames: string[] = ['films', 'pilots'];
+    const adders = [StarshipRepository.AddFilms, StarshipRepository.AddPilots];
+    return await Promise.all(
+      new Array(fieldNames.length)
+        .fill(addItemHandler(req, res))
+        .map((handler, i) => handler(fieldNames[i], adders[i]))
+    ).catch((e) => ({ status: Status.Error, message: 'Error' }));
+  }
+  private async Update(req: UpdateEntityRequest<Starship>, res: Response) {
+    const redirectUrl = `/api/v1/${this.Pathname}?id=${req.query.id}&apiKey=${req.query.apiKey}`;
+    const result: IDBResponse<string> = await StarshipRepository.Update({
+      id: req.query.id,
+      ...req.body
+    });
+    if (result.status === Status.Successfull) {
+      return res.redirect(redirectUrl);
+    } else {
+      return fail(res, 'Request body has invalid data');
+    }
   }
 }
 
