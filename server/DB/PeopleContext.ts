@@ -1,7 +1,14 @@
 import { knex, IDBContext, IDBResponse } from '.';
 import { IPeopleViewModel } from '../models/ViewModels/PeopleViewModel';
-import { RelationData, getIdsRelatedToThisEntity, validateCandidates, insertItemsIfNotAlreadyStored } from './commons';
+import {
+  RelationData,
+  getIdsRelatedToThisEntity,
+  validateCandidates,
+  insertItemsIfNotAlreadyStored
+} from './commons';
 import { Status } from '../middlewares/helpers';
+import { People } from '../types/DB';
+import uuid = require('uuid');
 
 export const PeopleContext: IDBContext<IPeopleViewModel> = {
   Get: (field) => (value): Promise<IPeopleViewModel[]> => {
@@ -84,17 +91,14 @@ export const PeopleContext: IDBContext<IPeopleViewModel> = {
         and id(s) equals to ${JSON.stringify(ids)} 
         deleted successfully`
       };
-      const relation:
-        | RelationData
-        | undefined = mapKeyNameToTableRelation(columnName);
+      const relation: RelationData | undefined = mapKeyNameToTableRelation(
+        columnName
+      );
       if (relation) {
-        knex(relation.tableName)
-          .del()
+        return knex(relation.tableName)
           .whereIn(relation.columnName, ids)
-          .then((v) => ({
-            status: Status.Successfull,
-            message: successMessage
-          }))
+          .del()
+          .then((v) => successMessage)
           .catch((e) => ({ status: Status.Error, message: e }));
       }
       return Promise.resolve({
@@ -102,10 +106,11 @@ export const PeopleContext: IDBContext<IPeopleViewModel> = {
         message: 'people do not have this field'
       });
     },
+  // ADD FOREING TABLES
   AddItems: (columnName: string) =>
     async function(
       peopleId: string,
-      itemIds: string[]
+      itemsIds: string[]
     ): Promise<IDBResponse<string>> {
       const relation = mapKeyNameToTableRelation(columnName);
       if (!relation) {
@@ -114,11 +119,15 @@ export const PeopleContext: IDBContext<IPeopleViewModel> = {
           message: 'film do not have this field'
         });
       }
-      const storedIds: string[] = await getIdsRelatedToThisEntity('people_id', peopleId, relation);
+      const storedIds: string[] = await getIdsRelatedToThisEntity(
+        'people_id',
+        peopleId,
+        relation
+      );
 
       const enteredIdsAreValid: boolean = await validateCandidates(
         relation.entityTableName,
-        itemIds
+        itemsIds
       );
       if (!enteredIdsAreValid) {
         return Promise.resolve({
@@ -129,17 +138,20 @@ export const PeopleContext: IDBContext<IPeopleViewModel> = {
       return insertItemsIfNotAlreadyStored(
         peopleId,
         'people_id',
-        itemIds,
+        itemsIds,
         storedIds,
-        relation,
+        relation
       );
     },
-  Update: () => {}
+  Update: (people: People) =>
+    knex('people')
+      .where({ id: people.id })
+      .update(people)
+      .then(v => ({ status: Status.Successfull, message: `Item with id ${people.id} updated successfully`  }))
+      .catch(e => ({ status: Status.Error, message: e }))
 };
 
-function mapKeyNameToTableRelation(
-  name: string
-): RelationData | undefined {
+function mapKeyNameToTableRelation(name: string): RelationData | undefined {
   switch (name) {
     case 'films':
       return {

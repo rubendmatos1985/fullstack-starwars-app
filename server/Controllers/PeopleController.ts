@@ -1,11 +1,18 @@
 import { Controller } from './Controller';
 import { Router, Response, Request, NextFunction } from 'express';
 import PeopleRepository from '../models/PeopleRepository';
-import { AddItemHandlerForDomain, RemoveItemHandlerForDomain } from './commons';
+import {
+  AddItemHandlerForDomain,
+  RemoveItemHandlerForDomain,
+  UpdateEntityRequest
+} from './commons';
 import { PeopleViewModelForeignFields } from '../models/ViewModels/PeopleViewModel';
+import { People } from '../types/DB';
+import { IDBResponse } from '../DB';
+import { Status } from '../middlewares/helpers';
+import { fail } from './commons';
 
 class PeopleController extends Controller {
-  foreignFields: PeopleViewModelForeignFields[];
   constructor() {
     super(router);
     function router() {
@@ -13,10 +20,10 @@ class PeopleController extends Controller {
       r.get('/', this.GetQueryParamsHandler);
       r.post('/add', this.AddToPeople);
       r.post('/delete', this.RemoveFromPeople);
+      r.post('/update', this.Update);
       return r;
     }
     this.Pathname = 'people';
-    this.foreignFields = [];
   }
 
   async GetAll(req: Request, res: Response): Promise<Response> {
@@ -67,13 +74,43 @@ class PeopleController extends Controller {
     return await Promise.all(
       new Array(fieldNames.length)
         .fill(addItemHandler(req, res))
-        .map((adder, i) => adder(fieldNames[i], adders[i]))
+        .map((handler, i) => handler(fieldNames[i], adders[i]))
     );
   }
 
-  private async RemoveFromPeople() {
+  private async RemoveFromPeople(req: Request, res: Response) {
     const removeItemHandler = RemoveItemHandlerForDomain(this.Pathname);
-    const foreignFields: PeopleViewModelForeignFields[] = [] as PeopleViewModelForeignFields[];
+    const fieldNames: PeopleViewModelForeignFields[] = [
+      'films',
+      'vehicles',
+      'starships',
+      'species'
+    ] as PeopleViewModelForeignFields[];
+
+    const removers = [
+      PeopleRepository.RemoveFilms,
+      PeopleRepository.RemoveVehicles,
+      PeopleRepository.RemoveStarships,
+      PeopleRepository.RemoveSpecies
+    ];
+    return await Promise.all(
+      new Array(fieldNames.length)
+        .fill(removeItemHandler(req, res))
+        .map((handler, i) => handler(fieldNames[i], removers[i]))
+    );
+  }
+
+  private async Update(req: UpdateEntityRequest<People>, res: Response) {
+    const redirectUrl = `/api/v1/${this.Pathname}?id=${req.query.id}&apiKey=${req.query.apiKey}`;
+    const result: IDBResponse<string> = await PeopleRepository.Update({
+      id: req.query.id,
+      ...req.body
+    });
+    if (result.status === Status.Successfull) {
+      return res.redirect(redirectUrl);
+    } else {
+      return fail(res, "Request body has invalid data");
+    }
   }
 }
 

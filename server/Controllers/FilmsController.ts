@@ -8,11 +8,11 @@ import { Controller } from './Controller';
 import { IDBResponse } from '../DB';
 import { Status } from '../middlewares/helpers';
 import { Film } from '../models/Film';
-import { IAddItemsRequestBody, AddItemHandlerForDomain, fail } from './commons';
+import { IAddItemsRequestBody, AddItemHandlerForDomain, fail, RemoveItemHandlerForDomain } from './commons';
 
 interface IDeleteItemsRequestBody {
   fieldName: string;
-  itemIds: string[];
+  itemsIds: string[];
 }
 
 
@@ -92,6 +92,7 @@ class FilmsController extends Controller {
   }
 
   private async DeleteFromFilm(req: DeleteItemsRequest, res: Response) {
+    const removeItemsHandler = RemoveItemHandlerForDomain('films');
     const fieldNames: FilmViewModelForeignFields[] = [
       'characters',
       'vehicles',
@@ -109,8 +110,8 @@ class FilmsController extends Controller {
     ];
     return await Promise.all(
       new Array(fieldNames.length)
-        .fill(this.RemoveItemHandler(req, res))
-        .map((fn, i) => fn(fieldNames[i], removers[i]))
+        .fill(removeItemsHandler(req, res))
+        .map((handler, i) => handler(fieldNames[i], removers[i]))
     );
   }
 
@@ -136,23 +137,6 @@ class FilmsController extends Controller {
         .fill(addItemHandler(req, res))
         .map((fn, i) => fn(fieldNames[i], adders[i]))
     );
-  }
-
-  private RemoveItemHandler(req: Request, res: Response) {
-    const redirectUrl = `/api/v1/${this.Pathname}?id=${req.query.id}&apiKey=${req.query.apiKey}`;
-    return async (
-      field: FilmViewModelForeignFields,
-      remover: (ids: string[]) => IDBResponse<any>
-    ): Promise<Response | void> => {
-      const { fieldName, itemIds } = req.body;
-      if (fieldName === field) {
-        const { status, message } = await remover(itemIds);
-        if (status === Status.Successfull) {
-          return res.redirect(redirectUrl);
-        }
-        return fail(res, message);
-      }
-    };
   }
   private async UpdateFilmContent(req: UpdateContentRequest, res: Response) {
     const redirectUrl = `/api/v1/${this.Pathname}?id=${req.query.id}&apiKey=${req.query.apiKey}`;

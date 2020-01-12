@@ -3,6 +3,14 @@ import { Response, Request } from 'express';
 import { IDBResponse } from '../DB';
 import { Status } from '../middlewares/helpers';
 
+export interface UpdateEntityRequest<T>{
+  body: T
+  query: {
+    id: string
+    apiKey: string
+  }
+}
+
 export interface AddItemsRequest extends Request {
   body: IAddItemsRequestBody;
   query: {
@@ -45,9 +53,9 @@ export const RemoveItemHandlerForDomain = (domain: string) =>
       field: string,
       remover: (ids: string[]) => IDBResponse<any>
     ): Promise<Response | void> => {
-      const { fieldName, itemIds } = req.body;
+      const { fieldName, itemsIds } = req.body;
       if (fieldName === field) {
-        const { status, message } = await remover(itemIds);
+        const { status, message } = await remover(itemsIds);
         if (status === Status.Successfull) {
           return res.redirect(redirectUrl);
         }
