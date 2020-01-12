@@ -1,15 +1,27 @@
 import { Router, Request, Response } from 'express';
-import Specie from '../models/SpecieRepository';
 import { Controller } from './Controller';
 import { ISpecieViewModel } from '../models/ViewModels/SpecieViewModel';
 import SpecieRepository from '../models/SpecieRepository';
 import { IDBResponse } from '../DB';
+import { Status } from '../middlewares/helpers';
+import {
+  fail,
+  DeleteItemsRequest,
+  RemoveItemHandlerForDomain,
+  AddItemHandlerForDomain,
+  AddItemsRequest,
+  UpdateEntityRequest
+} from './commons';
+import { Specie } from '../types/DB';
 
 class SpeciesController extends Controller {
   constructor() {
     const router = () => {
       const r: Router = Router();
       r.get('/', this.HandleQueryParams);
+      r.post('/delete', this.RemoveItem)
+      r.post('/add', this.AddItem)
+      r.post('/update', this.Update)
       return r;
     };
     super(router);
@@ -17,21 +29,29 @@ class SpeciesController extends Controller {
   }
 
   public async GetById(req: Request, res: Response): Promise<Response> {
-    const { message }: IDBResponse<ISpecieViewModel[]> = await Specie.getById(
-      req.params.id
+    const {
+      message
+    }: IDBResponse<ISpecieViewModel[]> = await SpecieRepository.GetById(
+      req.query.id
     );
     return res.json(message);
   }
 
   private async GetAll(req: Request, res: Response): Promise<Response> {
-    const { message }: IDBResponse<ISpecieViewModel[]> = await Specie.getAll();
-    return res.json(message);
+    const {
+      status,
+      message
+    }: IDBResponse<ISpecieViewModel[]> = await SpecieRepository.GetAll();
+    if (status === Status.Successfull) {
+      return res.json(message);
+    }
+    return fail(res, 'Error');
   }
 
   private async GetByName(req: Request, res: Response): Promise<Response> {
     const {
       message
-    }: IDBResponse<ISpecieViewModel[]> = await SpecieRepository.getByName(
+    }: IDBResponse<ISpecieViewModel[]> = await SpecieRepository.GetByName(
       req.query.name
     );
     return res.json(message);
@@ -45,6 +65,44 @@ class SpeciesController extends Controller {
       return this.GetByName(req, res);
     }
     return this.GetAll(req, res);
+  }
+
+  private async RemoveItem(req: DeleteItemsRequest, res: Response) {
+    const removeItemHandler = RemoveItemHandlerForDomain(this.Pathname);
+    const fieldNames: string[] = ['films', 'people'] as string[];
+
+    const removers = [
+      SpecieRepository.RemoveFilms,
+      SpecieRepository.RemovePeople
+    ];
+    return await Promise.all(
+      new Array(fieldNames.length)
+        .fill(removeItemHandler(req, res))
+        .map((handler, i) => handler(fieldNames[i], removers[i]))
+    );
+  }
+  async AddItem(req: AddItemsRequest, res: Response) {
+    const addItemHandler = AddItemHandlerForDomain(this.Pathname);
+    const fieldNames: string[] = ['films', 'people'];
+    const adders = [SpecieRepository.AddFilms, SpecieRepository.AddPeople];
+    return await Promise.all(
+      new Array(fieldNames.length)
+        .fill(addItemHandler(req, res))
+        .map((handler, i) => handler(fieldNames[i], adders[i]))
+    )
+    .catch(e => ({ status: Status.Error, message: "Error" }));
+  }
+  private async Update(req: UpdateEntityRequest<Specie>, res: Response) {
+    const redirectUrl = `/api/v1/${this.Pathname}?id=${req.query.id}&apiKey=${req.query.apiKey}`;
+    const result: IDBResponse<string> = await SpecieRepository.Update({
+      id: req.query.id,
+      ...req.body
+    });
+    if (result.status === Status.Successfull) {
+      return res.redirect(redirectUrl);
+    } else {
+      return fail(res, "Request body has invalid data");
+    }
   }
 }
 

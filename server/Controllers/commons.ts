@@ -23,6 +23,21 @@ export interface IAddItemsRequestBody {
   itemsIds: string[];
 }
 
+export interface IDeleteItemsRequestBody {
+  fieldName: string;
+  itemsIds: string[];
+}
+
+
+
+export interface DeleteItemsRequest extends Request {
+  body: IDeleteItemsRequestBody;
+  query:{
+    id: string;
+    apiKey: string
+  }
+}
+
 export type Adder = (filmId: string, itemIds: string[]) => IDBResponse<any>;
 
 export const fail = (res: Response, message: string): Response =>
