@@ -2,6 +2,9 @@ import { Router, Response, Request } from "express";
 import VehicleRepository from "../models/VehicleRepository";
 import { Controller } from "./Controller";
 import { Status } from "../middlewares/helpers";
+import { DeleteItemsRequest, RemoveItemHandlerForDomain, AddItemsRequest, AddItemHandlerForDomain, UpdateEntityRequest, fail } from "./commons";
+import { Vehicle } from "../types/DB";
+import { IDBResponse } from "../DB";
 
 const failedMessage = {
   status: Status.Error,
@@ -13,6 +16,9 @@ class VehicleController extends Controller {
     const router = () => {
       const r = Router();
       r.get("/", this.QueryParamsHandler);
+      r.post('/update', this.Update)
+      r.post('/delete', this.RemoveItem)
+      r.post('/add', this.AddItem)
       return r;
     };
     super(router);
@@ -53,6 +59,42 @@ class VehicleController extends Controller {
       return this.GetById(req, res);
     }
     return this.GetAll(req, res);
+  }
+  private async RemoveItem(req: DeleteItemsRequest, res: Response) {
+    const removeItemHandler = RemoveItemHandlerForDomain(this.Pathname);
+    const fieldNames: string[] = ['films', 'pilots'] as string[];
+
+    const removers = [
+      VehicleRepository.RemoveFilms,
+      VehicleRepository.RemovePilots
+    ];
+    return await Promise.all(
+      new Array(fieldNames.length)
+        .fill(removeItemHandler(req, res))
+        .map((handler, i) => handler(fieldNames[i], removers[i]))
+    );
+  }
+  async AddItem(req: AddItemsRequest, res: Response) {
+    const addItemHandler = AddItemHandlerForDomain(this.Pathname);
+    const fieldNames: string[] = ['films', 'pilots'];
+    const adders = [VehicleRepository.AddFilms, VehicleRepository.AddPilots];
+    return await Promise.all(
+      new Array(fieldNames.length)
+        .fill(addItemHandler(req, res))
+        .map((handler, i) => handler(fieldNames[i], adders[i]))
+    ).catch((e) => ({ status: Status.Error, message: 'Error' }));
+  }
+  private async Update(req: UpdateEntityRequest<Vehicle>, res: Response) {
+    const redirectUrl = `/api/v1/${this.Pathname}?id=${req.query.id}&apiKey=${req.query.apiKey}`;
+    const result: IDBResponse<string> = await VehicleRepository.Update({
+      id: req.query.id,
+      ...req.body
+    });
+    if (result.status === Status.Successfull) {
+      return res.redirect(redirectUrl);
+    } else {
+      return fail(res, 'Request body has invalid data');
+    }
   }
 }
 
