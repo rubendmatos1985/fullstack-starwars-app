@@ -32,7 +32,6 @@ export async function SendSignInEmail(
     await EmailServiceProvider.SendApiKeyEmail(apiKey, email);
     return next();
   } catch (e) {
-    console.log(e);
     return res.status(404).send({
       status: "Error",
       message:

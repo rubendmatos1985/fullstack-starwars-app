@@ -69,7 +69,7 @@ export const StarshipContext: IDBContext<IStarshipViewModel> = {
         )
         .join(EntityTable.Starship, 'starship.id', 'pilots.starship_id')
         .then(v => ({ status: Status.Successfull, message: v }))
-        .catch(e => {console.log(e); return ({ status: Status.Error, message: e }) })
+        .catch(e => ({ status: Status.Error, message: e }))
     },
   Add: (field: string) =>
     async function(

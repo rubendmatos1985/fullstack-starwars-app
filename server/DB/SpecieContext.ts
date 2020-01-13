@@ -62,7 +62,6 @@ export const SpecieContext: IDBContext<ISpecieViewModel> = {
         .join('specie', 'specie.id', 'in_race_people.specie_id')
         .then((v) => ({ status: Status.Successfull, message: v }))
         .catch((e) => {
-          console.log(e);
           return { status: Status.Error, message: e };
         });
     },

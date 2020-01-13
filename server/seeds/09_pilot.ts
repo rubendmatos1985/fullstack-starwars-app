@@ -54,4 +54,4 @@ const buildPilotRelation = async (vehicles: IVehicleFromApi[]) =>
           )
         )
     )
-    .catch((e:ExecException)=> console.log(e));
+    .catch((e:ExecException)=> e);

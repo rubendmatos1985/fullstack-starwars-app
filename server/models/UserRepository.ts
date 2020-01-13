@@ -28,9 +28,7 @@ export default (() => {
         fieldValue: new Date()
       })
         .then(v => v)
-        .catch(e => {
-          console.log(e);
-        })
+        .catch(e => e)
         .finally(() => ({ status: Status.Error, message: "error" })),
     UpdateUserData: (data: IUserEntity) => Update(data),
     ChangeApiKey: (oldApiKey: string) =>

@@ -148,7 +148,6 @@ export const FilmContext: IDBContext<IFilmViewModel> = {
       };
       const relationData = buildRelationContextFromField(columnName);
       if (relationData) {
-        console.log(ids)
         return knex(relationData.tableName)
           .whereIn(relationData.columnName, ids)
           .del()

@@ -6,7 +6,7 @@ export const asyncCompose = (...fns: Function[]) => (data: Promise<any> | any) =
     (acc: Promise<any>, f: Function) =>
       acc
         .then((v: any) => f(v))
-        .catch((e:ExecException) => console.log(e))
+        .catch((e:ExecException) => e)
     ,(isPromise(data) ? data : Promise.resolve(data))
     )
 

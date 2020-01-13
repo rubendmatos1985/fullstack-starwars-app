@@ -17,8 +17,8 @@ switch (process.argv[2]) {
   case "latest": {
     knex.migrate
       .latest({ directory: "./dist/server/migrations" })
-      .then(v => console.log("DB UPDATED", v))
-      .catch(e => console.log("Error", e));
+      .then(v => v)
+      .catch(e => e);
     return;
   }
   default:
