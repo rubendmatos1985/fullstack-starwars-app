@@ -42,9 +42,9 @@ export class HomeController extends Controller{
             resources: {
             type: "GET", 
               urls: {
-                  get_all       : `https://${req.get('host')}/api/v1/<resource>?id=<resource id>&apiKey=<your api key>`,
-                  get_by_id     : `https://${req.get('host')}/api/v1/<resource>?id=<resource id>&apiKey=<your api key>`,
-                  get_by_name   : `https://${req.get('host')}/api/v1/<resource>?name=<resource name>&apiKey=<your api key>`
+                  get_all       : `https://${req.get('host')}/api/v1/<resource>?id=<resource_id>&apiKey=<your_api_key>`,
+                  get_by_id     : `https://${req.get('host')}/api/v1/<resource>?id=<resource_id>&apiKey=<your_api_key>`,
+                  get_by_name   : `https://${req.get('host')}/api/v1/<resource>?name=<resource_name>&apiKey=<your_api_key>`
               },
               scopes: ['read']
             },
@@ -60,7 +60,7 @@ export class HomeController extends Controller{
             },
             add:{
                 type: 'POST',
-                url: `https://${req.get('host')}/api/v1/<resource>/add?id=<resource id>&apiKey=<your api key>`,
+                url: `https://${req.get('host')}/api/v1/<resource>/add?id=<resource_id>&apiKey=<your_api_key>`,
                 body:{
                     fieldName: 'string',
                     itemsIds: ['string']
@@ -69,7 +69,7 @@ export class HomeController extends Controller{
             },
             delete: {
                 type: 'POST',
-                url: `https://${req.get('host')}/api/v1/<resource>/delete?id=<resource id>&apiKey=<your api key>`,
+                url: `https://${req.get('host')}/api/v1/<resource>/delete?id=<resource id>&apiKey=<your_api_key>`,
                 body:{
                     fieldName: 'string',
                     itemsIds: ['string']
