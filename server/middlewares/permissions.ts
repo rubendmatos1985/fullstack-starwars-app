@@ -9,16 +9,17 @@ export namespace Permissions {
     const user: IDBResponse<IUserEntity[]> = await UserRepository.GetByApiKey(
       req.query.apiKey
     );
-    if (user.message[0].scopes.indexOf('write') >= 0) {
+    if (
+      user.status === Status.Successfull &&
+      user.message[0].scopes.indexOf('write') >= 0
+    ) {
       return next();
     } else {
-      res
-        .status(403)
-        .send({
-          status: Status.Error,
-          message:
-            'You do not have the required permissions to make this operation'
-        });
+      res.status(403).send({
+        status: Status.Error,
+        message:
+          'You do not have the required permissions to make this operation'
+      });
     }
   }
 }
