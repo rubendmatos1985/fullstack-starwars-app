@@ -42,7 +42,8 @@ export const UserContext: IDBContext<IUserEntity> = {
         created: new Date(),
         updated: new Date(),
         last_conexion: new Date(),
-        api_key: uuid()
+        api_key: uuid(),
+        scopes: "['read']" 
       })
       .then(r => ({ status: Status.Successfull, message: r }))
       .catch(e => ({ status: Status.Error, message: e })),
