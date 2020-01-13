@@ -13,15 +13,16 @@ import {
   UpdateEntityRequest
 } from './commons';
 import { Specie } from '../types/DB';
+import { Permissions } from '../middlewares/permissions';
 
 class SpeciesController extends Controller {
   constructor() {
     const router = () => {
       const r: Router = Router();
       r.get('/', this.HandleQueryParams);
-      r.post('/delete', this.RemoveItem)
-      r.post('/add', this.AddItem)
-      r.post('/update', this.Update)
+      r.post('/delete', Permissions.Write, this.RemoveItem)
+      r.post('/add', Permissions.Write, this.AddItem)
+      r.post('/update', Permissions.Write, this.Update)
       return r;
     };
     super(router);

@@ -32,5 +32,6 @@ export interface IUserEntity extends IEntity{
     created         : Date,
     updated         : Date,
     last_conexion   : Date,
-    api_key?        : string
+    api_key?        : string,
+    scopes?         :string[]
 }

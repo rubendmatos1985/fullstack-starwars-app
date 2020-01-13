@@ -6,15 +6,16 @@ import { Status } from '../middlewares/helpers';
 import { Planet } from '../types/DB';
 import { IDBResponse } from '../DB';
 import PeopleRepository from '../models/PeopleRepository';
+import { Permissions } from '../middlewares/permissions';
 
 class PlanetController extends Controller {
   constructor() {
     const router = () => {
       const r = Router();
       r.get('/', this.QueryParamsHandler);
-      r.post('/add', this.AddItem)
-      r.post('/delete', this.RemoveItem)
-      r.post('/update', this.Update)
+      r.post('/add', Permissions.Write, this.AddItem)
+      r.post('/delete', Permissions.Write, this.RemoveItem)
+      r.post('/update', Permissions.Write, this.Update)
       return r;
     };
     super(router);

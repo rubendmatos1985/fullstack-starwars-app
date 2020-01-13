@@ -9,6 +9,7 @@ import { IDBResponse } from '../DB';
 import { Status } from '../middlewares/helpers';
 import { Film } from '../models/Film';
 import { IAddItemsRequestBody, AddItemHandlerForDomain, fail, RemoveItemHandlerForDomain } from './commons';
+import { Permissions } from '../middlewares/permissions';
 
 interface IDeleteItemsRequestBody {
   fieldName: string;
@@ -42,9 +43,9 @@ class FilmsController extends Controller {
     const router = () => {
       const r: Router = Router();
       r.get('/', this.HandleQueryParams);
-      r.post('/delete', this.DeleteFromFilm);
-      r.post('/add', this.AddToFilm);
-      r.post('/update', this.UpdateFilmContent);
+      r.post('/delete', Permissions.Write, this.DeleteFromFilm);
+      r.post('/add', Permissions.Write, this.AddToFilm);
+      r.post('/update', Permissions.Write, this.UpdateFilmContent);
       return r;
     };
     super(router);

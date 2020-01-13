@@ -5,6 +5,7 @@ import { Status } from "../middlewares/helpers";
 import { DeleteItemsRequest, RemoveItemHandlerForDomain, AddItemsRequest, AddItemHandlerForDomain, UpdateEntityRequest, fail } from "./commons";
 import { Vehicle } from "../types/DB";
 import { IDBResponse } from "../DB";
+import { Permissions } from "../middlewares/permissions";
 
 const failedMessage = {
   status: Status.Error,
@@ -16,9 +17,9 @@ class VehicleController extends Controller {
     const router = () => {
       const r = Router();
       r.get("/", this.QueryParamsHandler);
-      r.post('/update', this.Update)
-      r.post('/delete', this.RemoveItem)
-      r.post('/add', this.AddItem)
+      r.post('/update', Permissions.Write, this.Update)
+      r.post('/delete', Permissions.Write, this.RemoveItem)
+      r.post('/add', Permissions.Write, this.AddItem)
       return r;
     };
     super(router);

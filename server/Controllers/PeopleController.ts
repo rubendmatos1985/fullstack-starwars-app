@@ -11,6 +11,7 @@ import { People } from '../types/DB';
 import { IDBResponse } from '../DB';
 import { Status } from '../middlewares/helpers';
 import { fail } from './commons';
+import { Permissions } from '../middlewares/permissions';
 
 class PeopleController extends Controller {
   constructor() {
@@ -18,9 +19,9 @@ class PeopleController extends Controller {
     function router() {
       const r = Router();
       r.get('/', this.GetQueryParamsHandler);
-      r.post('/add', this.AddItem);
-      r.post('/delete', this.RemoveItem);
-      r.post('/update', this.Update);
+      r.post('/add', Permissions.Write, this.AddItem);
+      r.post('/delete', Permissions.Write, this.RemoveItem);
+      r.post('/update', Permissions.Write, this.Update);
       return r;
     }
     this.Pathname = 'people';
