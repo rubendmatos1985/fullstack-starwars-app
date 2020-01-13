@@ -36,7 +36,10 @@ export class HomeController extends Controller{
 
     private async GetHome(req:Request, res: Response){
         const data = this.apiData(req)
-        return res.json({ status: Status.Successfull, message: data  })
+        return res.json({ 
+            status: Status.Successfull, 
+            endpoints: data  
+        })
     }
 
 }
