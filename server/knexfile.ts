@@ -7,9 +7,8 @@ const {
   DB_PASSWORD
 } = process.env
 
-let connection: object;
-if(process.env.NODE_ENV === 'development'){
-  connection = {
+const connection = process.env.NODE_ENV === 'development' 
+? {
     user: DB_USER,
     port: DB_PORT,
     host: DB_HOST,
@@ -17,12 +16,10 @@ if(process.env.NODE_ENV === 'development'){
     password: DB_PASSWORD,
     
   }
-}else{
-  connection = { 
-    connection: process.env.DATABASE_URL, 
-    ssl: true 
-  }
-}
+: process.env.DATABASE_URL
+  
+ 
+
 
 module.exports = {
   client: 'pg',
