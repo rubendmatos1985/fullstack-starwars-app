@@ -41,7 +41,7 @@ App
 
 // REGISTER USER CONTROLLER
 const userController = new UserController();    
-App.use(userController.Pathname, userController.Router())
+App.use('/' + userController.Pathname, userController.Router())
 
 
 
