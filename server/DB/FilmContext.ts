@@ -1,7 +1,7 @@
 import { IDBContext, knex, IDBResponse } from '.';
 import { IFilmViewModel } from '../models/ViewModels/FilmViewModel';
 import { Status } from '../middlewares/helpers';
-import { Film } from '../models/Film';
+import { Film } from '../../server/models/Film';
 import {
   RelationData,
   getIdsRelatedToThisEntity,

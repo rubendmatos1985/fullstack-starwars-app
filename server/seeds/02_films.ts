@@ -1,6 +1,5 @@
 import * as Knex from "knex";
-import { IFilmFromApi, FilmFieldsNames } from '../models/Film';
-import { Film } from '../models/Film';
+import { Film, IFilmFromApi, FilmFieldsNames } from '../../server/models/Film'//'../models/Film';
 import Api from '../original_starwars_api';
 import mapData from '../utils/mapData';
 import { Table } from "../types/Tables";

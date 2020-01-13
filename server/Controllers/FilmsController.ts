@@ -7,7 +7,7 @@ import FilmRepository from '../models/FilmRepository';
 import { Controller } from './Controller';
 import { IDBResponse } from '../DB';
 import { Status } from '../middlewares/helpers';
-import { Film } from '../models/Film';
+import { Film } from '../../server/models/Film';
 import { IAddItemsRequestBody, AddItemHandlerForDomain, fail, RemoveItemHandlerForDomain } from './commons';
 import { Permissions } from '../middlewares/permissions';
 

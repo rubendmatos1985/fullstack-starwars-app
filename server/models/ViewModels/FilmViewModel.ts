@@ -1,5 +1,5 @@
 import { IFromForeignTables } from "./FromForeignTables";
-import { Film } from "../Film";
+import { Film } from '../../../server/models/Film'
 
 export interface IFilmViewModel extends Film {
   characters    : IFromForeignTables[];

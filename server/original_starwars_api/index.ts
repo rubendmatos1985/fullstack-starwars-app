@@ -1,7 +1,7 @@
 import fetchData from '../utils/fetchData';
 import { IPeopleFromApi } from '../models/People';
-import { IFilmFromApi } from '../models/Film';
-import { IPlanetFromApi } from '../models/Planet';
+import { IFilmFromApi } from '../../server/models/Film' //'../models/Film';
+import { IPlanetFromApi } from '../../server/models/Planet' //'../models/Planet';
 import { IApiResponse } from './responseInterface';
 import { asyncMemoize as Mem } from '../utils/memoize';
 import { ExecException } from 'child_process';
