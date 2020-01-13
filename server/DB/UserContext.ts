@@ -43,7 +43,7 @@ export const UserContext: IDBContext<IUserEntity> = {
         updated: new Date(),
         last_conexion: new Date(),
         api_key: uuid(),
-        scopes: ['read'] 
+        scopes: JSON.stringify(['read']) 
       })
       .then(r => ({ status: Status.Successfull, message: r }))
       .catch(e => ({ status: Status.Error, message: e })),
