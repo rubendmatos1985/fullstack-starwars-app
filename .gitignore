@@ -4,3 +4,4 @@
 /server/settings.js
 *.env
 .prettierrc
+prod_db.js

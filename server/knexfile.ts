@@ -1,4 +1,5 @@
-const {
+import connection from '../prod_db.js';
+/* const {
   DB_CLIENT,
   DB_USER,
   DB_PORT,
@@ -6,20 +7,15 @@ const {
   DB_NAME,
   DB_PASSWORD
 } = process.env
-
-const connection = process.env.NODE_ENV === 'development' 
-? {
+ */
+/* const connection =  {
     user: DB_USER,
     port: DB_PORT,
     host: DB_HOST,
     database: DB_NAME,
     password: DB_PASSWORD,
     
-  }
-: process.env.DATABASE_URL
-  
- 
-
+  } */
 
 module.exports = {
   client: 'pg',
