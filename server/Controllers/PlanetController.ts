@@ -19,7 +19,7 @@ class PlanetController extends Controller {
       return r;
     };
     super(router);
-    this.Pathname = 'planet';
+    this.Pathname = 'planets';
   }
 
   async GetAll(req: Request, res: Response) {

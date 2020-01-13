@@ -25,7 +25,7 @@ class StarshipController extends Controller {
       return r;
     };
     super(router);
-    this.Pathname = 'starship';
+    this.Pathname = 'starships';
   }
 
   private async GetById(req: Request, res: Response): Promise<Response> {

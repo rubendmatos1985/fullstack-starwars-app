@@ -26,7 +26,7 @@ class SpeciesController extends Controller {
       return r;
     };
     super(router);
-    this.Pathname = 'specie';
+    this.Pathname = 'species';
   }
 
   public async GetById(req: Request, res: Response): Promise<Response> {

@@ -11,6 +11,7 @@ import SpeciesController from './Controllers/SpeciesController';
 import StarshipController from './Controllers/StarshipController';
 import VehicleController from './Controllers/VehicleController';
 import UserController from './Controllers/UserController';
+import { HomeController } from './Controllers/HomeController';
 
 const App:Application = Express();
 
@@ -41,9 +42,12 @@ App
 
 // REGISTER USER CONTROLLER
 const userController = new UserController();    
+const homeController = new HomeController()
+
 App.use('/' + userController.Pathname, userController.Router())
+App.use('/' + homeController.Pathname, homeController.Router())
 
-
+App.get('/*', (req, res)=> res.redirect('/home') )
 
  // START APP
    App

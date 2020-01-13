@@ -23,7 +23,7 @@ class VehicleController extends Controller {
       return r;
     };
     super(router);
-    this.Pathname = 'vehicle'
+    this.Pathname = 'vehicles'
   }
 
   private async GetById(req: Request, res: Response): Promise<Response> {
