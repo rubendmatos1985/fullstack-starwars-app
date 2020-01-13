@@ -56,7 +56,6 @@ export interface Film {
   created: FilmFields.created;
   edited: FilmFields.edited;
   url: FilmFields.url;
-
 }
 
 
