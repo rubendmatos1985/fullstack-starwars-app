@@ -1,4 +1,8 @@
-const dotenv = require("dotenv").config();
+const dotenv = require("dotenv")
+if(process.env.NODE_ENV === 'development'){
+  dotenv.config()
+}
+
 const readline = require("readline");
 const rl = readline.createInterface({
   input: process.stdin,
