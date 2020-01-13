@@ -11,7 +11,10 @@ export namespace Authentication {
   export const CheckKeyIsProvided = (req: Request, res: Response, next: NextFunction) =>
     req.query.apiKey
       ? next()
-      : res.send({ status: 'error', message: 'You must provide an api key' })
+      : res.send({ 
+        status: 'error', 
+        message: `You must provide an api key after the url. Ex: https://${req.get('host')}/api/v1/<resource>?apiKey=<your api key>`
+       })
   
   export async function ValidateKey(req: Request, res: Response, next: NextFunction): Promise<void> {
     const dbResponse: any = await User.GetByApiKey(req.query.apiKey)
