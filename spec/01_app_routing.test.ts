@@ -1,6 +1,6 @@
 import request from 'supertest';
 import App from '../server/app';
-describe('app', () => {
+describe('routing', () => {
   test('GET /home', async () => {
     const response = await request(App).get('/home');
     expect(response.status).toBe(200);
