@@ -7,7 +7,7 @@
   DB_PASSWORD
 } = process.env
  
- const connection =  process.env.NODE_ENV === 'development' 
+ const connection =  process.env.NODE_ENV === 'development' || 'test' 
  ? {
     user: DB_USER,
     port: DB_PORT,
