@@ -1,3 +1,5 @@
+import { Config } from "knex";
+
 const {
   DB_CLIENT,
   DB_USER,
@@ -7,29 +9,17 @@ const {
   DB_PASSWORD
 } = process.env;
 
-module.exports = {
-  test: {
-    client: 'pg',
-    connection: {
-      user: DB_USER,
-      port: DB_PORT,
-      host: DB_HOST,
-      database: DB_NAME,
-      password: DB_PASSWORD
-    }
-  },
-  development: {
-    client: 'pg',
-    connection: {
-      user: DB_USER,
-      port: DB_PORT,
-      host: DB_HOST,
-      database: DB_NAME,
-      password: DB_PASSWORD
-    }
-  },
-  production: {
-    client: 'pg',
-    connection: process.env.DATABASE_URL + '?ssl=true'
-  }
-};
+const connection = process.env.NODE_ENV === 'development' || 'test'
+? {
+  user: DB_USER,
+  port: DB_PORT,
+  host: DB_HOST,
+  database: DB_NAME,
+  password: DB_PASSWORD
+}
+: process.env.DATABASE_URL + '?ssl=true'
+
+export const config:Config = {
+  client: 'pg',
+  connection,
+}

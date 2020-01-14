@@ -1,10 +1,11 @@
-import Knex from "knex";
+import k, { Config } from "knex";
 import { Status } from "../middlewares/helpers";
+import { config } from '../knexfile';
 export interface IDBResponse<T> {
   status: Status;
   message: T | Error;
 }
-export const knex: Knex = require("knex")(require("../knexfile"));
+export const knex = k(config);
 
 export interface IDBContext<T> {
   Get: (f?: string) => (value?: any) => Promise<IDBResponse<T[]>>;
