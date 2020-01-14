@@ -1,6 +1,6 @@
-import App from "./app";
-import getPort from "./utils/port-getter";
+import App from './app';
+import getPort from './utils/port-getter';
 
-App
-.listen(getPort(process), () => console.log(`server started on port ${getPort(process)}`));
-
+App.listen(getPort(process), () =>
+  console.log(`server started on port ${getPort(process)}`)
+);
