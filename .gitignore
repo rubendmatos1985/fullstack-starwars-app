@@ -5,3 +5,4 @@
 *.env
 .prettierrc
 prod_db.js
+tslint.json

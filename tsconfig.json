@@ -1,6 +1,15 @@
 {
   "compilerOptions": {
-      "experimentalDecorators": true,
+    "plugins": [
+      {
+        "name": "typescript-tslint-plugin",
+        "alwaysShowRuleFailuresAsWarnings": false,
+        "ignoreDefinitionFiles": true,
+        "configFile": "./tslint.json",
+        "suppressWhileTypeErrorsPresent": false
+      }
+    ],
+    "experimentalDecorators": true,
     "target": "esnext",
     "lib": ["es5", "es6"],
     "module": "commonjs",
@@ -15,6 +24,4 @@
       "*": ["node_modules/*"]
     }
   }
-
 }
-

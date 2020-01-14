@@ -1,7 +1,6 @@
 import request from 'supertest';
 import App from '../server/app';
-import FilmController from '../server/Controllers/FilmsController';
-import { IDBResponse, knex } from '../server/DB';
+import { knex } from '../server/DB';
 import { Film } from '../server/models/Film';
 import { Status } from '../server/middlewares/helpers';
 import { IUserEntity } from '../server/models/User';
@@ -30,25 +29,21 @@ describe('Films Controller', () => {
   test('get all films', async () => {
     const idsFromDB: { id: string }[] = await knex('film').select('id');
     const response = await request(App).get(`/api/v1/films?apiKey=${apiKey}`);
-    const idsFromResponse: { id: string }[] = JSON.parse(
-      response.text
-    ).map(({ id }) => ({ id }));
+    const idsFromResponse: { id: string }[] = JSON.parse(response.text).map(({ id }) => ({ id }));
     expect(idsFromResponse).toStrictEqual(idsFromDB);
   });
   test('get film by id', async () => {
     const filmFromDB: Film[] = await knex('film')
       .select('id')
       .limit(1);
-    const response = await request(App).get(
-      `/api/v1/films?id=${filmFromDB[0].id}&apiKey=${apiKey}`
-    );
-    const filmFromResponse:{id: string}[] = JSON.parse(response.text).map(({ id }) => ({ id }));
+    const response = await request(App).get(`/api/v1/films?id=${filmFromDB[0].id}&apiKey=${apiKey}`);
+    const filmFromResponse: { id: string }[] = JSON.parse(response.text).map(({ id }) => ({ id }));
     expect(filmFromDB[0]).toStrictEqual(filmFromResponse[0]);
   });
-  test('not crash if id is not uuid', async ()=>{
-    const response = await request(App).get(`/api/v1/films?id=123456&apiKey=${apiKey}`)
-    const expectedMessage = { status: Status.Error, message: 'Invalid id' }
-    const message =  JSON.parse(response.text)
-    expect(message).toStrictEqual(expectedMessage)
-  })
+  test('not crash if id is not uuid', async () => {
+    const response = await request(App).get(`/api/v1/films?id=123456&apiKey=${apiKey}`);
+    const expectedMessage = { status: Status.Error, message: 'Invalid id' };
+    const message = JSON.parse(response.text);
+    expect(message).toStrictEqual(expectedMessage);
+  });
 });

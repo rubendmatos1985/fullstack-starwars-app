@@ -1,20 +1,12 @@
 import { Request, Response, Router } from 'express';
 import Joi from '@hapi/joi';
-import {
-  IFilmViewModel,
-  FilmViewModelForeignFields
-} from '../models/ViewModels/FilmViewModel';
+import { IFilmViewModel, FilmViewModelForeignFields } from '../models/ViewModels/FilmViewModel';
 import FilmRepository from '../models/FilmRepository';
 import { Controller } from './Controller';
 import { IDBResponse } from '../DB';
 import { Status } from '../middlewares/helpers';
 import { Film } from '../../server/models/Film';
-import {
-  IAddItemsRequestBody,
-  AddItemHandlerForDomain,
-  fail,
-  RemoveItemHandlerForDomain
-} from './commons';
+import { IAddItemsRequestBody, AddItemHandlerForDomain, fail, RemoveItemHandlerForDomain } from './commons';
 import { Permissions } from '../middlewares/permissions';
 import { Validation } from '../middlewares/validation';
 
@@ -48,30 +40,10 @@ class FilmsController extends Controller {
     const router = () => {
       const r: Router = Router();
       r.get('/', Validation.ValidateIdAsUUID, this.HandleQueryParams);
-      r.post(
-        '/delete/items',
-        Permissions.Write,
-        Validation.CheckItemIdIsProvided,
-        this.RemoveItems
-      );
-      r.post(
-        '/delete',
-        Permissions.Write,
-        Validation.CheckItemIdIsProvided,
-        this.RemoveFilm
-      );
-      r.post(
-        '/add',
-        Permissions.Write,
-        Validation.CheckItemIdIsProvided,
-        this.AddToFilm
-      );
-      r.post(
-        '/update',
-        Permissions.Write,
-        Validation.CheckItemIdIsProvided,
-        this.UpdateFilmContent
-      );
+      r.post('/delete/items', Permissions.Write, Validation.CheckItemIdIsProvided, this.RemoveItems);
+      r.post('/delete', Permissions.Write, Validation.CheckItemIdIsProvided, this.RemoveFilm);
+      r.post('/add', Permissions.Write, Validation.CheckItemIdIsProvided, this.AddToFilm);
+      r.post('/update', Permissions.Write, Validation.CheckItemIdIsProvided, this.UpdateFilmContent);
       r.post('/create', Permissions.Write, this.CreateFilm);
       return r;
     };
@@ -79,33 +51,18 @@ class FilmsController extends Controller {
     this.Pathname = 'films';
   }
 
-  private async GetAll(
-    request: Request,
-    response: Response
-  ): Promise<Response> {
-    const result:
-      | IDBResponse<IFilmViewModel[]>
-      | any = await FilmRepository.GetAll();
+  private async GetAll(request: Request, response: Response): Promise<Response> {
+    const result: IDBResponse<IFilmViewModel[]> | any = await FilmRepository.GetAll();
     return response.json(result.message);
   }
 
-  private async GetById(
-    request: Request,
-    response: Response
-  ): Promise<Response> {
-    const result:
-      | IDBResponse<IFilmViewModel[]>
-      | any = await FilmRepository.GetById(request.query.id);
+  private async GetById(request: Request, response: Response): Promise<Response> {
+    const result: IDBResponse<IFilmViewModel[]> | any = await FilmRepository.GetById(request.query.id);
     return response.json(result.message);
   }
 
-  private async GetByName(
-    request: Request,
-    response: Response
-  ): Promise<Response> {
-    const result:
-      | IDBResponse<IFilmViewModel[]>
-      | any = await FilmRepository.GetByName(request.query.id);
+  private async GetByName(request: Request, response: Response): Promise<Response> {
+    const result: IDBResponse<IFilmViewModel[]> | any = await FilmRepository.GetByName(request.query.id);
     return response.json(result.message);
   }
 
@@ -170,9 +127,7 @@ class FilmsController extends Controller {
     ];
 
     return await Promise.all(
-      new Array(fieldNames.length)
-        .fill(addItemHandler(req, res))
-        .map((fn, i) => fn(fieldNames[i], adders[i]))
+      new Array(fieldNames.length).fill(addItemHandler(req, res)).map((fn, i) => fn(fieldNames[i], adders[i]))
     );
   }
   private async UpdateFilmContent(req: UpdateContentRequest, res: Response) {

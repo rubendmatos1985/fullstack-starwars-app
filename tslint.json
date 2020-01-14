@@ -1,11 +1,11 @@
 {
-  "extends": [
-    "tslint:recommended",
-    "tslint-config-prettier",
-    "tslint-plugin-prettier"
-  ],
+  "linterOptions": {
+    "exclude": ["node_modules/**/*.ts"]
+  },
+  "extends": ["tslint:recommended", "tslint-plugin-prettier", "tslint-config-prettier"],
   "rules": {
     "prettier": true,
-    "function-paren-newline": ["error", { "minItems": 3 }]
+    "function-paren-newline": ["error", "never"],
+    "max-line-length": [true, 110]
   }
 }

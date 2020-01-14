@@ -2,23 +2,14 @@ import { IDBContext, knex, IDBResponse } from '.';
 import { IFilmViewModel } from '../models/ViewModels/FilmViewModel';
 import { Status } from '../middlewares/helpers';
 import { Film } from '../../server/models/Film';
-import {
-  RelationData,
-  getIdsRelatedToThisEntity,
-  validateCandidates,
-  insertItemsIfNotAlreadyStored
-} from './commons';
+import { RelationData, getIdsRelatedToThisEntity, validateCandidates, insertItemsIfNotAlreadyStored } from './commons';
 import uuid = require('uuid');
 
 export const FilmContext: IDBContext<IFilmViewModel> = {
   Get: (field?: string) =>
     function(value?: any) {
       const k =
-        field && value
-          ? field === 'name'
-            ? knex.where(field, 'like', `%${value}%`)
-            : knex.where(field, value)
-          : knex;
+        field && value ? (field === 'name' ? knex.where(field, 'like', `%${value}%`) : knex.where(field, value)) : knex;
       return k
         .select(
           'film.*',
@@ -50,11 +41,7 @@ export const FilmContext: IDBContext<IFilmViewModel> = {
                 )`)
             )
               .from('film')
-              .leftJoin(
-                'planets_in_films',
-                'planets_in_films.film_id',
-                'film.id'
-              )
+              .leftJoin('planets_in_films', 'planets_in_films.film_id', 'film.id')
               .leftJoin('planet', 'planet.id', 'planets_in_films.planet_id')
               .groupBy('film.id')
               .as('planets');
@@ -71,16 +58,8 @@ export const FilmContext: IDBContext<IFilmViewModel> = {
                   )`)
             )
               .from('film')
-              .leftJoin(
-                'starships_in_films',
-                'starships_in_films.film_id',
-                'film.id'
-              )
-              .leftJoin(
-                'starship',
-                'starship.id',
-                'starships_in_films.starship_id'
-              )
+              .leftJoin('starships_in_films', 'starships_in_films.film_id', 'film.id')
+              .leftJoin('starship', 'starship.id', 'starships_in_films.starship_id')
               .groupBy('film.id')
               .as('starships');
           },
@@ -96,11 +75,7 @@ export const FilmContext: IDBContext<IFilmViewModel> = {
                 )`)
             )
               .from('film')
-              .leftJoin(
-                'vehicles_in_films',
-                'vehicles_in_films.film_id',
-                'film_id'
-              )
+              .leftJoin('vehicles_in_films', 'vehicles_in_films.film_id', 'film_id')
               .leftJoin('vehicle', 'vehicle.id', 'vehicles_in_films.vehicle_id')
               .groupBy('film.id')
               .as('vehicles');
@@ -117,11 +92,7 @@ export const FilmContext: IDBContext<IFilmViewModel> = {
                 `)
             )
               .from('film')
-              .leftJoin(
-                'species_in_films',
-                'species_in_films.film_id',
-                'film.id'
-              )
+              .leftJoin('species_in_films', 'species_in_films.film_id', 'film.id')
               .leftJoin('specie', 'specie.id', 'species_in_films.specie_id')
               .groupBy('film.id')
               .as('species');
@@ -141,9 +112,8 @@ export const FilmContext: IDBContext<IFilmViewModel> = {
   // NOT AN ATHOMIC VALUE
   Remove: (columnName: string) =>
     function(ids: string[]): Promise<IDBResponse<string>> {
-      if(columnName && ids){
-
-        const successMessage:IDBResponse<string> = {
+      if (columnName && ids) {
+        const successMessage: IDBResponse<string> = {
           status: Status.Successfull,
           message: `item(s) with name ${columnName} 
           and id(s) equals to ${JSON.stringify(ids)} 
@@ -161,52 +131,36 @@ export const FilmContext: IDBContext<IFilmViewModel> = {
         message: 'Wrong field name'
       });
     },
-    RemoveThis: (id:string)=>(
-      knex('film')
-        .del()
-        .where({id})
-        .then(v => ({ status: Status.Successfull, message: `film with id ${id} deleted successfully` }))
-        .catch(e =>({ status: Status.Error, message: e }))
-  ),
+  RemoveThis: (id: string) =>
+    knex('film')
+      .del()
+      .where({ id })
+      .then((v) => ({
+        status: Status.Successfull,
+        message: `film with id ${id} deleted successfully`
+      }))
+      .catch((e) => ({ status: Status.Error, message: e })),
   // ADD WILL ADD A FOREIGN RELATION
   // NOT AN ATHOMIC VALUE
   Add: (columnName: string) =>
-    async function(
-      filmId: string,
-      itemIds: string[]
-    ): Promise<IDBResponse<string>> {
-      const relationData: RelationData = buildRelationContextFromField(
-        columnName
-      );
+    async function(filmId: string, itemIds: string[]): Promise<IDBResponse<string>> {
+      const relationData: RelationData = buildRelationContextFromField(columnName);
       if (!relationData) {
         return Promise.resolve({
           status: Status.Error,
           message: 'film do not have this field'
         });
       }
-      const storedIds: string[] = await getIdsRelatedToThisEntity(
-        'film_id',
-        filmId,
-        relationData
-      );
+      const storedIds: string[] = await getIdsRelatedToThisEntity('film_id', filmId, relationData);
 
-      const enteredIdsAreValid: boolean = await validateCandidates(
-        relationData.entityTableName,
-        itemIds
-      );
+      const enteredIdsAreValid: boolean = await validateCandidates(relationData.entityTableName, itemIds);
       if (!enteredIdsAreValid) {
         return Promise.resolve({
           status: Status.Error,
           message: 'Parameter itemIds has invalid values'
         });
       }
-      return insertItemsIfNotAlreadyStored(
-        filmId,
-        'film_id',
-        itemIds,
-        storedIds,
-        relationData
-        );
+      return insertItemsIfNotAlreadyStored(filmId, 'film_id', itemIds, storedIds, relationData);
     },
 
   Update: (film: Film) =>
@@ -221,17 +175,17 @@ export const FilmContext: IDBContext<IFilmViewModel> = {
         status: Status.Error,
         message: 'Invalid input format or field name'
       })),
-  Create: (film: Film)=>{
-      const filmId = uuid();
-      return knex('film')
-        .insert({
-          id: filmId,
-          ...film
-        })
-        .returning('id')
-        .then(v => ({ status: Status.Successfull, message: v}))
-        .catch(e => ({status: Status.Error, message: e }))
-      }
+  Create: (film: Film) => {
+    const filmId = uuid();
+    return knex('film')
+      .insert({
+        id: filmId,
+        ...film
+      })
+      .returning('id')
+      .then((v) => ({ status: Status.Successfull, message: v }))
+      .catch((e) => ({ status: Status.Error, message: e }));
+  }
 };
 
 // HELPERS
@@ -239,9 +193,7 @@ export const FilmContext: IDBContext<IFilmViewModel> = {
 // TAKE AN INPUT STRING AND MAPS IT
 // TO AN OBJECT WITH THE CORRESPONDANT
 // RELATION DATA
-function buildRelationContextFromField(
-  name: string
-): RelationData | undefined {
+function buildRelationContextFromField(name: string): RelationData | undefined {
   switch (name) {
     case 'characters':
       return {
@@ -277,5 +229,3 @@ function buildRelationContextFromField(
       return undefined;
   }
 }
-
-
