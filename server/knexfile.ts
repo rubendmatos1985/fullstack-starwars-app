@@ -1,24 +1,35 @@
- const {
+const {
   DB_CLIENT,
   DB_USER,
   DB_PORT,
   DB_HOST,
   DB_NAME,
   DB_PASSWORD
-} = process.env
- 
- const connection =  process.env.NODE_ENV === 'development' || 'test' 
- ? {
-    user: DB_USER,
-    port: DB_PORT,
-    host: DB_HOST,
-    database: DB_NAME,
-    password: DB_PASSWORD,
-    
-  }
-: process.env.DATABASE_URL + '?ssl=true'  
+} = process.env;
 
 module.exports = {
-  client: 'pg',
-  connection 
+  test: {
+    client: 'pg',
+    connection: {
+      user: DB_USER,
+      port: DB_PORT,
+      host: DB_HOST,
+      database: DB_NAME,
+      password: DB_PASSWORD
+    }
+  },
+  development: {
+    client: 'pg',
+    connection: {
+      user: DB_USER,
+      port: DB_PORT,
+      host: DB_HOST,
+      database: DB_NAME,
+      password: DB_PASSWORD
+    }
+  },
+  production: {
+    client: 'pg',
+    connection: process.env.DATABASE_URL + '?ssl=true'
+  }
 };
