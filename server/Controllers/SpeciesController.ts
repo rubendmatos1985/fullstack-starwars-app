@@ -82,7 +82,7 @@ class SpeciesController extends Controller {
     const { status, message } = await SpecieRepository.RemoveThis(req.query.id)
     if(status === Status.Successfull){
       const redirectUrl = `/api/v1/${this.Pathname}?apiKey=${req.query.apiKey}`;
-      return res.json(redirectUrl)
+      return res.redirect(redirectUrl)
     }
     return fail(res, 'something went wrong')
   }

@@ -41,8 +41,8 @@ class FilmsController extends Controller {
     const router = () => {
       const r: Router = Router();
       r.get('/', this.HandleQueryParams);
-      r.post('/delete/items', Permissions.Write, this.DeleteFromFilm);
-      r.post('/delete', Permissions.Write, this.DeleteFilm)
+      r.post('/delete/items', Permissions.Write, this.RemoveItems);
+      r.post('/delete', Permissions.Write, this.RemoveFilm)
       r.post('/add', Permissions.Write, this.AddToFilm);
       r.post('/update', Permissions.Write, this.UpdateFilmContent);
       r.post('/create', Permissions.Write, this.CreateFilm)
@@ -92,7 +92,7 @@ class FilmsController extends Controller {
     return this.GetAll(req, res);
   }
 
-  private async DeleteFromFilm(req: DeleteItemsRequest, res: Response) {
+  private async RemoveItems(req: DeleteItemsRequest, res: Response) {
     const removeItemsHandler = RemoveItemHandlerForDomain('films');
     const fieldNames: FilmViewModelForeignFields[] = [
       'characters',
@@ -116,7 +116,7 @@ class FilmsController extends Controller {
     );
   }
 
-  private async DeleteFilm(req:Request, res:Response){
+  private async RemoveFilm(req:Request, res:Response){
     const { status, message } = await FilmRepository.RemoveThis(req.query.id);
     if(status === Status.Successfull){
       const redirectUrl = `/api/v1/${this.Pathname}&apiKey=${req.query.apiKey}`;
