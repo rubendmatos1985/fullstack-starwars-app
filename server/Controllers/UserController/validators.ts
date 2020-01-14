@@ -1,9 +1,9 @@
-import Joi, { ValidationResult } from "@hapi/joi";
-import { Request } from "express";
-import crypto from "crypto";
+import Joi, { ValidationResult } from '@hapi/joi';
+import { Request } from 'express';
+import crypto from 'crypto';
 export type EmailFromRequest = string;
 export namespace UserValidators {
-  export const SignInData: (r: Request) => ValidationResult<any> = req =>
+  export const SignInData: (r: Request) => ValidationResult<any> = (req) =>
     Joi.object({
       name: Joi.string()
         .min(3)
@@ -34,7 +34,7 @@ export namespace UserValidators {
       }
 
       while (bigger.length > smaller.length) {
-        smaller += "0";
+        smaller += '0';
       }
       return crypto.timingSafeEqual(Buffer.from(bigger), Buffer.from(smaller));
     }

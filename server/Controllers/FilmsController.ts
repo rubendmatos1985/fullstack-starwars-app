@@ -1,4 +1,5 @@
 import { Request, Response, Router } from 'express';
+import Joi from '@hapi/joi';
 import {
   IFilmViewModel,
   FilmViewModelForeignFields
@@ -46,7 +47,7 @@ class FilmsController extends Controller {
   public constructor() {
     const router = () => {
       const r: Router = Router();
-      r.get('/', this.HandleQueryParams);
+      r.get('/', Validation.ValidateIdAsUUID, this.HandleQueryParams);
       r.post(
         '/delete/items',
         Permissions.Write,

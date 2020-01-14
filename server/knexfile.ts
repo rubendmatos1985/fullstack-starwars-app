@@ -1,5 +1,6 @@
 import { Config } from "knex";
-
+import dotenv from 'dotenv';
+dotenv.config();
 const {
   DB_CLIENT,
   DB_USER,
