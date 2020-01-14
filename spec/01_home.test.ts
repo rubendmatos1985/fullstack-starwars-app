@@ -7,7 +7,7 @@ describe('Home', () => {
     const response = await request(App).get('/home');
     expect(response.status).toBe(200);
   });
-  test('redirect from / -> /home', async () => {
+  test('redirect from to /home', async () => {
     const response = await request(App).get('/');
     expect(response.status).toBe(302);
     expect(response.header.location).toBe('/home')
