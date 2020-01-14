@@ -13,38 +13,61 @@ import {
 import StarshipRepository from '../models/StarshipRepository';
 import { Starship } from '../types/DB';
 import { Permissions } from '../middlewares/permissions';
+import { Validation } from '../middlewares/validation';
 
 class StarshipController extends Controller {
   constructor() {
     const router = () => {
       const r = Router();
       r.get('/', this.HandleQueryParams);
-      r.post('/add', Permissions.Write, this.AddItem)
-      r.post('/delete/items', Permissions.Write, this.RemoveItem),
-      r.post('/update', Permissions.Write, this.Update)
-      r.post('/delete', Permissions.Write, this.RemoveStarship)
+      r.post(
+        '/add',
+        Permissions.Write,
+        Validation.CheckItemIdIsProvided,
+        this.AddItem
+      );
+      r.post(
+        '/delete/items',
+        Permissions.Write,
+        Validation.CheckItemIdIsProvided,
+        this.RemoveItem
+      ),
+        r.post(
+          '/update',
+          Permissions.Write,
+          Validation.CheckItemIdIsProvided,
+          this.Update
+        );
+      r.post(
+        '/delete',
+        Permissions.Write,
+        Validation.CheckItemIdIsProvided,
+        this.RemoveStarship
+      );
       return r;
     };
     super(router);
     this.Pathname = 'starships';
   }
 
-  async CreateStarship(req: Request, res: Response){
+  async CreateStarship(req: Request, res: Response) {
     const { status, message } = await StarshipRepository.Create(req.body);
-    if(status === Status.Successfull){
+    if (status === Status.Successfull) {
       const redirectUrl = `/api/v1/${this.Pathname}?id=${message[0].id}&apiKey=${req.query.apiKey}`;
-      return res.redirect(redirectUrl)
+      return res.redirect(redirectUrl);
     }
-    return fail(res, 'check your request body')
+    return fail(res, 'check your request body');
   }
 
-  async RemoveStarship(req: Request, res: Response){
-    const { status, message } = await StarshipRepository.RemoveThis(req.query.id)
-    if(status === Status.Successfull){
+  async RemoveStarship(req: Request, res: Response) {
+    const { status, message } = await StarshipRepository.RemoveThis(
+      req.query.id
+    );
+    if (status === Status.Successfull) {
       const redirectUrl = `/api/v1/${this.Pathname}?apiKey=${req.query.apiKey}`;
-      return res.redirect(redirectUrl)
+      return res.redirect(redirectUrl);
     }
-    return fail(res, 'something went wrong')
+    return fail(res, 'something went wrong');
   }
 
   private async GetById(req: Request, res: Response): Promise<Response> {

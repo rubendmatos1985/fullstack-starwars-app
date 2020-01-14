@@ -14,17 +14,38 @@ import {
 } from './commons';
 import { Specie } from '../types/DB';
 import { Permissions } from '../middlewares/permissions';
+import { Validation } from '../middlewares/validation';
 
 class SpeciesController extends Controller {
   constructor() {
     const router = () => {
       const r: Router = Router();
       r.get('/', this.HandleQueryParams);
-      r.post('/delete/items', Permissions.Write, this.RemoveItem)
-      r.post('/add', Permissions.Write, this.AddItem)
-      r.post('/update', Permissions.Write, this.Update)
-      r.post('/create', Permissions.Write, this.CreateSpecie)
-      r.post('/delete', Permissions.Write, this.RemoveSpecie)
+      r.post(
+        '/delete/items',
+        Permissions.Write,
+        Validation.CheckItemIdIsProvided,
+        this.RemoveItem
+      );
+      r.post(
+        '/add',
+        Permissions.Write,
+        Validation.CheckItemIdIsProvided,
+        this.AddItem
+      );
+      r.post(
+        '/update',
+        Permissions.Write,
+        Validation.CheckItemIdIsProvided,
+        this.Update
+      );
+      r.post('/create', Permissions.Write, this.CreateSpecie);
+      r.post(
+        '/delete',
+        Permissions.Write,
+        Validation.CheckItemIdIsProvided,
+        this.RemoveSpecie
+      );
       return r;
     };
     super(router);
@@ -39,13 +60,13 @@ class SpeciesController extends Controller {
     );
     return res.json(message);
   }
-  private async CreateSpecie(req: Request, res: Response){
+  private async CreateSpecie(req: Request, res: Response) {
     const { status, message } = await SpecieRepository.Create(req.body);
-    if(status === Status.Successfull){
+    if (status === Status.Successfull) {
       const redirectUrl = `/api/v1/${this.Pathname}?id=${message[0].id}&apiKey=${req.query.apiKey}`;
-      return res.redirect(redirectUrl)
+      return res.redirect(redirectUrl);
     }
-    return fail(res, 'check your request body')
+    return fail(res, 'check your request body');
   }
   private async GetAll(req: Request, res: Response): Promise<Response> {
     const {
@@ -67,7 +88,6 @@ class SpeciesController extends Controller {
     return res.json(message);
   }
 
-
   private async HandleQueryParams(req: Request, res: Response) {
     if (req.query.id) {
       return this.GetById(req, res);
@@ -78,13 +98,13 @@ class SpeciesController extends Controller {
     return this.GetAll(req, res);
   }
 
-  async RemoveSpecie(req: Request, res: Response){
-    const { status, message } = await SpecieRepository.RemoveThis(req.query.id)
-    if(status === Status.Successfull){
+  private async RemoveSpecie(req: Request, res: Response) {
+    const { status, message } = await SpecieRepository.RemoveThis(req.query.id);
+    if (status === Status.Successfull) {
       const redirectUrl = `/api/v1/${this.Pathname}?apiKey=${req.query.apiKey}`;
-      return res.redirect(redirectUrl)
+      return res.redirect(redirectUrl);
     }
-    return fail(res, 'something went wrong')
+    return fail(res, 'something went wrong');
   }
 
   private async RemoveItem(req: DeleteItemsRequest, res: Response) {
@@ -101,7 +121,7 @@ class SpeciesController extends Controller {
         .map((handler, i) => handler(fieldNames[i], removers[i]))
     );
   }
-  async AddItem(req: AddItemsRequest, res: Response) {
+  private async AddItem(req: AddItemsRequest, res: Response) {
     const addItemHandler = AddItemHandlerForDomain(this.Pathname);
     const fieldNames: string[] = ['films', 'people'];
     const adders = [SpecieRepository.AddFilms, SpecieRepository.AddPeople];
@@ -109,8 +129,7 @@ class SpeciesController extends Controller {
       new Array(fieldNames.length)
         .fill(addItemHandler(req, res))
         .map((handler, i) => handler(fieldNames[i], adders[i]))
-    )
-    .catch(e => ({ status: Status.Error, message: "Error" }));
+    ).catch((e) => ({ status: Status.Error, message: 'Error' }));
   }
   private async Update(req: UpdateEntityRequest<Specie>, res: Response) {
     const redirectUrl = `/api/v1/${this.Pathname}?id=${req.query.id}&apiKey=${req.query.apiKey}`;
@@ -121,7 +140,7 @@ class SpeciesController extends Controller {
     if (result.status === Status.Successfull) {
       return res.redirect(redirectUrl);
     } else {
-      return fail(res, "Request body has invalid data");
+      return fail(res, 'Request body has invalid data');
     }
   }
 }

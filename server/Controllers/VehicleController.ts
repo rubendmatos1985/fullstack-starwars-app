@@ -1,31 +1,59 @@
-import { Router, Response, Request } from "express";
-import VehicleRepository from "../models/VehicleRepository";
-import { Controller } from "./Controller";
-import { Status } from "../middlewares/helpers";
-import { DeleteItemsRequest, RemoveItemHandlerForDomain, AddItemsRequest, AddItemHandlerForDomain, UpdateEntityRequest, fail } from "./commons";
-import { Vehicle } from "../types/DB";
-import { IDBResponse } from "../DB";
-import { Permissions } from "../middlewares/permissions";
+import { Router, Response, Request } from 'express';
+import VehicleRepository from '../models/VehicleRepository';
+import { Controller } from './Controller';
+import { Status } from '../middlewares/helpers';
+import {
+  DeleteItemsRequest,
+  RemoveItemHandlerForDomain,
+  AddItemsRequest,
+  AddItemHandlerForDomain,
+  UpdateEntityRequest,
+  fail
+} from './commons';
+import { Vehicle } from '../types/DB';
+import { IDBResponse } from '../DB';
+import { Permissions } from '../middlewares/permissions';
+import { Validation } from '../middlewares/validation';
 
 const failedMessage = {
   status: Status.Error,
-  message: "We are having problems please try later"
+  message: 'We are having problems please try later'
 };
 
 class VehicleController extends Controller {
   constructor() {
     const router = () => {
       const r = Router();
-      r.get("/", this.QueryParamsHandler);
-      r.post('/update', Permissions.Write, this.Update)
-      r.post('/delete/items', Permissions.Write, this.RemoveItem)
-      r.post('/add', Permissions.Write, this.AddItem)
-      r.post('/create', Permissions.Write, this.CreateVehicle)
-      r.post('/delete', Permissions.Write, this.RemoveVehicle)
+      r.get('/', this.QueryParamsHandler);
+      r.post(
+        '/update',
+        Permissions.Write,
+        Validation.CheckItemIdIsProvided,
+        this.Update
+      );
+      r.post(
+        '/delete/items',
+        Permissions.Write,
+        Validation.CheckItemIdIsProvided,
+        this.RemoveItem
+      );
+      r.post(
+        '/add',
+        Permissions.Write,
+        Validation.CheckItemIdIsProvided,
+        this.AddItem
+      );
+      r.post('/create', Permissions.Write, this.CreateVehicle);
+      r.post(
+        '/delete',
+        Permissions.Write,
+        Validation.CheckItemIdIsProvided,
+        this.RemoveVehicle
+      );
       return r;
     };
     super(router);
-    this.Pathname = 'vehicles'
+    this.Pathname = 'vehicles';
   }
 
   private async GetById(req: Request, res: Response): Promise<Response> {
@@ -77,21 +105,23 @@ class VehicleController extends Controller {
         .map((handler, i) => handler(fieldNames[i], removers[i]))
     );
   }
-  async RemoveVehicle(req: Request, res: Response){
-    const { status, message } = await VehicleRepository.RemoveThis(req.query.id)
-    if(status === Status.Successfull){
+  async RemoveVehicle(req: Request, res: Response) {
+    const { status, message } = await VehicleRepository.RemoveThis(
+      req.query.id
+    );
+    if (status === Status.Successfull) {
       const redirectUrl = `/api/v1/${this.Pathname}?apiKey=${req.query.apiKey}`;
-      return res.redirect(redirectUrl)
+      return res.redirect(redirectUrl);
     }
-    return fail(res, 'something went wrong')
+    return fail(res, 'something went wrong');
   }
-  private async CreateVehicle(req: Request, res: Response){
+  private async CreateVehicle(req: Request, res: Response) {
     const { status, message } = await VehicleRepository.Create(req.body);
-    if(status === Status.Successfull){
+    if (status === Status.Successfull) {
       const redirectUrl = `/api/v1/${this.Pathname}?id=${message[0].id}&apiKey=${req.query.apiKey}`;
-      return res.redirect(redirectUrl)
+      return res.redirect(redirectUrl);
     }
-    return fail(res, 'check your request body')
+    return fail(res, 'check your request body');
   }
 
   private async AddItem(req: AddItemsRequest, res: Response) {

@@ -1,24 +1,55 @@
 import { Controller } from './Controller';
 import { Router, Request, Response } from 'express';
 import PlanetRepository from '../models/PlanetRepository';
-import { AddItemHandlerForDomain, RemoveItemHandlerForDomain, UpdateEntityRequest, fail } from './commons';
+import {
+  AddItemHandlerForDomain,
+  RemoveItemHandlerForDomain,
+  UpdateEntityRequest,
+  fail
+} from './commons';
 import { Status } from '../middlewares/helpers';
 import { Planet } from '../types/DB';
 import { IDBResponse } from '../DB';
 import PeopleRepository from '../models/PeopleRepository';
 import { Permissions } from '../middlewares/permissions';
+import { Validation } from '../middlewares/validation';
 
 class PlanetController extends Controller {
   constructor() {
     const router = () => {
       const r = Router();
       r.get('/', this.QueryParamsHandler);
-      r.post('/add', Permissions.Write, this.AddItem)
-      r.post('/delete/items', Permissions.Write, this.RemoveItem)
-      r.post('/delete', Permissions.Write, this.RemovePlanet)
-      r.post('/update', Permissions.Write, this.Update)
-      r.post('/delete', Permissions.Write, this.RemovePlanet)
-      r.post('/create', Permissions.Write, this.CreatePlanet)
+      r.post(
+        '/add',
+        Permissions.Write,
+        Validation.CheckItemIdIsProvided,
+        this.AddItem
+      );
+      r.post(
+        '/delete/items',
+        Permissions.Write,
+        Validation.CheckItemIdIsProvided,
+        this.RemoveItem
+      );
+      r.post(
+        '/delete',
+        Permissions.Write,
+        Validation.CheckItemIdIsProvided,
+        this.RemovePlanet
+      );
+      r.post(
+        '/update',
+        Permissions.Write,
+        Validation.CheckItemIdIsProvided,
+        this.Update
+      );
+      r.post(
+        '/delete',
+        Permissions.Write,
+        Validation.CheckItemIdIsProvided,
+        this.RemovePlanet
+      );
+      r.post('/create', Permissions.Write, this.CreatePlanet);
       return r;
     };
     super(router);
@@ -57,41 +88,39 @@ class PlanetController extends Controller {
       new Array(fieldNames.length)
         .fill(addItemHandler(req, res))
         .map((handler, i) => handler(fieldNames[i], adders[i]))
-    )
-    .catch(e => ({ status: Status.Error, message: "Error" }));
+    ).catch((e) => ({ status: Status.Error, message: 'Error' }));
   }
 
-  async RemoveItem(req: Request, res: Response){
-    const removeItemHandler = RemoveItemHandlerForDomain(this.Pathname)
+  async RemoveItem(req: Request, res: Response) {
+    const removeItemHandler = RemoveItemHandlerForDomain(this.Pathname);
     const fieldNames: string[] = ['films', 'residents'];
     const removers = [
       PlanetRepository.RemoveFilms,
       PlanetRepository.RemoveResidents
-    ]
+    ];
     return await Promise.all(
       new Array(fieldNames.length)
         .fill(removeItemHandler(req, res))
         .map((handler, i) => handler(fieldNames[i], removers[i]))
-    )
-    .catch(e => ({ status: Status.Error, message: "Error" }));
+    ).catch((e) => ({ status: Status.Error, message: 'Error' }));
   }
 
-  async RemovePlanet(req: Request, res: Response){
-    const { status, message } = await PlanetRepository.RemoveThis(req.query.id)
-    if(status === Status.Successfull){
+  async RemovePlanet(req: Request, res: Response) {
+    const { status, message } = await PlanetRepository.RemoveThis(req.query.id);
+    if (status === Status.Successfull) {
       const redirectUrl = `/api/v1/${this.Pathname}?apiKey=${req.query.apiKey}`;
-      return res.redirect(redirectUrl)
+      return res.redirect(redirectUrl);
     }
-    return fail(res, 'something went wrong')
+    return fail(res, 'something went wrong');
   }
 
-  async CreatePlanet(req: Request, res: Response){
+  async CreatePlanet(req: Request, res: Response) {
     const { status, message } = await PlanetRepository.Create(req.body);
-    if(status === Status.Successfull){
+    if (status === Status.Successfull) {
       const redirectUrl = `/api/v1/${this.Pathname}?id=${message[0].id}&apiKey=${req.query.apiKey}`;
-      return res.redirect(redirectUrl)
+      return res.redirect(redirectUrl);
     }
-    return fail(res, 'check your request body')
+    return fail(res, 'check your request body');
   }
 
   private async Update(req: UpdateEntityRequest<Planet>, res: Response) {
@@ -103,7 +132,7 @@ class PlanetController extends Controller {
     if (result.status === Status.Successfull) {
       return res.redirect(redirectUrl);
     } else {
-      return fail(res, "Request body has invalid data");
+      return fail(res, 'Request body has invalid data');
     }
   }
 }

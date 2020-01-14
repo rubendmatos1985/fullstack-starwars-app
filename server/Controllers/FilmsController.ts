@@ -8,8 +8,14 @@ import { Controller } from './Controller';
 import { IDBResponse } from '../DB';
 import { Status } from '../middlewares/helpers';
 import { Film } from '../../server/models/Film';
-import { IAddItemsRequestBody, AddItemHandlerForDomain, fail, RemoveItemHandlerForDomain } from './commons';
+import {
+  IAddItemsRequestBody,
+  AddItemHandlerForDomain,
+  fail,
+  RemoveItemHandlerForDomain
+} from './commons';
 import { Permissions } from '../middlewares/permissions';
+import { Validation } from '../middlewares/validation';
 
 interface IDeleteItemsRequestBody {
   fieldName: string;
@@ -41,11 +47,31 @@ class FilmsController extends Controller {
     const router = () => {
       const r: Router = Router();
       r.get('/', this.HandleQueryParams);
-      r.post('/delete/items', Permissions.Write, this.RemoveItems);
-      r.post('/delete', Permissions.Write, this.RemoveFilm)
-      r.post('/add', Permissions.Write, this.AddToFilm);
-      r.post('/update', Permissions.Write, this.UpdateFilmContent);
-      r.post('/create', Permissions.Write, this.CreateFilm)
+      r.post(
+        '/delete/items',
+        Permissions.Write,
+        Validation.CheckItemIdIsProvided,
+        this.RemoveItems
+      );
+      r.post(
+        '/delete',
+        Permissions.Write,
+        Validation.CheckItemIdIsProvided,
+        this.RemoveFilm
+      );
+      r.post(
+        '/add',
+        Permissions.Write,
+        Validation.CheckItemIdIsProvided,
+        this.AddToFilm
+      );
+      r.post(
+        '/update',
+        Permissions.Write,
+        Validation.CheckItemIdIsProvided,
+        this.UpdateFilmContent
+      );
+      r.post('/create', Permissions.Write, this.CreateFilm);
       return r;
     };
     super(router);
@@ -116,13 +142,13 @@ class FilmsController extends Controller {
     );
   }
 
-  private async RemoveFilm(req:Request, res:Response){
+  private async RemoveFilm(req: Request, res: Response) {
     const { status, message } = await FilmRepository.RemoveThis(req.query.id);
-    if(status === Status.Successfull){
+    if (status === Status.Successfull) {
       const redirectUrl = `/api/v1/${this.Pathname}&apiKey=${req.query.apiKey}`;
-      return res.redirect(redirectUrl)
+      return res.redirect(redirectUrl);
     }
-    return fail(res, 'something went wrong')
+    return fail(res, 'something went wrong');
   }
 
   private async AddToFilm(req: AddItemsRequest, res: Response) {
@@ -160,13 +186,13 @@ class FilmsController extends Controller {
       return fail(res, message);
     }
   }
-  private async CreateFilm(req: Request, res: Response){
-    const result:IDBResponse<string> = await FilmRepository.Create(req.body)
-    if(result.status === Status.Successfull){
+  private async CreateFilm(req: Request, res: Response) {
+    const result: IDBResponse<string> = await FilmRepository.Create(req.body);
+    if (result.status === Status.Successfull) {
       const redirectUrl = `/api/v1/${this.Pathname}?id=${result.message[0].id}&apiKey=${req.query.apiKey}`;
-      return res.redirect(redirectUrl)
+      return res.redirect(redirectUrl);
     }
-    return fail(res, "check your request body")
+    return fail(res, 'check your request body');
   }
 }
 export default FilmsController;
