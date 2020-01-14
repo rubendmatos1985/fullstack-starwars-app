@@ -62,7 +62,7 @@ class FilmsController extends Controller {
   }
 
   private async GetByName(request: Request, response: Response): Promise<Response> {
-    const result: IDBResponse<IFilmViewModel[]> | any = await FilmRepository.GetByName(request.query.id);
+    const result: IDBResponse<IFilmViewModel[]> | any = await FilmRepository.GetByName(request.query.name);
     return response.json(result.message);
   }
 

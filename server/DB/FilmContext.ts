@@ -2,14 +2,23 @@ import { IDBContext, knex, IDBResponse } from '.';
 import { IFilmViewModel } from '../models/ViewModels/FilmViewModel';
 import { Status } from '../middlewares/helpers';
 import { Film } from '../../server/models/Film';
-import { RelationData, getIdsRelatedToThisEntity, validateCandidates, insertItemsIfNotAlreadyStored } from './commons';
+import {
+  RelationData,
+  getIdsRelatedToThisEntity,
+  validateCandidates,
+  insertItemsIfNotAlreadyStored
+} from './commons';
 import uuid = require('uuid');
 
 export const FilmContext: IDBContext<IFilmViewModel> = {
   Get: (field?: string) =>
     function(value?: any) {
       const k =
-        field && value ? (field === 'name' ? knex.where(field, 'like', `%${value}%`) : knex.where(field, value)) : knex;
+        field && value
+          ? field === 'name'
+            ? knex.where('title', 'like', `%${value}%`)
+            : knex.where(field, value)
+          : knex;
       return k
         .select(
           'film.*',

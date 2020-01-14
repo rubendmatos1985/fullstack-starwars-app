@@ -4,6 +4,7 @@ import { knex } from '../server/DB';
 import { Film } from '../server/models/Film';
 import { Status } from '../server/middlewares/helpers';
 import { IUserEntity } from '../server/models/User';
+import uuid from 'uuid';
 
 describe('Films Controller', () => {
   let apiKey;
@@ -33,17 +34,31 @@ describe('Films Controller', () => {
     expect(idsFromResponse).toStrictEqual(idsFromDB);
   });
   test('get film by id', async () => {
-    const filmFromDB: Film[] = await knex('film')
+    const [filmFromDB]: { id: string }[] = await knex('film')
       .select('id')
       .limit(1);
-    const response = await request(App).get(`/api/v1/films?id=${filmFromDB[0].id}&apiKey=${apiKey}`);
-    const filmFromResponse: { id: string }[] = JSON.parse(response.text).map(({ id }) => ({ id }));
-    expect(filmFromDB[0]).toStrictEqual(filmFromResponse[0]);
+    const response = await request(App).get(`/api/v1/films?id=${filmFromDB.id}&apiKey=${apiKey}`);
+    const [filmFromResponse]: { id: string }[] = JSON.parse(response.text).map(({ id }) => ({ id }));
+    expect(filmFromDB).toStrictEqual(filmFromResponse);
   });
-  test('not crash if id is not uuid', async () => {
+  test('crash if id is not uuid', async () => {
     const response = await request(App).get(`/api/v1/films?id=123456&apiKey=${apiKey}`);
     const expectedMessage = { status: Status.Error, message: 'Invalid id' };
     const message = JSON.parse(response.text);
     expect(message).toStrictEqual(expectedMessage);
+  });
+  test('crash if id do not exist', async () => {
+    const falseId = uuid();
+    const response = await request(App).get(`/api/v1/films?id=${falseId}&apiKey=${apiKey}`);
+    expect(response.status).toBe(200);
+    expect(response.text).toBe(JSON.stringify([]));
+  });
+
+  test('get film by name', async () => {
+    const pattern: string = 'Hope';
+    const [film]: Film[] = await knex('film').where('title', 'like', `%${pattern}%`);
+    const response = await request(App).get(`/api/v1/films?name=${pattern}&apiKey=${apiKey}`);
+    const [filmFromResponse]: Film[] = JSON.parse(response.text);
+    expect(film.id).toBe(filmFromResponse.id);
   });
 });
