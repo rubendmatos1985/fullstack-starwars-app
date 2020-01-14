@@ -2,7 +2,8 @@ import request from 'supertest';
 import App from '../server/app';
 import { buildHomeData } from '../server/Controllers/HomeController';
 import { Request } from 'express';
-describe('Home', () => {
+
+describe('Home Controller', () => {
   test('GET /home', async () => {
     const response = await request(App).get('/home');
     expect(response.status).toBe(200);
