@@ -8,7 +8,7 @@ type Adder = (ids: string[]) => Promise<IDBResponse<IStarshipViewModel[]>>;
 type Remover = (ids: string[]) => Promise<IDBResponse<string>>;
 
 export default (() => {
-  const { Get, Add, Remove, Update } = StarshipContext;
+  const { Get, Add, Remove, Update, Create, RemoveThis } = StarshipContext;
   return {
     getById         : Get('id') as Getter,
     getAll          : Get() as GetterWithNoArgs,
@@ -17,6 +17,8 @@ export default (() => {
     AddFilms        : Add('films') as Adder,
     RemovePilots    : Remove('pilots') as Remover,
     RemoveFilms     : Remove('films') as Remover,
-    Update
+    Update,
+    Create,
+    RemoveThis
   };
 })();

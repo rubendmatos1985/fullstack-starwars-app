@@ -20,9 +20,11 @@ class SpeciesController extends Controller {
     const router = () => {
       const r: Router = Router();
       r.get('/', this.HandleQueryParams);
-      r.post('/delete', Permissions.Write, this.RemoveItem)
+      r.post('/delete/items', Permissions.Write, this.RemoveItem)
       r.post('/add', Permissions.Write, this.AddItem)
       r.post('/update', Permissions.Write, this.Update)
+      r.post('/create', Permissions.Write, this.CreateSpecie)
+      r.post('/delete', Permissions.Write, this.RemoveSpecie)
       return r;
     };
     super(router);
@@ -37,7 +39,14 @@ class SpeciesController extends Controller {
     );
     return res.json(message);
   }
-
+  private async CreateSpecie(req: Request, res: Response){
+    const { status, message } = await SpecieRepository.Create(req.body);
+    if(status === Status.Successfull){
+      const redirectUrl = `/api/v1/${this.Pathname}?id=${message[0].id}&apiKey=${req.query.apiKey}`;
+      return res.redirect(redirectUrl)
+    }
+    return fail(res, 'check your request body')
+  }
   private async GetAll(req: Request, res: Response): Promise<Response> {
     const {
       status,
@@ -58,6 +67,7 @@ class SpeciesController extends Controller {
     return res.json(message);
   }
 
+
   private async HandleQueryParams(req: Request, res: Response) {
     if (req.query.id) {
       return this.GetById(req, res);
@@ -66,6 +76,15 @@ class SpeciesController extends Controller {
       return this.GetByName(req, res);
     }
     return this.GetAll(req, res);
+  }
+
+  async RemoveSpecie(req: Request, res: Response){
+    const { status, message } = await SpecieRepository.RemoveThis(req.query.id)
+    if(status === Status.Successfull){
+      const redirectUrl = `/api/v1/${this.Pathname}?apiKey=${req.query.apiKey}`;
+      return res.json(redirectUrl)
+    }
+    return fail(res, 'something went wrong')
   }
 
   private async RemoveItem(req: DeleteItemsRequest, res: Response) {

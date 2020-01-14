@@ -8,6 +8,7 @@ import {
   insertItemsIfNotAlreadyStored
 } from './commons';
 import { Specie } from '../types/DB';
+import uuid = require('uuid');
 
 export const SpecieContext: IDBContext<ISpecieViewModel> = {
   Get: (field: string) =>
@@ -88,6 +89,31 @@ export const SpecieContext: IDBContext<ISpecieViewModel> = {
         message: 'people do not have this field'
       });
     },
+
+  RemoveThis: (id: string) =>
+    knex('specie')
+      .del()
+      .where({ id })
+      .then((v) => ({
+        status: Status.Successfull,
+        message: `item with id ${id} removed successfully`
+      }))
+      .catch((e) => ({
+        status: Status.Error,
+        message: `item with id ${id} not founded`
+      })),
+  Create: (specie: Specie) => {
+    const specieId = uuid();
+    return knex('specie')
+      .insert({ id: specieId, ...specie })
+      .returning('id')
+      .then((v) => ({
+        status: Status.Successfull,
+        message: v
+      }))
+      .catch((e) => ({ status: Status.Error, message: e }));
+  },
+
   Add: (field: string) =>
     async function(
       specieId: string,

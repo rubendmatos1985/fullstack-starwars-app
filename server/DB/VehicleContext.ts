@@ -1,8 +1,14 @@
 import { IDBContext, knex, IDBResponse } from '.';
 import { IVehicleViewModel } from '../models/ViewModels/VehicleViewModel';
-import { RelationData, getIdsRelatedToThisEntity, validateCandidates, insertItemsIfNotAlreadyStored } from './commons';
+import {
+  RelationData,
+  getIdsRelatedToThisEntity,
+  validateCandidates,
+  insertItemsIfNotAlreadyStored
+} from './commons';
 import { Status } from '../middlewares/helpers';
 import { Vehicle } from '../types/DB';
+import uuid = require('uuid');
 
 export const VehicleContext: IDBContext<IVehicleViewModel> = {
   Get: (field?: string) =>
@@ -22,7 +28,9 @@ export const VehicleContext: IDBContext<IVehicleViewModel> = {
         .from(function() {
           this.select(
             'vehicle.id as vehicle_id',
-            knex.raw(`json_agg(json_build_object('id', people.id, 'name', people.name))`)
+            knex.raw(
+              `json_agg(json_build_object('id', people.id, 'name', people.name))`
+            )
           )
             .from('vehicle')
             .leftJoin('pilot', 'pilot.vehicle_id', 'vehicle.id')
@@ -34,7 +42,9 @@ export const VehicleContext: IDBContext<IVehicleViewModel> = {
           function() {
             this.select(
               'vehicle.id as vehicle_id',
-              knex.raw(`json_agg(json_build_object('id', film.id, 'name', film.title))`)
+              knex.raw(
+                `json_agg(json_build_object('id', film.id, 'name', film.title))`
+              )
             )
               .from('vehicle')
               .leftJoin(
@@ -111,6 +121,29 @@ export const VehicleContext: IDBContext<IVehicleViewModel> = {
         message: 'people do not have this field'
       });
     },
+  RemoveThis: (id: string) =>
+    knex('vehicle')
+      .del()
+      .where({ id })
+      .then((v) => ({
+        status: Status.Successfull,
+        message: `item with id ${id} removed successfully`
+      }))
+      .catch((e) => ({
+        status: Status.Error,
+        message: `item with id ${id} not founded`
+      })),
+  Create: (vehicle: Vehicle) => {
+    const vehicleId = uuid();
+    return knex('planet')
+      .insert({ id: vehicleId, ...vehicle })
+      .returning('id')
+      .then((v) => ({
+        status: Status.Successfull,
+        message: v
+      }))
+      .catch((e) => ({ status: Status.Error, message: e }));
+  },
   Update: (vehicle: Vehicle) =>
     knex('vehicle')
       .where({ id: vehicle.id })

@@ -165,7 +165,8 @@ export const PeopleContext: IDBContext<IPeopleViewModel> = {
      const peopleId = uuid();  
      return knex('people')
       .insert({ id: peopleId, ...people })
-      .then(v => ({ status: Status.Successfull, message: `people ${peopleId} inserted successfully` }))
+      .returning('id')
+      .then(v => ({ status: Status.Successfull, message: v }))
       .catch(e => ({ status: Status.Error, message: e }))
   }
 };

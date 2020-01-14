@@ -20,12 +20,31 @@ class StarshipController extends Controller {
       const r = Router();
       r.get('/', this.HandleQueryParams);
       r.post('/add', Permissions.Write, this.AddItem)
-      r.post('/delete', Permissions.Write, this.RemoveItem),
+      r.post('/delete/items', Permissions.Write, this.RemoveItem),
       r.post('/update', Permissions.Write, this.Update)
+      r.post('/delete', Permissions.Write, this.RemoveStarship)
       return r;
     };
     super(router);
     this.Pathname = 'starships';
+  }
+
+  async CreateStarship(req: Request, res: Response){
+    const { status, message } = await StarshipRepository.Create(req.body);
+    if(status === Status.Successfull){
+      const redirectUrl = `/api/v1/${this.Pathname}?id=${message[0].id}&apiKey=${req.query.apiKey}`;
+      return res.redirect(redirectUrl)
+    }
+    return fail(res, 'check your request body')
+  }
+
+  async RemoveStarship(req: Request, res: Response){
+    const { status, message } = await StarshipRepository.RemoveThis(req.query.id)
+    if(status === Status.Successfull){
+      const redirectUrl = `/api/v1/${this.Pathname}?apiKey=${req.query.apiKey}`;
+      return res.json(redirectUrl)
+    }
+    return fail(res, 'something went wrong')
   }
 
   private async GetById(req: Request, res: Response): Promise<Response> {

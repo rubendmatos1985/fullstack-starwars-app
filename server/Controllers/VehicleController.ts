@@ -18,8 +18,10 @@ class VehicleController extends Controller {
       const r = Router();
       r.get("/", this.QueryParamsHandler);
       r.post('/update', Permissions.Write, this.Update)
-      r.post('/delete', Permissions.Write, this.RemoveItem)
+      r.post('/delete/items', Permissions.Write, this.RemoveItem)
       r.post('/add', Permissions.Write, this.AddItem)
+      r.post('/create', Permissions.Write, this.CreateVehicle)
+      r.post('/delete', Permissions.Write, this.RemoveVehicle)
       return r;
     };
     super(router);
@@ -52,7 +54,7 @@ class VehicleController extends Controller {
       return res.json(failedMessage);
     }
   }
-  private QueryParamsHandler(req: Request, res: Response) {
+  private async QueryParamsHandler(req: Request, res: Response) {
     if (req.query.name) {
       return this.GetByName(req, res);
     }
@@ -75,7 +77,24 @@ class VehicleController extends Controller {
         .map((handler, i) => handler(fieldNames[i], removers[i]))
     );
   }
-  async AddItem(req: AddItemsRequest, res: Response) {
+  async RemoveVehicle(req: Request, res: Response){
+    const { status, message } = await VehicleRepository.RemoveThis(req.query.id)
+    if(status === Status.Successfull){
+      const redirectUrl = `/api/v1/${this.Pathname}?apiKey=${req.query.apiKey}`;
+      return res.json(redirectUrl)
+    }
+    return fail(res, 'something went wrong')
+  }
+  private async CreateVehicle(req: Request, res: Response){
+    const { status, message } = await VehicleRepository.Create(req.body);
+    if(status === Status.Successfull){
+      const redirectUrl = `/api/v1/${this.Pathname}?id=${message[0].id}&apiKey=${req.query.apiKey}`;
+      return res.redirect(redirectUrl)
+    }
+    return fail(res, 'check your request body')
+  }
+
+  private async AddItem(req: AddItemsRequest, res: Response) {
     const addItemHandler = AddItemHandlerForDomain(this.Pathname);
     const fieldNames: string[] = ['films', 'pilots'];
     const adders = [VehicleRepository.AddFilms, VehicleRepository.AddPilots];

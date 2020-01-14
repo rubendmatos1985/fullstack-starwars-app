@@ -9,6 +9,7 @@ import {
   validateCandidates
 } from './commons';
 import { Starship } from '../types/DB';
+import uuid = require('uuid');
 
 export const StarshipContext: IDBContext<IStarshipViewModel> = {
   Get: (field?: string) =>
@@ -38,11 +39,7 @@ export const StarshipContext: IDBContext<IStarshipViewModel> = {
               'starship_pilot.starship_id',
               'starship.id'
             )
-            .leftJoin(
-              'people',
-              'people.id',
-              'starship_pilot.people_id'
-            )
+            .leftJoin('people', 'people.id', 'starship_pilot.people_id')
             .groupBy('starship.id')
             .as('pilots');
         })
@@ -68,8 +65,8 @@ export const StarshipContext: IDBContext<IStarshipViewModel> = {
           'films.starship_id'
         )
         .join(EntityTable.Starship, 'starship.id', 'pilots.starship_id')
-        .then(v => ({ status: Status.Successfull, message: v }))
-        .catch(e => ({ status: Status.Error, message: e }))
+        .then((v) => ({ status: Status.Successfull, message: v }))
+        .catch((e) => ({ status: Status.Error, message: e }));
     },
   Add: (field: string) =>
     async function(
@@ -131,6 +128,29 @@ export const StarshipContext: IDBContext<IStarshipViewModel> = {
         message: 'people do not have this field'
       });
     },
+  RemoveThis: (id: string) =>
+    knex('starship')
+      .del()
+      .where({ id })
+      .then((v) => ({
+        status: Status.Successfull,
+        message: `item with id ${id} removed successfully`
+      }))
+      .catch((e) => ({
+        status: Status.Error,
+        message: `item with id ${id} not founded`
+      })),
+  Create: (planet: Starship) => {
+    const starshipId = uuid();
+    return knex('starship')
+      .insert({ id: starshipId, ...planet })
+      .returning('id')
+      .then((v) => ({
+        status: Status.Successfull,
+        message: v
+      }))
+      .catch((e) => ({ status: Status.Error, message: e }));
+  },
   Update: (starship: Starship) =>
     knex('starship')
       .where({ id: starship.id })
@@ -142,23 +162,23 @@ export const StarshipContext: IDBContext<IStarshipViewModel> = {
       .catch((e) => ({ status: Status.Error, message: e }))
 };
 
-function buildRelationContextFromField(fieldName: string):RelationData {
-  switch(fieldName){
-    case 'pilots':{
-      return ({
+function buildRelationContextFromField(fieldName: string): RelationData {
+  switch (fieldName) {
+    case 'pilots': {
+      return {
         tableName: 'starship_pilot',
         columnName: 'people_id',
         entityTableName: 'people'
-      })
+      };
     }
-    case 'films':{
-      return ({
+    case 'films': {
+      return {
         tableName: 'starships_in_films',
         columnName: 'film_id',
         entityTableName: 'film'
-      })
+      };
     }
     default:
-        return undefined
+      return undefined;
   }
 }

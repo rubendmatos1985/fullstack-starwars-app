@@ -1,7 +1,7 @@
 import { PlanetContext } from '../DB/PlanetContext';
 
 export default (function() {
-  const { Get, Add, Remove, Update }  = PlanetContext;
+  const { Get, Add, Remove, Update, RemoveThis, Create }  = PlanetContext;
   return {
     getById                   : Get('id'),
     getByName                 : Get('name'),
@@ -10,6 +10,8 @@ export default (function() {
     AddFilms                  : Add('films'),
     RemoveResidents           : Remove('residents'),
     RemoveFilms               : Remove('films'),
-    Update
+    Update,
+    RemoveThis,
+    Create
   };
 })();

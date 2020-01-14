@@ -127,7 +127,7 @@ class PeopleController extends Controller {
   private async CreatePeople(req: Request, res: Response){
     const { status, message } = await PeopleRepository.Create(req.body);
     if(status === Status.Successfull){
-      const redirectUrl = `/api/v1/${this.Pathname}&apiKey=${req.query.apiKey}`;
+      const redirectUrl = `/api/v1/${this.Pathname}?id=${message[0].id}&apiKey=${req.query.apiKey}`;
       return res.redirect(redirectUrl)
     }
     return fail(res, 'check your request body')

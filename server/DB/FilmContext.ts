@@ -228,7 +228,7 @@ export const FilmContext: IDBContext<IFilmViewModel> = {
           id: filmId,
           ...film
         })
-        .returning('*')
+        .returning('id')
         .then(v => ({ status: Status.Successfull, message: v}))
         .catch(e => ({status: Status.Error, message: e }))
       }

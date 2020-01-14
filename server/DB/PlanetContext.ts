@@ -8,6 +8,7 @@ import {
 } from './commons';
 import { Status } from '../middlewares/helpers';
 import { Planet } from '../types/DB';
+import uuid = require('uuid');
 
 export const PlanetContext: IDBContext<IPlanetViewModel> = {
   Get: (field?: string) =>
@@ -120,6 +121,23 @@ export const PlanetContext: IDBContext<IPlanetViewModel> = {
         message: 'people do not have this field'
       });
     },
+
+  RemoveThis: (id: string)=>
+    knex('planet')
+      .del()
+      .where({ id })
+      .then(v => ({ status: Status.Successfull, message: `item with id ${id} removed successfully` }))
+      .catch(e => ({ status: Status.Error, message: `item with id ${id} not founded` })),
+  Create: (planet: Planet)=>{
+    const planetId = uuid()
+    return knex('planet')
+      .insert({id: planetId, ...planet})
+      .returning('*')
+      .then(v => ({ status: Status.Successfull, message: v }))
+      .catch(e => ({ status: Status.Error, message: e }))
+  },
+  
+  
   Update: (planet: Planet) =>
     knex('planet')
       .where({ id: planet.id })

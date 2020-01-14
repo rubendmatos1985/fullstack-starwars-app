@@ -14,8 +14,11 @@ class PlanetController extends Controller {
       const r = Router();
       r.get('/', this.QueryParamsHandler);
       r.post('/add', Permissions.Write, this.AddItem)
-      r.post('/delete', Permissions.Write, this.RemoveItem)
+      r.post('/delete/items', Permissions.Write, this.RemoveItem)
+      r.post('/delete', Permissions.Write, this.RemovePlanet)
       r.post('/update', Permissions.Write, this.Update)
+      r.post('/delete', Permissions.Write, this.RemovePlanet)
+      r.post('/create', Permissions.Write, this.CreatePlanet)
       return r;
     };
     super(router);
@@ -72,6 +75,25 @@ class PlanetController extends Controller {
     )
     .catch(e => ({ status: Status.Error, message: "Error" }));
   }
+
+  async RemovePlanet(req: Request, res: Response){
+    const { status, message } = await PlanetRepository.RemoveThis(req.query.id)
+    if(status === Status.Successfull){
+      const redirectUrl = `/api/v1/${this.Pathname}?apiKey=${req.query.apiKey}`;
+      return res.json(redirectUrl)
+    }
+    return fail(res, 'something went wrong')
+  }
+
+  async CreatePlanet(req: Request, res: Response){
+    const { status, message } = await PlanetRepository.Create(req.body);
+    if(status === Status.Successfull){
+      const redirectUrl = `/api/v1/${this.Pathname}?id=${message[0].id}&apiKey=${req.query.apiKey}`;
+      return res.redirect(redirectUrl)
+    }
+    return fail(res, 'check your request body')
+  }
+
   private async Update(req: UpdateEntityRequest<Planet>, res: Response) {
     const redirectUrl = `/api/v1/${this.Pathname}?id=${req.query.id}&apiKey=${req.query.apiKey}`;
     const result: IDBResponse<string> = await PlanetRepository.Update({
