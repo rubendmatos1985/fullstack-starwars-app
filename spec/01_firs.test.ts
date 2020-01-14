@@ -1,6 +1,4 @@
 import request from 'supertest';
-import { buildHomeData } from '../server/Controllers/HomeController';
-import { Request } from 'express';
 import App from '../server/app';
 describe('app', () => {
   test('GET /home', async () => {
