@@ -15,3 +15,4 @@
  The app has some Email api key validation process and authentication process through api key. 
  Is not the securest way but is fine for the propose of this app.
 
+[click here to visit the website](https://starwars-api-clone.herokuapp.com/home])
