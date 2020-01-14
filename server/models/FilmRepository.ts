@@ -1,7 +1,7 @@
 import { FilmContext } from "../DB/FilmContext";
 
 export default (() => {
-  const { Get, Remove, Add, Update }  = FilmContext;
+  const { Get, Remove, Add, Update, Create, RemoveThis }  = FilmContext;
   return {
     GetById                           : Get('id'),
     GetByName                         : Get("name"),
@@ -16,7 +16,9 @@ export default (() => {
     AddStarships                      : Add("starships"),
     AddVehicles                       : Add("vehicles"),
     AddSpecies                        : Add("species"),
-    Update, 
+    Update,
+    Create,
+    RemoveThis
   };
 })();
 

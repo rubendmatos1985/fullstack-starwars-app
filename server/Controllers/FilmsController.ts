@@ -16,8 +16,6 @@ interface IDeleteItemsRequestBody {
   itemsIds: string[];
 }
 
-
-
 interface DeleteItemsRequest extends Request {
   body: IDeleteItemsRequestBody;
 }
@@ -43,9 +41,11 @@ class FilmsController extends Controller {
     const router = () => {
       const r: Router = Router();
       r.get('/', this.HandleQueryParams);
-      r.post('/delete', Permissions.Write, this.DeleteFromFilm);
+      r.post('/delete/items', Permissions.Write, this.DeleteFromFilm);
+      r.post('/delete', Permissions.Write, this.DeleteFilm)
       r.post('/add', Permissions.Write, this.AddToFilm);
       r.post('/update', Permissions.Write, this.UpdateFilmContent);
+      r.post('/create', Permissions.Write, this.CreateFilm)
       return r;
     };
     super(router);
@@ -116,6 +116,15 @@ class FilmsController extends Controller {
     );
   }
 
+  private async DeleteFilm(req:Request, res:Response){
+    const { status, message } = await FilmRepository.RemoveThis(req.query.id);
+    if(status === Status.Successfull){
+      const redirectUrl = `/api/v1/${this.Pathname}&apiKey=${req.query.apiKey}`;
+      return res.redirect(redirectUrl)
+    }
+    return fail(res, 'something went wrong')
+  }
+
   private async AddToFilm(req: AddItemsRequest, res: Response) {
     const addItemHandler = AddItemHandlerForDomain(this.Pathname);
     const fieldNames: FilmViewModelForeignFields[] = [
@@ -150,6 +159,14 @@ class FilmsController extends Controller {
     } else {
       return fail(res, message);
     }
+  }
+  private async CreateFilm(req: Request, res: Response){
+    const result:IDBResponse<string> = await FilmRepository.Create(req.body)
+    if(result.status === Status.Successfull){
+      const redirectUrl = `/api/v1/${this.Pathname}?id=${result.message[0].id}&apiKey=${req.query.apiKey}`;
+      return res.redirect(redirectUrl)
+    }
+    return fail(res, "check your request body")
   }
 }
 export default FilmsController;

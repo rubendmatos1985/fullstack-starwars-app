@@ -1,7 +1,7 @@
 import { PeopleContext } from "../DB/PeopleContext";
 
 export default (function() {
-  const { Get, Add, Remove, Update }  = PeopleContext;
+  const { Get, Add, Remove, Update, RemoveThis, Create }  = PeopleContext;
 
   return {
     GetByName                           : Get("name"),
@@ -15,7 +15,9 @@ export default (function() {
     RemoveVehicles                      : Remove('vehicles'),
     RemoveStarships                     : Remove('starships'),
     RemoveSpecies                       : Remove('species'),
-    Update
+    Update,
+    RemoveThis,
+    Create
   };
 })();
 

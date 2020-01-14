@@ -20,8 +20,10 @@ class PeopleController extends Controller {
       const r = Router();
       r.get('/', this.GetQueryParamsHandler);
       r.post('/add', Permissions.Write, this.AddItem);
-      r.post('/delete', Permissions.Write, this.RemoveItem);
+      r.post('/delete/items', Permissions.Write, this.RemoveItems);
+      r.post('/delete', Permissions.Write, this.RemovePeople);
       r.post('/update', Permissions.Write, this.Update);
+      r.post('/create', Permissions.Write, this.CreatePeople)
       return r;
     }
     this.Pathname = 'people';
@@ -79,7 +81,16 @@ class PeopleController extends Controller {
     );
   }
 
-  private async RemoveItem(req: Request, res: Response) {
+  private async RemovePeople(req: Request, res: Response){
+    const { status, message } = await PeopleRepository.RemoveThis(req.query.id);
+    if(status === Status.Successfull){
+      const redirectUrl = `/api/v1/${this.Pathname}?apiKey=${req.query.apiKey}`;
+      return res.redirect(redirectUrl)
+    }
+    return fail(res, 'something went wrong')
+  }
+
+  private async RemoveItems(req: Request, res: Response) {
     const removeItemHandler = RemoveItemHandlerForDomain(this.Pathname);
     const fieldNames: PeopleViewModelForeignFields[] = [
       'films',
@@ -112,6 +123,14 @@ class PeopleController extends Controller {
     } else {
       return fail(res, "Request body has invalid data");
     }
+  }
+  private async CreatePeople(req: Request, res: Response){
+    const { status, message } = await PeopleRepository.Create(req.body);
+    if(status === Status.Successfull){
+      const redirectUrl = `/api/v1/${this.Pathname}&apiKey=${req.query.apiKey}`;
+      return res.redirect(redirectUrl)
+    }
+    return fail(res, 'check your request body')
   }
 }
 

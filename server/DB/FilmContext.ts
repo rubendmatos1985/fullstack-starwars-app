@@ -8,6 +8,7 @@ import {
   validateCandidates,
   insertItemsIfNotAlreadyStored
 } from './commons';
+import uuid = require('uuid');
 
 export const FilmContext: IDBContext<IFilmViewModel> = {
   Get: (field?: string) =>
@@ -140,14 +141,15 @@ export const FilmContext: IDBContext<IFilmViewModel> = {
   // NOT AN ATHOMIC VALUE
   Remove: (columnName: string) =>
     function(ids: string[]): Promise<IDBResponse<string>> {
-      const successMessage:IDBResponse<string> = {
-        status: Status.Successfull,
-        message: `item(s) with name ${columnName} 
-        and id(s) equals to ${JSON.stringify(ids)} 
-        deleted successfully`
-      };
-      const relationData = buildRelationContextFromField(columnName);
-      if (relationData) {
+      if(columnName && ids){
+
+        const successMessage:IDBResponse<string> = {
+          status: Status.Successfull,
+          message: `item(s) with name ${columnName} 
+          and id(s) equals to ${JSON.stringify(ids)} 
+          deleted successfully`
+        };
+        const relationData = buildRelationContextFromField(columnName);
         return knex(relationData.tableName)
           .whereIn(relationData.columnName, ids)
           .del()
@@ -159,7 +161,13 @@ export const FilmContext: IDBContext<IFilmViewModel> = {
         message: 'Wrong field name'
       });
     },
-
+    RemoveThis: (id:string)=>(
+      knex('film')
+        .del()
+        .where({id})
+        .then(v => ({ status: Status.Successfull, message: `film with id ${id} deleted successfully` }))
+        .catch(e =>({ status: Status.Error, message: e }))
+  ),
   // ADD WILL ADD A FOREIGN RELATION
   // NOT AN ATHOMIC VALUE
   Add: (columnName: string) =>
@@ -212,7 +220,18 @@ export const FilmContext: IDBContext<IFilmViewModel> = {
       .catch((e) => ({
         status: Status.Error,
         message: 'Invalid input format or field name'
-      }))
+      })),
+  Create: (film: Film)=>{
+      const filmId = uuid();
+      return knex('film')
+        .insert({
+          id: filmId,
+          ...film
+        })
+        .returning('*')
+        .then(v => ({ status: Status.Successfull, message: v}))
+        .catch(e => ({status: Status.Error, message: e }))
+      }
 };
 
 // HELPERS

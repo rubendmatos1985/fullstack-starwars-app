@@ -85,7 +85,7 @@ export const PeopleContext: IDBContext<IPeopleViewModel> = {
   // REMOVE JUST FOREGIN TABLES
   Remove: (columnName: string) =>
     async function(ids: string[]): Promise<IDBResponse<string>> {
-      const successMessage:IDBResponse<string> = {
+      const successMessage: IDBResponse<string> = {
         status: Status.Successfull,
         message: `item(s) with name ${columnName} 
         and id(s) equals to ${JSON.stringify(ids)} 
@@ -106,6 +106,15 @@ export const PeopleContext: IDBContext<IPeopleViewModel> = {
         message: 'people do not have this field'
       });
     },
+  RemoveThis: (id: string) =>
+    knex('people')
+      .del()
+      .where({ id })
+      .then((v) => ({
+        status: Status.Successfull,
+        message: `item with id ${id} removed successfully`
+      }))
+      .catch((e) => ({ status: Status.Error, message: e })),
   // ADD FOREING TABLES
   Add: (columnName: string) =>
     async function(
@@ -143,12 +152,22 @@ export const PeopleContext: IDBContext<IPeopleViewModel> = {
         relation
       );
     },
-  Update: (people: People) =>
+  Update: (people: People) =>(
     knex('people')
       .where({ id: people.id })
       .update(people)
-      .then(v => ({ status: Status.Successfull, message: `Item with id ${people.id} updated successfully`  }))
+      .then((v) => ({
+        status: Status.Successfull,
+        message: `Item with id ${people.id} updated successfully`
+      }))
+      .catch((e) => ({ status: Status.Error, message: e }))),
+  Create: (people: People)=>{
+     const peopleId = uuid();  
+     return knex('people')
+      .insert({ id: peopleId, ...people })
+      .then(v => ({ status: Status.Successfull, message: `people ${peopleId} inserted successfully` }))
       .catch(e => ({ status: Status.Error, message: e }))
+  }
 };
 
 function buildRelationContextFromField(name: string): RelationData | undefined {

@@ -1,7 +1,7 @@
 import { Controller } from "./Controller";
 import { Router, Request, Response } from "express";
 import { Status } from "../middlewares/helpers";
-import path from 'path';
+
 interface ApiUrls{
     people: string
     planets: string
@@ -49,7 +49,7 @@ export class HomeController extends Controller{
               scopes: ['read']
             },
             signin:  { 
-                url: `https://${req.get('host')}/user/signgin`,
+                url: `https://${req.get('host')}/user/signin`,
                 body: {
                     name: "string",
                     email: "string",
@@ -68,13 +68,20 @@ export class HomeController extends Controller{
                 scopes: ['read','write']
             },
             delete: {
-                type: 'POST',
-                url: `https://${req.get('host')}/api/v1/<resource>/delete?id=<resource id>&apiKey=<your_api_key>`,
-                body:{
-                    fieldName: 'string',
-                    itemsIds: ['string']
+               delete_items: {
+                   type: 'POST',
+                   url: `https://${req.get('host')}/api/v1/<resource>/delete/items?id=<resource id>&apiKey=<your_api_key>`,
+                   body:{
+                        fieldName: 'string',
+                        itemsIds: ['string']
+                    },
+                   scopes: ['read','write']
                 },
-                scopes: ['read','write']
+                delete_entity: {
+                   type: 'POST',
+                   url: `https://${req.get('host')}/api/v1/<resource>/delete?id=<resource id>&apiKey=<your_api_key>`,
+                   scopes: ['read','write']
+                }
             }
         })
     }

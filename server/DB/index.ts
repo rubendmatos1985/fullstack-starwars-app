@@ -11,5 +11,6 @@ export interface IDBContext<T> {
   Create?: any;
   Update?: any;
   Remove?: any;
+  RemoveThis?:any
   Add?: any;
 }
