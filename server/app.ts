@@ -1,7 +1,6 @@
 import express from 'express'
 import helmet from 'helmet';
 import Express, { Application } from 'express';
-import getPort from './utils/port-getter';
 import { Authentication } from  './middlewares/authentication';
 import FilmsController from './Controllers/FilmsController';
 import { IController } from './Controllers/Controller';
