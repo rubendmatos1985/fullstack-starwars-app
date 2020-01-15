@@ -98,4 +98,28 @@ describe('Films: add and remvove', () => {
     );
     expect(response.status).toBe(404);
   });
+  test('Remove characters with wrong body.itemsIds', async () => {
+    const response = await request(App)
+      .post(`/api/v1/films/delete/items?id=${film.id}&apiKey=${apiKey}`)
+      .send({
+        fieldName: 'characters',
+        itemsIds: [characters] // wrong
+      });
+    expect({ status: Status.Error, message: Validation.ErrorMessages.Body.AddOrRemoveItems }).toStrictEqual(
+      JSON.parse(response.text)
+    );
+    expect(response.status).toBe(404);
+  });
+  test('Remove characters with wrong body.fieldName', async () => {
+    const response = await request(App)
+      .post(`/api/v1/films/delete/items?id=${film.id}&apiKey=${apiKey}`)
+      .send({
+        fieldName: 12345, // wrong
+        itemsIds: [characters]
+      });
+    expect({ status: Status.Error, message: Validation.ErrorMessages.Body.AddOrRemoveItems }).toStrictEqual(
+      JSON.parse(response.text)
+    );
+    expect(response.status).toBe(404);
+  });
 });

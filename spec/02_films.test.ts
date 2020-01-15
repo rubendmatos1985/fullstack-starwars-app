@@ -62,4 +62,11 @@ describe('Films Controller', () => {
     const [filmFromResponse]: Film[] = JSON.parse(response.text);
     expect(film.id).toBe(filmFromResponse.id);
   });
+  test('get film with two parameters in query get just the first', async () => {
+    const pattern: string = 'Clones';
+    const [film]: Film[] = await knex('film').where('title', 'like', `%${pattern}%`);
+    const response = await request(App).get(`/api/v1/films?id=${film.id}&name=${pattern}&apiKey=${apiKey}`);
+    const [filmFromResponse]: Film[] = JSON.parse(response.text);
+    expect(film.id).toBe(filmFromResponse.id);
+  });
 });
