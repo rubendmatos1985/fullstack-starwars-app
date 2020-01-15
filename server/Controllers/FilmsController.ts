@@ -40,9 +40,21 @@ class FilmsController extends Controller {
     const router = () => {
       const r: Router = Router();
       r.get('/', Validation.ValidateIdAsUUID, this.HandleQueryParams);
-      r.post('/delete/items', Permissions.Write, Validation.CheckItemIdIsProvided, this.RemoveItems);
+      r.post(
+        '/delete/items',
+        Permissions.Write,
+        Validation.CheckItemIdIsProvided,
+        Validation.AddOrRemoveItemsBodyParameters,
+        this.RemoveItems
+      );
       r.post('/delete', Permissions.Write, Validation.CheckItemIdIsProvided, this.RemoveFilm);
-      r.post('/add', Permissions.Write, Validation.CheckItemIdIsProvided, this.AddToFilm);
+      r.post(
+        '/add',
+        Permissions.Write,
+        Validation.CheckItemIdIsProvided,
+        Validation.AddOrRemoveItemsBodyParameters,
+        this.AddToFilm
+      );
       r.post('/update', Permissions.Write, Validation.CheckItemIdIsProvided, this.UpdateFilmContent);
       r.post('/create', Permissions.Write, this.CreateFilm);
       return r;

@@ -5,6 +5,7 @@ import { Film } from '../server/models/Film';
 import { Status } from '../server/middlewares/helpers';
 import { IUserEntity } from '../server/models/User';
 import uuid from 'uuid';
+import { isDate } from 'util';
 
 describe('Films Controller', () => {
   let apiKey;
@@ -55,7 +56,7 @@ describe('Films Controller', () => {
   });
 
   test('get film by name', async () => {
-    const pattern: string = 'Hope';
+    const pattern: string = 'Clones';
     const [film]: Film[] = await knex('film').where('title', 'like', `%${pattern}%`);
     const response = await request(App).get(`/api/v1/films?name=${pattern}&apiKey=${apiKey}`);
     const [filmFromResponse]: Film[] = JSON.parse(response.text);
