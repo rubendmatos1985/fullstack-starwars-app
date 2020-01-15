@@ -25,31 +25,11 @@ class VehicleController extends Controller {
     const router = () => {
       const r = Router();
       r.get('/', this.QueryParamsHandler);
-      r.post(
-        '/update',
-        Permissions.Write,
-        Validation.CheckItemIdIsProvided,
-        this.Update
-      );
-      r.post(
-        '/delete/items',
-        Permissions.Write,
-        Validation.CheckItemIdIsProvided,
-        this.RemoveItem
-      );
-      r.post(
-        '/add',
-        Permissions.Write,
-        Validation.CheckItemIdIsProvided,
-        this.AddItem
-      );
+      r.post('/update', Permissions.Write, Validation.CheckItemIdIsProvided, this.Update);
+      r.post('/delete/items', Permissions.Write, Validation.CheckItemIdIsProvided, this.RemoveItem);
+      r.post('/add', Permissions.Write, Validation.CheckItemIdIsProvided, this.AddItem);
       r.post('/create', Permissions.Write, this.CreateVehicle);
-      r.post(
-        '/delete',
-        Permissions.Write,
-        Validation.CheckItemIdIsProvided,
-        this.RemoveVehicle
-      );
+      r.post('/delete', Permissions.Write, Validation.CheckItemIdIsProvided, this.RemoveVehicle);
       return r;
     };
     super(router);
@@ -95,10 +75,7 @@ class VehicleController extends Controller {
     const removeItemHandler = RemoveItemHandlerForDomain(this.Pathname);
     const fieldNames: string[] = ['films', 'pilots'] as string[];
 
-    const removers = [
-      VehicleRepository.RemoveFilms,
-      VehicleRepository.RemovePilots
-    ];
+    const removers = [VehicleRepository.RemoveFilms, VehicleRepository.RemovePilots];
     return await Promise.all(
       new Array(fieldNames.length)
         .fill(removeItemHandler(req, res))
@@ -106,9 +83,7 @@ class VehicleController extends Controller {
     );
   }
   async RemoveVehicle(req: Request, res: Response) {
-    const { status, message } = await VehicleRepository.RemoveThis(
-      req.query.id
-    );
+    const { status, message } = await VehicleRepository.RemoveThis(req.query.id);
     if (status === Status.Successfull) {
       const redirectUrl = `/api/v1/${this.Pathname}?apiKey=${req.query.apiKey}`;
       return res.redirect(redirectUrl);
