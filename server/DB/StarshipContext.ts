@@ -1,6 +1,6 @@
 import { IDBContext, knex, IDBResponse } from '.';
 import { IStarshipViewModel } from '../models/ViewModels/StarshipViewModel';
-import { ManyToManyTable, EntityTable } from '../types/Tables';
+import { ManyToManyTable, EntityTable } from '../models/Tables';
 import { Status } from '../middlewares/helpers';
 import {
   RelationData,

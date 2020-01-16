@@ -2,7 +2,7 @@ import Knex from 'knex';
 import mapData from '../utils/mapData';
 import Api from '../original_starwars_api';
 import { IPlanetFromApi, IPlanetEntity } from '../models/Planet';
-import { Table } from '../types/Tables';
+import { Table } from '../models/Tables';
 import { Planet } from '../models/Planet';
 
 export async function seed(knex: Knex): Promise<Planet> {

@@ -1,5 +1,5 @@
 import * as Knex from 'knex';
-import { ManyToManyTable, EntityTable } from '../types/Tables';
+import { ManyToManyTable, EntityTable } from '../models/Tables';
 import { Resident } from '../models/Residents';
 import uuid from 'uuid/v1';
 import { IPlanetFromApi } from '../models/Planet';

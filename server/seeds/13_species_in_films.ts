@@ -1,5 +1,5 @@
 import * as Knex from 'knex';
-import { Table } from '../types/Tables';
+import { Table } from '../models/Tables';
 import { ISpeciesInFilms, SpeciesInFilmsFieldsName } from '../models/SpeciesInFilms';
 import { IFilmFromApi } from '../models/Film';
 import Api from '../original_starwars_api';

@@ -1,7 +1,7 @@
 import * as Knex from 'knex';
 import Api from '../original_starwars_api';
 import { ISpecieFromApi, ISpecieEntity } from '../models/Specie';
-import { Table } from '../types/Tables';
+import { Table } from '../models/Tables';
 
 export async function seed(knex: Knex): Promise<any> {
   const data: {

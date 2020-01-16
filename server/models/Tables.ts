@@ -1,4 +1,4 @@
-export enum Table{
+export enum Table {
   Actors = 'actors',
   Film = 'film',
   People = 'people',
@@ -12,12 +12,10 @@ export enum Table{
   StarshipsInFilms = 'starships_in_films',
   SpeciesInFilms = 'species_in_films',
   Race = 'race',
-  StarshipPilot = 'starship_pilot',
- 
-
+  StarshipPilot = 'starship_pilot'
 }
 
-export enum ManyToManyTable{
+export enum ManyToManyTable {
   Actors = 'actors',
   VehiclesInFilms = 'vehicles_in_films',
   StarshipsInFilms = 'starships_in_films',
@@ -29,18 +27,18 @@ export enum ManyToManyTable{
   UserPermissions = 'user_permissions'
 }
 
-export enum OneToManyTable{
-  Race = 'race',
+export enum OneToManyTable {
+  Race = 'race'
 }
 
-export enum EntityTable{
+export enum EntityTable {
   Film = 'film',
   People = 'people',
   Planet = 'planet',
   Specie = 'specie',
   Starship = 'starship',
   Vehicle = 'vehicle',
-  Test    = 'test',
+  Test = 'test',
   User = 'user',
   Permission = 'permission'
 }

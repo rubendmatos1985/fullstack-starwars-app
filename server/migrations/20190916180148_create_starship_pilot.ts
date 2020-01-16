@@ -1,5 +1,5 @@
 import * as Knex from 'knex';
-import { ManyToManyTable, EntityTable } from '../types/Tables';
+import { ManyToManyTable, EntityTable } from '../models/Tables';
 import { StarshipPilotFieldsNames } from '../models/StarshipPilot';
 import { PeopleEntityFields } from '../models/People';
 import { StarshipEntityFields } from '../models/Starship';

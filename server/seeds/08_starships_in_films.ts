@@ -1,7 +1,7 @@
 import * as Knex from 'knex';
 import Api from '../original_starwars_api';
 import { IFilmFromApi } from '../models/Film';
-import { Table } from '../types/Tables';
+import { Table } from '../models/Tables';
 import uuid from 'uuid/v1';
 import { StarshipsInFilms } from '../models/StarshipsInFilms';
 export async function seed(knex: Knex): Promise<any> {

@@ -1,6 +1,6 @@
 import { IDBContext, knex, IDBResponse } from '.';
 import { IUserEntity } from '../models/User';
-import { EntityTable } from '../types/Tables';
+import { EntityTable } from '../models/Tables';
 import uuid = require('uuid');
 import { Status } from '../middlewares/helpers';
 
