@@ -32,7 +32,9 @@ class PeopleController extends Controller {
   }
 
   async GetById(req: Request, res: Response): Promise<Response> {
-    const { status, message }: IDBResponse<IPeopleViewModel[]> = await PeopleRepository.GetById(req.query.id);
+    const { status, message }: IDBResponse<IPeopleViewModel[] | string> = await PeopleRepository.GetById(
+      req.query.id
+    );
     if (status === Status.Successfull) {
       return res.json(message);
     }

@@ -1,8 +1,8 @@
-import { IDBContext, knex, IDBResponse } from ".";
-import { IUserEntity } from "../models/User";
-import { EntityTable } from "../types/Tables";
-import uuid = require("uuid");
-import { Status } from "../middlewares/helpers";
+import { IDBContext, knex, IDBResponse } from '.';
+import { IUserEntity } from '../models/User';
+import { EntityTable } from '../types/Tables';
+import uuid = require('uuid');
+import { Status } from '../middlewares/helpers';
 
 export interface ICreateUserArguments {
   name: string;
@@ -18,22 +18,22 @@ export interface IUpdateUserArguments {
 }
 
 export const UserContext: IDBContext<IUserEntity> = {
-  Get: (field: string) =>
-    function(value: string) {
+  Get: (field?: string) =>
+    function(value?: string) {
       const k = field && value ? knex.where(field, value) : knex;
       return k
-        .select("*")
-        .from("user")
+        .select('*')
+        .from('user')
         .then((r: IUserEntity[]) =>
           r[0]
             ? { status: Status.Successfull, message: r }
-            : { status: Status.Error, message: Error("user do not exists") }
+            : { status: Status.Error, message: 'user do not exists' }
         )
-        .catch(e => ({ status: Status.Error, message: e }));
+        .catch((e) => ({ status: Status.Error, message: e }));
     },
   Create: ({ name, email, password }: ICreateUserArguments) =>
     knex(EntityTable.User)
-      .returning(["id", "name", "email", "api_key"])
+      .returning(['id', 'name', 'email', 'api_key'])
       .insert({
         id: uuid(),
         name,
@@ -43,31 +43,26 @@ export const UserContext: IDBContext<IUserEntity> = {
         updated: new Date(),
         last_conexion: new Date(),
         api_key: uuid(),
-        scopes: JSON.stringify(['read']) 
+        scopes: JSON.stringify(['read'])
       })
-      .then(r => ({ status: Status.Successfull, message: r }))
-      .catch(e => ({ status: Status.Error, message: e })),
+      .then((r) => ({ status: Status.Successfull, message: r }))
+      .catch((e) => ({ status: Status.Error, message: e })),
 
   Update: (data: IUpdateUserArguments | IUserEntity) => {
-    if (Object.keys(data).some(k => k === "identifierKey")) {
-      const {
-        identifierKey,
-        identifierValue,
-        fieldKey,
-        newValue
-      } = data as IUpdateUserArguments;
-      return knex("user")
-        .update({ [fieldKey]: newValue }, ["name", "email", "api_key"])
+    if (Object.keys(data).some((k) => k === 'identifierKey')) {
+      const { identifierKey, identifierValue, fieldKey, newValue } = data as IUpdateUserArguments;
+      return knex('user')
+        .update({ [fieldKey]: newValue }, ['name', 'email', 'api_key'])
         .where({ [identifierKey]: identifierValue })
-        .then(r => ({ status: Status.Successfull, message: r }))
-        .catch(e => ({ status: Status.Error, message: e }));
+        .then((r) => ({ status: Status.Successfull, message: r }))
+        .catch((e) => ({ status: Status.Error, message: e }));
     }
     const d = data as IUserEntity;
-    return knex("user")
+    return knex('user')
       .update(d)
       .where({ api_key: d.api_key })
-      .returning(["name", "email", "api_key"])
-      .then(r => ({ status: Status.Successfull, message: r }))
-      .catch(e => ({ status: Status.Error, message: e }));
+      .returning(['name', 'email', 'api_key'])
+      .then((r) => ({ status: Status.Successfull, message: r }))
+      .catch((e) => ({ status: Status.Error, message: e }));
   }
 };
