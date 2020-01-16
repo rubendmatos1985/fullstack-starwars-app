@@ -1,16 +1,10 @@
 import { Controller } from './Controller';
 import { Router, Request, Response } from 'express';
 import PlanetRepository from '../models/PlanetRepository';
-import {
-  AddItemHandlerForDomain,
-  RemoveItemHandlerForDomain,
-  UpdateEntityRequest,
-  fail
-} from './commons';
+import { AddItemHandlerForDomain, RemoveItemHandlerForDomain, UpdateEntityRequest, fail } from './commons';
 import { Status } from '../middlewares/helpers';
-import { Planet } from '../types/DB';
+import { Planet } from '../models/Planet';
 import { IDBResponse } from '../DB';
-import PeopleRepository from '../models/PeopleRepository';
 import { Permissions } from '../middlewares/permissions';
 import { Validation } from '../middlewares/validation';
 
@@ -19,36 +13,11 @@ class PlanetController extends Controller {
     const router = () => {
       const r = Router();
       r.get('/', this.QueryParamsHandler);
-      r.post(
-        '/add',
-        Permissions.Write,
-        Validation.CheckItemIdIsProvided,
-        this.AddItem
-      );
-      r.post(
-        '/delete/items',
-        Permissions.Write,
-        Validation.CheckItemIdIsProvided,
-        this.RemoveItem
-      );
-      r.post(
-        '/delete',
-        Permissions.Write,
-        Validation.CheckItemIdIsProvided,
-        this.RemovePlanet
-      );
-      r.post(
-        '/update',
-        Permissions.Write,
-        Validation.CheckItemIdIsProvided,
-        this.Update
-      );
-      r.post(
-        '/delete',
-        Permissions.Write,
-        Validation.CheckItemIdIsProvided,
-        this.RemovePlanet
-      );
+      r.post('/add', Permissions.Write, Validation.CheckItemIdIsProvided, this.AddItem);
+      r.post('/delete/items', Permissions.Write, Validation.CheckItemIdIsProvided, this.RemoveItem);
+      r.post('/delete', Permissions.Write, Validation.CheckItemIdIsProvided, this.RemovePlanet);
+      r.post('/update', Permissions.Write, Validation.CheckItemIdIsProvided, this.Update);
+      r.post('/delete', Permissions.Write, Validation.CheckItemIdIsProvided, this.RemovePlanet);
       r.post('/create', Permissions.Write, this.CreatePlanet);
       return r;
     };
@@ -94,10 +63,7 @@ class PlanetController extends Controller {
   async RemoveItem(req: Request, res: Response) {
     const removeItemHandler = RemoveItemHandlerForDomain(this.Pathname);
     const fieldNames: string[] = ['films', 'residents'];
-    const removers = [
-      PlanetRepository.RemoveFilms,
-      PlanetRepository.RemoveResidents
-    ];
+    const removers = [PlanetRepository.RemoveFilms, PlanetRepository.RemoveResidents];
     return await Promise.all(
       new Array(fieldNames.length)
         .fill(removeItemHandler(req, res))

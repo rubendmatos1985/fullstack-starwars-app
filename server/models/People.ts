@@ -1,27 +1,26 @@
 import { ISpecieEntity as Specie } from './Specie';
-import { ISubject, ISubjectFromApi } from '../types/interfaces/Subject';
+import { ISubject, ISubjectFromApi } from './Subject';
 import { IFromForeignTables } from './ViewModels/FromForeignTables';
 
-export interface IPeople extends ISubject{
-  height: string
-  mass: string
-  hair_color: string
-  skin_color: string
-  eye_color: string
-  birth_year: string
-  gender: string
-  created: string
-  edited: string
+export interface IPeople extends ISubject {
+  height: string;
+  mass: string;
+  hair_color: string;
+  skin_color: string;
+  eye_color: string;
+  birth_year: string;
+  gender: string;
+  created: string;
+  edited: string;
 }
 
-
-export interface IPeopleFromApi extends IPeople{
-  species: string
-  vehicles: string[]
-  starships: string[]
+export interface IPeopleFromApi extends IPeople {
+  species: string;
+  vehicles: string[];
+  starships: string[];
 }
 
-export enum PeopleEntityFields{
+export enum PeopleEntityFields {
   Id = 'id',
   Name = 'name',
   Height = 'height',

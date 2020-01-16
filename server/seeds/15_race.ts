@@ -5,7 +5,7 @@ import Api from '../original_starwars_api';
 import { knex } from '../DB';
 import { ISpecieFromApi, ISpecieEntityFields } from '../models/Specie';
 import { flatten } from 'ramda';
-import { IRace } from '../types/interfaces/Races';
+import { IRace } from '../models/Races';
 import uuid from 'uuid/v1';
 
 export async function seed(knex: Knex): Promise<any> {

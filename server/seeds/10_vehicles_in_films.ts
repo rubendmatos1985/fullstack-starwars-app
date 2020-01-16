@@ -1,13 +1,14 @@
 import * as Knex from 'knex';
 import { Table } from '../types/Tables';
-import { IFilmFromApi } from '../../server/models/Film'//'../models/Film';
+import { IFilmFromApi } from '../../server/models/Film'; //'../models/Film';
 import Api from '../original_starwars_api';
 import uuid from 'uuid/v1';
-import { VehiclesInFilms } from '../types/interfaces/VehiclesInFilms';
+import { VehiclesInFilms } from '../models/VehiclesInFilms';
 export async function seed(knex: Knex): Promise<any> {
-  const vehiclesInFilms: { film: { id: string }[]; vehicles: { id: string }[] }[] = await makeVehiclesInFilmsRelation(
-    knex
-  );
+  const vehiclesInFilms: {
+    film: { id: string }[];
+    vehicles: { id: string }[];
+  }[] = await makeVehiclesInFilmsRelation(knex);
   return knex(Table.VehiclesInFilms)
     .del()
     .then(() => {

@@ -7,7 +7,7 @@ import {
   insertItemsIfNotAlreadyStored
 } from './commons';
 import { Status } from '../middlewares/helpers';
-import { Planet } from '../types/DB';
+import { Planet } from '../models/Planet';
 import uuid = require('uuid');
 
 export const PlanetContext: IDBContext<IPlanetViewModel> = {
@@ -20,17 +20,11 @@ export const PlanetContext: IDBContext<IPlanetViewModel> = {
             : knex.where(field, value)
           : knex;
       return k
-        .select(
-          'planet.*',
-          'residents.json_agg as residents',
-          'films.json_agg as films'
-        )
+        .select('planet.*', 'residents.json_agg as residents', 'films.json_agg as films')
         .from(function() {
           this.select(
             'planet.id as planet_id',
-            knex.raw(
-              `json_agg(json_build_object('id', people.id, 'name', people.name))`
-            )
+            knex.raw(`json_agg(json_build_object('id', people.id, 'name', people.name))`)
           )
             .from('planet')
             .leftJoin('resident', 'resident.planet_id', 'planet.id')
@@ -42,16 +36,10 @@ export const PlanetContext: IDBContext<IPlanetViewModel> = {
           function() {
             this.select(
               'planet.id as planet_id',
-              knex.raw(
-                `json_agg(json_build_object('id', film.id, 'title', film.title))`
-              )
+              knex.raw(`json_agg(json_build_object('id', film.id, 'title', film.title))`)
             )
               .from('planet')
-              .leftJoin(
-                'planets_in_films',
-                'planets_in_films.planet_id',
-                'planet.id'
-              )
+              .leftJoin('planets_in_films', 'planets_in_films.planet_id', 'planet.id')
               .leftJoin('film', 'planets_in_films.film_id', 'film.id')
               .groupBy('planet.id')
               .as('films');
@@ -62,41 +50,23 @@ export const PlanetContext: IDBContext<IPlanetViewModel> = {
         .join('planet', 'planet.id', 'residents.planet_id');
     },
   Add: (field: string) =>
-    async function(
-      planetId: string,
-      itemsIds: string[]
-    ): Promise<IDBResponse<string>> {
-      const relationContext:
-        | RelationData
-        | undefined = buildRelationContextFromField(field);
+    async function(planetId: string, itemsIds: string[]): Promise<IDBResponse<string>> {
+      const relationContext: RelationData | undefined = buildRelationContextFromField(field);
       if (!relationContext) {
         return {
           status: Status.Error,
           message: `planet relation do not have field ${field}`
         };
       }
-      const storedIds = await getIdsRelatedToThisEntity(
-        'planet_id',
-        planetId,
-        relationContext
-      );
-      const enteredIdsAreValid = await validateCandidates(
-        relationContext.entityTableName,
-        itemsIds
-      );
+      const storedIds = await getIdsRelatedToThisEntity('planet_id', planetId, relationContext);
+      const enteredIdsAreValid = await validateCandidates(relationContext.entityTableName, itemsIds);
       if (!enteredIdsAreValid) {
         return Promise.resolve({
           status: Status.Error,
           message: 'Parameter itemIds has invalid values'
         });
       }
-      return insertItemsIfNotAlreadyStored(
-        planetId,
-        'planet_id',
-        itemsIds,
-        storedIds,
-        relationContext
-      );
+      return insertItemsIfNotAlreadyStored(planetId, 'planet_id', itemsIds, storedIds, relationContext);
     },
   Remove: (field: string) =>
     async function(ids: string[]): Promise<IDBResponse<string>> {
@@ -106,9 +76,7 @@ export const PlanetContext: IDBContext<IPlanetViewModel> = {
           and id(s) equals to ${JSON.stringify(ids)} 
           deleted successfully`
       };
-      const relation: RelationData | undefined = buildRelationContextFromField(
-        field
-      );
+      const relation: RelationData | undefined = buildRelationContextFromField(field);
       if (relation) {
         return knex(relation.tableName)
           .whereIn(relation.columnName, ids)
@@ -122,22 +90,21 @@ export const PlanetContext: IDBContext<IPlanetViewModel> = {
       });
     },
 
-  RemoveThis: (id: string)=>
+  RemoveThis: (id: string) =>
     knex('planet')
       .del()
       .where({ id })
-      .then(v => ({ status: Status.Successfull, message: `item with id ${id} removed successfully` }))
-      .catch(e => ({ status: Status.Error, message: `item with id ${id} not founded` })),
-  Create: (planet: Planet)=>{
-    const planetId = uuid()
+      .then((v) => ({ status: Status.Successfull, message: `item with id ${id} removed successfully` }))
+      .catch((e) => ({ status: Status.Error, message: `item with id ${id} not founded` })),
+  Create: (planet: Planet) => {
+    const planetId = uuid();
     return knex('planet')
-      .insert({id: planetId, ...planet})
+      .insert({ id: planetId, ...planet })
       .returning('*')
-      .then(v => ({ status: Status.Successfull, message: v }))
-      .catch(e => ({ status: Status.Error, message: e }))
+      .then((v) => ({ status: Status.Successfull, message: v }))
+      .catch((e) => ({ status: Status.Error, message: e }));
   },
-  
-  
+
   Update: (planet: Planet) =>
     knex('planet')
       .where({ id: planet.id })
@@ -149,9 +116,7 @@ export const PlanetContext: IDBContext<IPlanetViewModel> = {
       .catch((e) => ({ status: Status.Error, message: e }))
 };
 
-function buildRelationContextFromField(
-  fieldName: string
-): RelationData | undefined {
+function buildRelationContextFromField(fieldName: string): RelationData | undefined {
   switch (fieldName) {
     case 'residents': {
       return {
