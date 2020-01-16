@@ -40,9 +40,7 @@ export namespace Validation {
         .split(' ')
         .join('');
       const matched: string[] | null = formattedString.match(/[a-zA-Z\u00C0-\u017F]+/);
-      return matched !== null
-        ? matched[0] !== 'null' && matched[0] !== 'undefined' && matched[0].length === formattedString.length
-        : false;
+      return matched !== null ? matched[0].length === formattedString.length : false;
     };
     if (req.query.name) {
       if (validateQuery(req.query.name)) {

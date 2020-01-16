@@ -94,12 +94,9 @@ describe('People Controller', () => {
   });
   test('passing wrong format to name', async () => {
     const mock = jest.fn();
-    const pattern = mock
-      .mockReturnValueOnce(12345)
-      .mockReturnValueOnce(uuid())
-      .mockReturnValueOnce(null);
+    const pattern = mock.mockReturnValueOnce(12345).mockReturnValueOnce(uuid());
     const responses = await Promise.all(
-      Array(3)
+      Array(2)
         .fill(0)
         .map(async (v) => await request(App).get(`/api/v1/people?name=${pattern()}&apiKey=${apiKey}`))
     );

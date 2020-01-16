@@ -8,7 +8,7 @@ import { Status } from '../server/middlewares/helpers';
 import { Validation } from '../server/middlewares/validation';
 import uuid from 'uuid';
 
-describe('Films: add and remvove', () => {
+describe('Post Characters in Films: add and remvove', () => {
   let apiKey: string;
   let film: Film;
   let characters: string[];
