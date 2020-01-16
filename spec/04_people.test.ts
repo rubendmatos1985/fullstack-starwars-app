@@ -3,7 +3,7 @@ import request from 'supertest';
 import App from '../server/app';
 import { Status } from '../server/middlewares/helpers';
 import { Authentication } from '../server/middlewares/authentication';
-import { People } from '../server/types/DB';
+import { IPeople } from '../server/models/People';
 import { IPeopleViewModel } from '../server/models/ViewModels/PeopleViewModel';
 import { Validation } from '../server/middlewares/validation';
 import uuid from 'uuid';
@@ -41,7 +41,7 @@ describe('People Controller', () => {
     expect(people).toStrictEqual(peopleFromDB);
   });
   test('get people by id', async () => {
-    const [dbPeople]: People[] = await knex('people')
+    const [dbPeople]: IPeople[] = await knex('people')
       .select('*')
       .limit(1);
     const response = await request(App).get(`/api/v1/people?id=${dbPeople.id}&apiKey=${apiKey}`);
@@ -81,7 +81,7 @@ describe('People Controller', () => {
       .select('name')
       .limit(1)
       .then((p: { name: string }[]) => p.map((v) => v.name));
-    const [people]: People[] = await knex('people').where('name', 'like', `%${pattern}%`);
+    const [people]: IPeople[] = await knex('people').where('name', 'like', `%${pattern}%`);
     const response = await request(App).get(`/api/v1/people?name=${pattern}&apiKey=${apiKey}`);
     const {
       status,
