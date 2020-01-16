@@ -3,7 +3,7 @@ import { Router, Response, Request, NextFunction } from 'express';
 import PeopleRepository from '../models/PeopleRepository';
 import { AddItemHandlerForDomain, RemoveItemHandlerForDomain, UpdateEntityRequest } from './commons';
 import { PeopleViewModelForeignFields, IPeopleViewModel } from '../models/ViewModels/PeopleViewModel';
-import { People } from '../types/DB';
+import { IPeople } from '../models/People';
 import { IDBResponse } from '../DB';
 import { Status } from '../middlewares/helpers';
 import { fail } from './commons';
@@ -110,7 +110,7 @@ class PeopleController extends Controller {
     );
   }
 
-  private async Update(req: UpdateEntityRequest<People>, res: Response) {
+  private async Update(req: UpdateEntityRequest<IPeople>, res: Response) {
     const redirectUrl = `/api/v1/${this.Pathname}?id=${req.query.id}&apiKey=${req.query.apiKey}`;
     const result: IDBResponse<string> = await PeopleRepository.Update({
       id: req.query.id,

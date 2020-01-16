@@ -7,7 +7,7 @@ import {
   insertItemsIfNotAlreadyStored
 } from './commons';
 import { Status } from '../middlewares/helpers';
-import { People } from '../types/DB';
+import { IPeople } from '../models/People';
 import uuid = require('uuid');
 
 export const PeopleContext: IDBContext<IPeopleViewModel> = {
@@ -127,7 +127,7 @@ export const PeopleContext: IDBContext<IPeopleViewModel> = {
       }
       return insertItemsIfNotAlreadyStored(peopleId, 'people_id', itemsIds, storedIds, relation);
     },
-  Update: (people: People) =>
+  Update: (people: IPeople) =>
     knex('people')
       .where({ id: people.id })
       .update(people)
@@ -136,7 +136,7 @@ export const PeopleContext: IDBContext<IPeopleViewModel> = {
         message: `Item with id ${people.id} updated successfully`
       }))
       .catch((e) => ({ status: Status.Error, message: e })),
-  Create: (people: People) => {
+  Create: (people: IPeople) => {
     const peopleId = uuid();
     return knex('people')
       .insert({ id: peopleId, ...people })
