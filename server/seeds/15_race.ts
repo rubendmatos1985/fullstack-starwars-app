@@ -1,6 +1,6 @@
 import Knex from 'knex';
-import { OneToManyTable, EntityTable, Table } from '../types/Tables';
-import { IPeopleFromApi, PeopleEntityFields } from '../models/People';
+import { OneToManyTable, Table } from '../types/Tables';
+import { PeopleEntityFields } from '../models/People';
 import Api from '../original_starwars_api';
 import { knex } from '../DB';
 import { ISpecieFromApi, ISpecieEntityFields } from '../models/Specie';

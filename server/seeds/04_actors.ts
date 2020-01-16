@@ -1,8 +1,8 @@
 import * as Knex from 'knex';
 import Api from '../original_starwars_api';
-import { IFilmFromApi } from '../../server/models/Film'//'../models/Film';
+import { IFilmFromApi } from '../../server/models/Film'; //'../models/Film';
 import uuid from 'uuid/v1';
-import { Actors } from '../types/DB';
+import { IActors } from '../models/Actors';
 export async function seed(knex: Knex): Promise<any> {
   const actors = await buildAsyncActor(knex);
 
@@ -30,7 +30,7 @@ const buildAsyncActor = async (knex: Knex) => {
 };
 const buildActorsEntity: (
   a: Array<{ film: Array<{ id: string }>; people: Array<{ id: string }> }>
-) => Array<Actors> = (actors) =>
+) => Array<IActors> = (actors) =>
   actors
     .map((obj: { film: { id: string }[]; people: { id: string }[] }) =>
       obj.people.reduce(

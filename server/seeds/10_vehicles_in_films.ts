@@ -1,6 +1,6 @@
 import * as Knex from 'knex';
 import { Table } from '../types/Tables';
-import { IFilmFromApi } from '../../server/models/Film'; //'../models/Film';
+import { IFilmFromApi } from '../../server/models/Film';
 import Api from '../original_starwars_api';
 import uuid from 'uuid/v1';
 import { VehiclesInFilms } from '../models/VehiclesInFilms';

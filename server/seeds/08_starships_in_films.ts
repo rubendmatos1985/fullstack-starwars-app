@@ -3,7 +3,7 @@ import Api from '../original_starwars_api';
 import { IFilmFromApi } from '../models/Film';
 import { Table } from '../types/Tables';
 import uuid from 'uuid/v1';
-import { StarshipsInFilms, StarshipsInFilmsFields } from '../types/DB';
+import { StarshipsInFilms } from '../models/StarshipsInFilms';
 export async function seed(knex: Knex): Promise<any> {
   const filmsAndStarships: {
     film: { id: string }[];
@@ -43,9 +43,9 @@ const buildStarshipsInFilmsEntity: (
         (acc: Array<StarshipsInFilms>, curr: { id: string }) => [
           ...acc,
           {
-            id: uuid() as StarshipsInFilmsFields.id,
-            starship_id: curr.id as StarshipsInFilmsFields.starship_id,
-            film_id: obj.film[0].id as StarshipsInFilmsFields.film_id
+            id: uuid(),
+            starship_id: curr.id,
+            film_id: obj.film[0].id
           }
         ],
         []

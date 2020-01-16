@@ -1,15 +1,17 @@
 import * as Knex from 'knex';
 import { Table } from '../types/Tables';
-import { SpeciesInFilms, SpeciesInFilmsFields } from '../types/DB';
+import { ISpeciesInFilms, SpeciesInFilmsFieldsName } from '../models/SpeciesInFilms';
 import { IFilmFromApi } from '../models/Film';
 import Api from '../original_starwars_api';
 import uuid from 'uuid/v1';
 export async function seed(knex: Knex): Promise<any> {
-  const data: Array<{ film: { id: string }[]; species: { id: string }[] }> = await makeSpeciesInFilmsRelation(knex);
-  return knex<SpeciesInFilms>(Table.SpeciesInFilms)
+  const data: Array<{ film: { id: string }[]; species: { id: string }[] }> = await makeSpeciesInFilmsRelation(
+    knex
+  );
+  return knex<ISpeciesInFilms>(Table.SpeciesInFilms)
     .del()
     .then(() => {
-      return knex<SpeciesInFilms[]>(Table.SpeciesInFilms).insert(buildSpeciesInFilmsEntity(data));
+      return knex<ISpeciesInFilms[]>(Table.SpeciesInFilms).insert(buildSpeciesInFilmsEntity(data));
     });
 }
 
@@ -35,19 +37,19 @@ const makeSpeciesInFilmsRelation: (
 
 const buildSpeciesInFilmsEntity: (
   filmsAndStarships: Array<{ film: { id: string }[]; species: { id: string }[] }>
-) => Array<SpeciesInFilms> = (filmAndPlanets) =>
+) => Array<ISpeciesInFilms> = (filmAndPlanets) =>
   filmAndPlanets
     .map((obj: { film: Array<{ id: string }>; species: Array<{ id: string }> }) =>
       obj.species.reduce(
-        (acc: Array<SpeciesInFilms>, curr: { id: string }) => [
+        (acc: Array<ISpeciesInFilms>, curr: { id: string }) => [
           ...acc,
           {
-            id: uuid() as SpeciesInFilmsFields.id,
-            specie_id: curr.id as SpeciesInFilmsFields.specie_id,
-            film_id: obj.film[0].id as SpeciesInFilmsFields.film_id
+            id: uuid(),
+            specie_id: curr.id,
+            film_id: obj.film[0].id
           }
         ],
         []
       )
     )
-    .reduce((acc: SpeciesInFilms[], curr: any) => [...acc, ...curr]);
+    .reduce((acc: ISpeciesInFilms[], curr: any) => [...acc, ...curr]);

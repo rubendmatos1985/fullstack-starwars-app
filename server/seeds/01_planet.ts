@@ -3,9 +3,9 @@ import mapData from '../utils/mapData';
 import Api from '../original_starwars_api';
 import { IPlanetFromApi, IPlanetEntity } from '../models/Planet';
 import { Table } from '../types/Tables';
-import { Planet } from '../types/DB';
+import { Planet } from '../models/Planet';
 
-export async function seed(knex:Knex):Promise<Planet> { 
+export async function seed(knex: Knex): Promise<Planet> {
   const data = await mapData<IPlanetFromApi, IPlanetEntity>(Api.Planet, [
     'name',
     'rotation_period',
@@ -21,6 +21,6 @@ export async function seed(knex:Knex):Promise<Planet> {
   return knex(Table.Planet)
     .del()
     .then(function() {
-      return knex(Table.Planet).insert(data)
-    })
+      return knex(Table.Planet).insert(data);
+    });
 }

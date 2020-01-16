@@ -1,14 +1,13 @@
 import * as Knex from 'knex';
 import { ManyToManyTable, EntityTable } from '../types/Tables';
-import { PlanetFields } from '../models/Planet';
-import { Resident, ResidentFields, PeopleFields } from '../types/DB';
+import { Resident } from '../models/Residents';
 import uuid from 'uuid/v1';
 import { IPlanetFromApi } from '../models/Planet';
 import Api from '../original_starwars_api';
 export async function seed(knex: Knex): Promise<any> {
   const residentsRelation: Array<{
-    people: { id: PeopleFields.id }[];
-    planet: { id: PlanetFields.id }[];
+    people: { id: string }[];
+    planet: { id: string }[];
   }> = await makeResidentRelation(knex);
 
   return knex(ManyToManyTable.Resident)
@@ -20,9 +19,7 @@ export async function seed(knex: Knex): Promise<any> {
 
 const makeResidentRelation: (
   k: Knex
-) => Promise<Array<{ people: { id: PeopleFields.id }[]; planet: { id: PlanetFields.id }[] }>> = async (
-  knex: Knex
-) => {
+) => Promise<Array<{ people: { id: string }[]; planet: { id: string }[] }>> = async (knex: Knex) => {
   const planets: Array<IPlanetFromApi> = await Api.Planet();
   const peopleWithPlanets: Promise<{ planet: { id: string }[]; people: { id: string }[] }>[] = planets.map(
     async (planet: IPlanetFromApi) => ({
@@ -41,7 +38,7 @@ const makeResidentRelation: (
 };
 
 const buildResidents: (
-  residents: Array<{ planet: { id: PlanetFields.id }[]; people: { id: PeopleFields.id }[] }>
+  residents: Array<{ planet: { id: string }[]; people: { id: string }[] }>
 ) => Array<Resident> = (residents) =>
   residents
     .map((obj) =>
@@ -49,7 +46,7 @@ const buildResidents: (
         (acc: Array<Resident>, curr: { id: string }) => [
           ...acc,
           {
-            id: uuid() as ResidentFields.id,
+            id: uuid(),
             planet_id: obj.planet[0].id,
             people_id: curr.id
           }

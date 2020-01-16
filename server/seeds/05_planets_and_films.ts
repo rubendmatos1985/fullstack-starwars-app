@@ -2,11 +2,13 @@ import * as Knex from 'knex';
 import { IFilmFromApi } from '../models/Film';
 import Api from '../original_starwars_api';
 import uuid from 'uuid/v1';
-import { PlanetsInFilms } from '../types/DB';
+import { PlanetsInFilms } from '../models/PlanetsInFilms';
 
 export async function seed(knex: Knex): Promise<any> {
-  const filmAndPlanets: Array<{ film: { id: string }[]; planets: { id: string }[] }> = 
-    await getFilmsAndPlanetsFromApi(knex);
+  const filmAndPlanets: Array<{
+    film: { id: string }[];
+    planets: { id: string }[];
+  }> = await getFilmsAndPlanetsFromApi(knex);
   return knex('planets_in_films')
     .del()
     .then((v: any) => {
@@ -14,19 +16,23 @@ export async function seed(knex: Knex): Promise<any> {
     });
 }
 
-const getFilmsAndPlanetsFromApi: (k: Knex) => Promise<{ film: any[]; planets: any[] }[]> = async (knex: Knex) => {
+const getFilmsAndPlanetsFromApi: (k: Knex) => Promise<{ film: any[]; planets: any[] }[]> = async (
+  knex: Knex
+) => {
   const films: IFilmFromApi[] = await Api.Film();
-  const filmWithPlanets: Promise<{ film: any[]; planets: any[] }>[] = films.map(async (film: IFilmFromApi) => ({
-    film: await knex
-      .select('id')
-      .from('film')
-      .where('url', film.url),
+  const filmWithPlanets: Promise<{ film: any[]; planets: any[] }>[] = films.map(
+    async (film: IFilmFromApi) => ({
+      film: await knex
+        .select('id')
+        .from('film')
+        .where('url', film.url),
 
-    planets: await knex
-      .select('id')
-      .from('planet')
-      .whereIn('url', film.planets)
-  }));
+      planets: await knex
+        .select('id')
+        .from('planet')
+        .whereIn('url', film.planets)
+    })
+  );
   return Promise.all(filmWithPlanets);
 };
 
