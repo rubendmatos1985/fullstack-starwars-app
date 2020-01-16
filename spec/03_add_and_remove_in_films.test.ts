@@ -6,6 +6,7 @@ import { Film } from '../server/models/Film';
 import { isEmpty } from 'ramda';
 import { Status } from '../server/middlewares/helpers';
 import { Validation } from '../server/middlewares/validation';
+import uuid from 'uuid';
 
 describe('Films: add and remvove', () => {
   let apiKey: string;
@@ -121,5 +122,20 @@ describe('Films: add and remvove', () => {
       JSON.parse(response.text)
     );
     expect(response.status).toBe(400);
+  });
+  test('passing wrong format to name', async () => {
+    const mock = jest.fn();
+    const pattern = mock
+      .mockReturnValueOnce(12345)
+      .mockReturnValueOnce(uuid())
+      .mockReturnValueOnce(null);
+    const responses = await Promise.all(
+      Array(3)
+        .fill(0)
+        .map(async (v) => await request(App).get(`/api/v1/films?name=${pattern()}&apiKey=${apiKey}`))
+    );
+    responses.forEach((rs) => {
+      expect(rs.status).toBe(400);
+    });
   });
 });

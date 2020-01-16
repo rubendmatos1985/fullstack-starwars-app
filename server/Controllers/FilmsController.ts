@@ -39,7 +39,7 @@ class FilmsController extends Controller {
   public constructor() {
     const router = () => {
       const r: Router = Router();
-      r.get('/', Validation.ValidateIdAsUUID, this.HandleQueryParams);
+      r.get('/', Validation.ValidateIdAsUUID, Validation.ValidateNameAsString, this.HandleQueryParams);
       r.post(
         '/delete/items',
         Permissions.Write,
@@ -155,7 +155,7 @@ class FilmsController extends Controller {
     }
   }
   private async CreateFilm(req: Request, res: Response) {
-    const result: IDBResponse<string> = await FilmRepository.Create(req.body);
+    const result: IDBResponse<{ id: string }> = await FilmRepository.Create(req.body);
     if (result.status === Status.Successfull) {
       const redirectUrl = `/api/v1/${this.Pathname}?id=${result.message[0].id}&apiKey=${req.query.apiKey}`;
       return res.redirect(redirectUrl);

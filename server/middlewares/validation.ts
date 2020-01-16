@@ -48,7 +48,6 @@ export namespace Validation {
       if (validateQuery(req.query.name)) {
         return next();
       }
-      console.log('wrong name', req.query.name);
       return res.status(400).json({ status: Status.Error, message: ErrorMessages.Query.NumbersInName });
     }
     return next();
