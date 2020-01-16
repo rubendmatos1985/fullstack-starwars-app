@@ -36,10 +36,7 @@ export const PeopleContext: IDBContext<IPeopleViewModel> = {
       })
       .join(
         function() {
-          this.select(
-            'people.id as people_id',
-            knex.raw('json_agg(vehicle.name)')
-          )
+          this.select('people.id as people_id', knex.raw('json_agg(vehicle.name)'))
             .from('people')
             .leftJoin('pilot', 'pilot.people_id', 'people.id')
             .leftJoin('vehicle', 'pilot.vehicle_id', 'vehicle.id')
@@ -52,10 +49,7 @@ export const PeopleContext: IDBContext<IPeopleViewModel> = {
       )
       .join(
         function() {
-          this.select(
-            'people.id as people_id',
-            knex.raw('json_agg(starship.name)')
-          )
+          this.select('people.id as people_id', knex.raw('json_agg(starship.name)'))
             .from('people')
             .leftJoin('starship_pilot', 'starship_pilot.people_id', 'people.id')
             .leftJoin('starship', 'starship_pilot.starship_id', 'starship.id')
@@ -67,10 +61,7 @@ export const PeopleContext: IDBContext<IPeopleViewModel> = {
       )
       .join(
         function() {
-          this.select(
-            'people.id as people_id',
-            knex.raw('json_agg(specie.name)')
-          )
+          this.select('people.id as people_id', knex.raw('json_agg(specie.name)'))
             .from('people')
             .leftJoin('race', 'people.id', 'race.people_id')
             .leftJoin('specie', 'specie.id', 'race.specie_id')
@@ -80,7 +71,9 @@ export const PeopleContext: IDBContext<IPeopleViewModel> = {
         'species.people_id',
         'films.people_id'
       )
-      .join('people', 'people.id', 'films.people_id');
+      .join('people', 'people.id', 'films.people_id')
+      .then((p) => ({ status: Status.Successfull, message: p }))
+      .catch((e) => ({ status: Status.Error, message: e }));
   },
   // REMOVE JUST FOREGIN TABLES
   Remove: (columnName: string) =>
@@ -91,9 +84,7 @@ export const PeopleContext: IDBContext<IPeopleViewModel> = {
         and id(s) equals to ${JSON.stringify(ids)} 
         deleted successfully`
       };
-      const relation: RelationData | undefined = buildRelationContextFromField(
-        columnName
-      );
+      const relation: RelationData | undefined = buildRelationContextFromField(columnName);
       if (relation) {
         return knex(relation.tableName)
           .whereIn(relation.columnName, ids)
@@ -117,10 +108,7 @@ export const PeopleContext: IDBContext<IPeopleViewModel> = {
       .catch((e) => ({ status: Status.Error, message: e })),
   // ADD FOREING TABLES
   Add: (columnName: string) =>
-    async function(
-      peopleId: string,
-      itemsIds: string[]
-    ): Promise<IDBResponse<string>> {
+    async function(peopleId: string, itemsIds: string[]): Promise<IDBResponse<string>> {
       const relation = buildRelationContextFromField(columnName);
       if (!relation) {
         return Promise.resolve({
@@ -128,31 +116,18 @@ export const PeopleContext: IDBContext<IPeopleViewModel> = {
           message: 'film do not have this field'
         });
       }
-      const storedIds: string[] = await getIdsRelatedToThisEntity(
-        'people_id',
-        peopleId,
-        relation
-      );
+      const storedIds: string[] = await getIdsRelatedToThisEntity('people_id', peopleId, relation);
 
-      const enteredIdsAreValid: boolean = await validateCandidates(
-        relation.entityTableName,
-        itemsIds
-      );
+      const enteredIdsAreValid: boolean = await validateCandidates(relation.entityTableName, itemsIds);
       if (!enteredIdsAreValid) {
         return Promise.resolve({
           status: Status.Error,
           message: 'Parameter itemIds has invalid values'
         });
       }
-      return insertItemsIfNotAlreadyStored(
-        peopleId,
-        'people_id',
-        itemsIds,
-        storedIds,
-        relation
-      );
+      return insertItemsIfNotAlreadyStored(peopleId, 'people_id', itemsIds, storedIds, relation);
     },
-  Update: (people: People) =>(
+  Update: (people: People) =>
     knex('people')
       .where({ id: people.id })
       .update(people)
@@ -160,14 +135,14 @@ export const PeopleContext: IDBContext<IPeopleViewModel> = {
         status: Status.Successfull,
         message: `Item with id ${people.id} updated successfully`
       }))
-      .catch((e) => ({ status: Status.Error, message: e }))),
-  Create: (people: People)=>{
-     const peopleId = uuid();  
-     return knex('people')
+      .catch((e) => ({ status: Status.Error, message: e })),
+  Create: (people: People) => {
+    const peopleId = uuid();
+    return knex('people')
       .insert({ id: peopleId, ...people })
       .returning('id')
-      .then(v => ({ status: Status.Successfull, message: v }))
-      .catch(e => ({ status: Status.Error, message: e }))
+      .then((v) => ({ status: Status.Successfull, message: v }))
+      .catch((e) => ({ status: Status.Error, message: e }));
   }
 };
 

@@ -1,12 +1,8 @@
 import { Controller } from './Controller';
 import { Router, Response, Request, NextFunction } from 'express';
 import PeopleRepository from '../models/PeopleRepository';
-import {
-  AddItemHandlerForDomain,
-  RemoveItemHandlerForDomain,
-  UpdateEntityRequest
-} from './commons';
-import { PeopleViewModelForeignFields } from '../models/ViewModels/PeopleViewModel';
+import { AddItemHandlerForDomain, RemoveItemHandlerForDomain, UpdateEntityRequest } from './commons';
+import { PeopleViewModelForeignFields, IPeopleViewModel } from '../models/ViewModels/PeopleViewModel';
 import { People } from '../types/DB';
 import { IDBResponse } from '../DB';
 import { Status } from '../middlewares/helpers';
@@ -19,31 +15,11 @@ class PeopleController extends Controller {
     super(router);
     function router() {
       const r = Router();
-      r.get('/', this.GetQueryParamsHandler);
-      r.post(
-        '/add',
-        Permissions.Write,
-        Validation.CheckItemIdIsProvided,
-        this.AddItem
-      );
-      r.post(
-        '/delete/items',
-        Permissions.Write,
-        Validation.CheckItemIdIsProvided,
-        this.RemoveItems
-      );
-      r.post(
-        '/delete',
-        Permissions.Write,
-        Validation.CheckItemIdIsProvided,
-        this.RemovePeople
-      );
-      r.post(
-        '/update',
-        Permissions.Write,
-        Validation.CheckItemIdIsProvided,
-        this.Update
-      );
+      r.get('/', Validation.ValidateIdAsUUID, Validation.ValidateNameAsString, this.GetQueryParamsHandler);
+      r.post('/add', Permissions.Write, Validation.CheckItemIdIsProvided, this.AddItem);
+      r.post('/delete/items', Permissions.Write, Validation.CheckItemIdIsProvided, this.RemoveItems);
+      r.post('/delete', Permissions.Write, Validation.CheckItemIdIsProvided, this.RemovePeople);
+      r.post('/update', Permissions.Write, Validation.CheckItemIdIsProvided, this.Update);
       r.post('/create', Permissions.Write, this.CreatePeople);
       return r;
     }
@@ -56,8 +32,11 @@ class PeopleController extends Controller {
   }
 
   async GetById(req: Request, res: Response): Promise<Response> {
-    const result: any = await PeopleRepository.GetById(req.query.id);
-    return res.json(result);
+    const { status, message }: IDBResponse<IPeopleViewModel[]> = await PeopleRepository.GetById(req.query.id);
+    if (status === Status.Successfull) {
+      return res.json(message);
+    }
+    return res.json({ status: Status.Error, message: 'An error ocurred' });
   }
 
   async GetByName(req: Request, res: Response): Promise<Response> {
@@ -65,11 +44,7 @@ class PeopleController extends Controller {
     return res.send(result);
   }
 
-  private GetQueryParamsHandler(
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ): Promise<Response> {
+  private GetQueryParamsHandler(req: Request, res: Response, next: NextFunction): Promise<Response> {
     const params = Object.keys(req.query);
     if (params.some((k) => k === 'name')) {
       return this.GetByName(req, res);

@@ -5,7 +5,6 @@ import { Film } from '../server/models/Film';
 import { Status } from '../server/middlewares/helpers';
 import { IUserEntity } from '../server/models/User';
 import uuid from 'uuid';
-import { isDate } from 'util';
 
 describe('Films Controller', () => {
   let apiKey;
@@ -42,13 +41,14 @@ describe('Films Controller', () => {
     const [filmFromResponse]: { id: string }[] = JSON.parse(response.text).map(({ id }) => ({ id }));
     expect(filmFromDB).toStrictEqual(filmFromResponse);
   });
-  test('crash if id is not uuid', async () => {
+  test('passing wrong id format != uuid', async () => {
     const response = await request(App).get(`/api/v1/films?id=123456&apiKey=${apiKey}`);
     const expectedMessage = { status: Status.Error, message: 'Invalid id' };
     const message = JSON.parse(response.text);
+    expect(response.status).toEqual(400);
     expect(message).toStrictEqual(expectedMessage);
   });
-  test('crash if id do not exist', async () => {
+  test('passing not existent id', async () => {
     const falseId = uuid();
     const response = await request(App).get(`/api/v1/films?id=${falseId}&apiKey=${apiKey}`);
     expect(response.status).toBe(200);
@@ -67,6 +67,7 @@ describe('Films Controller', () => {
     const [film]: Film[] = await knex('film').where('title', 'like', `%${pattern}%`);
     const response = await request(App).get(`/api/v1/films?id=${film.id}&name=${pattern}&apiKey=${apiKey}`);
     const [filmFromResponse]: Film[] = JSON.parse(response.text);
+    expect(response.status).toBe(200);
     expect(film.id).toBe(filmFromResponse.id);
   });
 });

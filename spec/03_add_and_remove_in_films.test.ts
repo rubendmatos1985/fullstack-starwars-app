@@ -83,7 +83,7 @@ describe('Films: add and remvove', () => {
     expect({ status: Status.Error, message: Validation.ErrorMessages.Body.AddOrRemoveItems }).toStrictEqual(
       JSON.parse(response.text)
     );
-    expect(response.status).toBe(404);
+    expect(response.status).toBe(400);
   });
   test('Add characters with wrong body.fieldName', async () => {
     const response = await request(App)
@@ -96,7 +96,7 @@ describe('Films: add and remvove', () => {
     expect({ status: Status.Error, message: Validation.ErrorMessages.Body.AddOrRemoveItems }).toStrictEqual(
       JSON.parse(response.text)
     );
-    expect(response.status).toBe(404);
+    expect(response.status).toBe(400);
   });
   test('Remove characters with wrong body.itemsIds', async () => {
     const response = await request(App)
@@ -108,7 +108,7 @@ describe('Films: add and remvove', () => {
     expect({ status: Status.Error, message: Validation.ErrorMessages.Body.AddOrRemoveItems }).toStrictEqual(
       JSON.parse(response.text)
     );
-    expect(response.status).toBe(404);
+    expect(response.status).toBe(400);
   });
   test('Remove characters with wrong body.fieldName', async () => {
     const response = await request(App)
@@ -120,6 +120,6 @@ describe('Films: add and remvove', () => {
     expect({ status: Status.Error, message: Validation.ErrorMessages.Body.AddOrRemoveItems }).toStrictEqual(
       JSON.parse(response.text)
     );
-    expect(response.status).toBe(404);
+    expect(response.status).toBe(400);
   });
 });
