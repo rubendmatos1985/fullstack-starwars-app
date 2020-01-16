@@ -7,7 +7,7 @@ import {
   validateCandidates,
   insertItemsIfNotAlreadyStored
 } from './commons';
-import { Specie } from '../types/DB';
+import { ISpecieEntity } from '../models/Specie';
 import uuid = require('uuid');
 
 export const SpecieContext: IDBContext<ISpecieViewModel> = {
@@ -21,17 +21,11 @@ export const SpecieContext: IDBContext<ISpecieViewModel> = {
           : knex;
 
       return k
-        .select(
-          'specie.*',
-          'in_race_people.json_agg as people',
-          'films.json_agg as films'
-        )
+        .select('specie.*', 'in_race_people.json_agg as people', 'films.json_agg as films')
         .from(function() {
           this.select(
             'specie.id as specie_id',
-            knex.raw(
-              "json_agg(json_build_object('id', people.id, 'name', people.name))"
-            )
+            knex.raw("json_agg(json_build_object('id', people.id, 'name', people.name))")
           )
             .from('specie')
             .leftJoin('race', 'race.specie_id', 'specie.id')
@@ -43,16 +37,10 @@ export const SpecieContext: IDBContext<ISpecieViewModel> = {
           function() {
             this.select(
               'specie.id as specie_id',
-              knex.raw(
-                "json_agg(json_build_object('id', film.id, 'name', film.title))"
-              )
+              knex.raw("json_agg(json_build_object('id', film.id, 'name', film.title))")
             )
               .from('specie')
-              .leftJoin(
-                'species_in_films',
-                'species_in_films.specie_id',
-                'specie.id'
-              )
+              .leftJoin('species_in_films', 'species_in_films.specie_id', 'specie.id')
               .leftJoin('film', 'film.id', 'species_in_films.film_id')
               .groupBy('specie.id')
               .as('films');
@@ -74,9 +62,7 @@ export const SpecieContext: IDBContext<ISpecieViewModel> = {
       and id(s) equals to ${JSON.stringify(ids)} 
       deleted successfully`
       };
-      const relation: RelationData | undefined = buildRelationContextFromField(
-        field
-      );
+      const relation: RelationData | undefined = buildRelationContextFromField(field);
       if (relation) {
         return knex(relation.tableName)
           .whereIn(relation.columnName, ids)
@@ -102,7 +88,7 @@ export const SpecieContext: IDBContext<ISpecieViewModel> = {
         status: Status.Error,
         message: `item with id ${id} not founded`
       })),
-  Create: (specie: Specie) => {
+  Create: (specie: ISpecieEntity) => {
     const specieId = uuid();
     return knex('specie')
       .insert({ id: specieId, ...specie })
@@ -115,43 +101,25 @@ export const SpecieContext: IDBContext<ISpecieViewModel> = {
   },
 
   Add: (field: string) =>
-    async function(
-      specieId: string,
-      itemsIds: string[]
-    ): Promise<IDBResponse<string>> {
-      const relationContext:
-        | RelationData
-        | undefined = buildRelationContextFromField(field);
+    async function(specieId: string, itemsIds: string[]): Promise<IDBResponse<string>> {
+      const relationContext: RelationData | undefined = buildRelationContextFromField(field);
       if (!relationContext) {
         return {
           status: Status.Error,
           message: `planet relation do not have field ${field}`
         };
       }
-      const storedIds = await getIdsRelatedToThisEntity(
-        'specie_id',
-        specieId,
-        relationContext
-      );
-      const enteredIdsAreValid = await validateCandidates(
-        relationContext.entityTableName,
-        itemsIds
-      );
+      const storedIds = await getIdsRelatedToThisEntity('specie_id', specieId, relationContext);
+      const enteredIdsAreValid = await validateCandidates(relationContext.entityTableName, itemsIds);
       if (!enteredIdsAreValid) {
         return Promise.resolve({
           status: Status.Error,
           message: 'Parameter itemIds has invalid values'
         });
       }
-      return insertItemsIfNotAlreadyStored(
-        specieId,
-        'specie_id',
-        itemsIds,
-        storedIds,
-        relationContext
-      );
+      return insertItemsIfNotAlreadyStored(specieId, 'specie_id', itemsIds, storedIds, relationContext);
     },
-  Update: (specie: Specie) =>
+  Update: (specie: ISpecieEntity) =>
     knex('specie')
       .where({ id: specie.id })
       .update(specie)

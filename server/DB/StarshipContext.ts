@@ -8,7 +8,7 @@ import {
   getIdsRelatedToThisEntity,
   validateCandidates
 } from './commons';
-import { Starship } from '../types/DB';
+import { IStarshipEntity } from '../models/Starship';
 import uuid = require('uuid');
 
 export const StarshipContext: IDBContext<IStarshipViewModel> = {
@@ -21,24 +21,14 @@ export const StarshipContext: IDBContext<IStarshipViewModel> = {
             : knex.where(field, value)
           : knex;
       return k
-        .select(
-          'starship.*',
-          'pilots.json_agg as pilots',
-          'films.json_agg as films'
-        )
+        .select('starship.*', 'pilots.json_agg as pilots', 'films.json_agg as films')
         .from(function() {
           this.select(
             'starship.id as starship_id',
-            knex.raw(
-              `json_agg(json_build_object('id', people.id, 'name', people.name))`
-            )
+            knex.raw(`json_agg(json_build_object('id', people.id, 'name', people.name))`)
           )
             .from(EntityTable.Starship)
-            .leftJoin(
-              ManyToManyTable.StarshipPilot,
-              'starship_pilot.starship_id',
-              'starship.id'
-            )
+            .leftJoin(ManyToManyTable.StarshipPilot, 'starship_pilot.starship_id', 'starship.id')
             .leftJoin('people', 'people.id', 'starship_pilot.people_id')
             .groupBy('starship.id')
             .as('pilots');
@@ -47,16 +37,10 @@ export const StarshipContext: IDBContext<IStarshipViewModel> = {
           function() {
             this.select(
               'starship.id as starship_id',
-              knex.raw(
-                `json_agg(json_build_object('id', film.id, 'name', film.title))`
-              )
+              knex.raw(`json_agg(json_build_object('id', film.id, 'name', film.title))`)
             )
               .from(EntityTable.Starship)
-              .leftJoin(
-                'starships_in_films',
-                'starships_in_films.starship_id',
-                'starship.id'
-              )
+              .leftJoin('starships_in_films', 'starships_in_films.starship_id', 'starship.id')
               .leftJoin('film', 'film.id', 'starships_in_films.film_id')
               .groupBy('starship.id')
               .as('films');
@@ -69,41 +53,23 @@ export const StarshipContext: IDBContext<IStarshipViewModel> = {
         .catch((e) => ({ status: Status.Error, message: e }));
     },
   Add: (field: string) =>
-    async function(
-      starshipId: string,
-      itemsIds: string[]
-    ): Promise<IDBResponse<string>> {
-      const relationContext:
-        | RelationData
-        | undefined = buildRelationContextFromField(field);
+    async function(starshipId: string, itemsIds: string[]): Promise<IDBResponse<string>> {
+      const relationContext: RelationData | undefined = buildRelationContextFromField(field);
       if (!relationContext) {
         return {
           status: Status.Error,
           message: `planet relation do not have field ${field}`
         };
       }
-      const storedIds = await getIdsRelatedToThisEntity(
-        'starship_id',
-        starshipId,
-        relationContext
-      );
-      const enteredIdsAreValid = await validateCandidates(
-        relationContext.entityTableName,
-        itemsIds
-      );
+      const storedIds = await getIdsRelatedToThisEntity('starship_id', starshipId, relationContext);
+      const enteredIdsAreValid = await validateCandidates(relationContext.entityTableName, itemsIds);
       if (!enteredIdsAreValid) {
         return Promise.resolve({
           status: Status.Error,
           message: 'Parameter itemIds has invalid values'
         });
       }
-      return insertItemsIfNotAlreadyStored(
-        starshipId,
-        'starship_id',
-        itemsIds,
-        storedIds,
-        relationContext
-      );
+      return insertItemsIfNotAlreadyStored(starshipId, 'starship_id', itemsIds, storedIds, relationContext);
     },
   Remove: (field: string) =>
     async function(ids: string[]): Promise<IDBResponse<string>> {
@@ -113,9 +79,7 @@ export const StarshipContext: IDBContext<IStarshipViewModel> = {
           and id(s) equals to ${JSON.stringify(ids)} 
           deleted successfully`
       };
-      const relation: RelationData | undefined = buildRelationContextFromField(
-        field
-      );
+      const relation: RelationData | undefined = buildRelationContextFromField(field);
       if (relation) {
         return knex(relation.tableName)
           .whereIn(relation.columnName, ids)
@@ -140,7 +104,7 @@ export const StarshipContext: IDBContext<IStarshipViewModel> = {
         status: Status.Error,
         message: `item with id ${id} not founded`
       })),
-  Create: (planet: Starship) => {
+  Create: (planet: IStarshipEntity) => {
     const starshipId = uuid();
     return knex('starship')
       .insert({ id: starshipId, ...planet })
@@ -151,7 +115,7 @@ export const StarshipContext: IDBContext<IStarshipViewModel> = {
       }))
       .catch((e) => ({ status: Status.Error, message: e }));
   },
-  Update: (starship: Starship) =>
+  Update: (starship: IStarshipEntity) =>
     knex('starship')
       .where({ id: starship.id })
       .update(starship)

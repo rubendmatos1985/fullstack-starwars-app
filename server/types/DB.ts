@@ -40,7 +40,7 @@ import { EntityTable } from './Tables';
   url: PlanetFields.url;
 } */
 
-export namespace ActorsFields {
+/* export namespace ActorsFields {
   export type id = string | null;
   export type people_id = string | null;
   export type film_id = string | null;
@@ -50,9 +50,9 @@ export interface Actors {
   id: ActorsFields.id;
   people_id: ActorsFields.people_id;
   film_id: ActorsFields.film_id;
-}
+} */
 
-export namespace VehicleFields {
+/* export namespace VehicleFields {
   export type id = string;
   export type name = string | null;
   export type model = string | null;
@@ -82,9 +82,9 @@ export interface Vehicle {
   consumables: VehicleFields.consumables;
   vehicle_class: VehicleFields.vehicle_class;
   url: VehicleFields.url;
-}
+} */
 
-export namespace CharacterFields {
+/* export namespace CharacterFields {
   export type id = string | null;
   export type people_id = string | null;
   export type film_id = string | null;
@@ -94,21 +94,21 @@ export interface Character {
   id: CharacterFields.id;
   people_id: CharacterFields.people_id;
   film_id: CharacterFields.film_id;
-}
+} */
 
-export namespace VehiclesInFilmsFields {
+/* export namespace VehiclesInFilmsFields {
   export type id = string | null;
   export type vehicle_id = string | null;
   export type film_id = string | null;
-}
+} */
 
-export interface VehiclesInFilms {
+/* export interface VehiclesInFilms {
   id: VehiclesInFilmsFields.id;
   vehicle_id: VehiclesInFilmsFields.vehicle_id;
   film_id: VehiclesInFilmsFields.film_id;
-}
+} */
 
-export namespace SpecieFields {
+/* export namespace SpecieFields {
   export type id = string;
   export type name = string | null;
   export type classification = string | null;
@@ -136,9 +136,9 @@ export interface Specie {
   language: SpecieFields.language;
   url: SpecieFields.url;
   homeworld: SpecieFields.homeworld;
-}
+} */
 
-export namespace StarshipFields {
+/* export namespace StarshipFields {
   export type id = string | null;
   export type name = string | null;
   export type model = string | null;
@@ -177,8 +177,8 @@ export interface Starship {
   created: StarshipFields.created;
   edited: StarshipFields.edited;
 }
-
-export namespace PeopleFields {
+ */
+/* export namespace PeopleFields {
   export type id = string;
   export type name = string | null;
   export type height = string | null;
@@ -208,7 +208,7 @@ export interface People {
   edited: PeopleFields.edited;
   url: PeopleFields.url;
   specie_id: PeopleFields.specie_id;
-}
+} */
 
 export namespace StarshipsInFilmsFields {
   export type id = string | null;

@@ -7,7 +7,7 @@ import {
   insertItemsIfNotAlreadyStored
 } from './commons';
 import { Status } from '../middlewares/helpers';
-import { Vehicle } from '../types/DB';
+import { Vehicle } from '../models/Vehicle';
 import uuid = require('uuid');
 
 export const VehicleContext: IDBContext<IVehicleViewModel> = {
@@ -20,17 +20,11 @@ export const VehicleContext: IDBContext<IVehicleViewModel> = {
             : knex.where(field, value)
           : knex;
       return k
-        .select(
-          'vehicle.*',
-          'pilots.json_agg as pilots',
-          'films.json_agg as films'
-        )
+        .select('vehicle.*', 'pilots.json_agg as pilots', 'films.json_agg as films')
         .from(function() {
           this.select(
             'vehicle.id as vehicle_id',
-            knex.raw(
-              `json_agg(json_build_object('id', people.id, 'name', people.name))`
-            )
+            knex.raw(`json_agg(json_build_object('id', people.id, 'name', people.name))`)
           )
             .from('vehicle')
             .leftJoin('pilot', 'pilot.vehicle_id', 'vehicle.id')
@@ -42,16 +36,10 @@ export const VehicleContext: IDBContext<IVehicleViewModel> = {
           function() {
             this.select(
               'vehicle.id as vehicle_id',
-              knex.raw(
-                `json_agg(json_build_object('id', film.id, 'name', film.title))`
-              )
+              knex.raw(`json_agg(json_build_object('id', film.id, 'name', film.title))`)
             )
               .from('vehicle')
-              .leftJoin(
-                'vehicles_in_films',
-                'vehicles_in_films.vehicle_id',
-                'vehicle.id'
-              )
+              .leftJoin('vehicles_in_films', 'vehicles_in_films.vehicle_id', 'vehicle.id')
               .leftJoin('film', 'film.id', 'vehicles_in_films.film_id')
               .groupBy('vehicle.id')
               .as('films');
@@ -62,41 +50,23 @@ export const VehicleContext: IDBContext<IVehicleViewModel> = {
         .join('vehicle', 'vehicle.id', 'pilots.vehicle_id');
     },
   Add: (field: string) =>
-    async function(
-      vehicleId: string,
-      itemsIds: string[]
-    ): Promise<IDBResponse<string>> {
-      const relationContext:
-        | RelationData
-        | undefined = buildRelationContextFromField(field);
+    async function(vehicleId: string, itemsIds: string[]): Promise<IDBResponse<string>> {
+      const relationContext: RelationData | undefined = buildRelationContextFromField(field);
       if (!relationContext) {
         return {
           status: Status.Error,
           message: `planet relation do not have field ${field}`
         };
       }
-      const storedIds = await getIdsRelatedToThisEntity(
-        'vehicle_id',
-        vehicleId,
-        relationContext
-      );
-      const enteredIdsAreValid = await validateCandidates(
-        relationContext.entityTableName,
-        itemsIds
-      );
+      const storedIds = await getIdsRelatedToThisEntity('vehicle_id', vehicleId, relationContext);
+      const enteredIdsAreValid = await validateCandidates(relationContext.entityTableName, itemsIds);
       if (!enteredIdsAreValid) {
         return Promise.resolve({
           status: Status.Error,
           message: 'Parameter itemIds has invalid values'
         });
       }
-      return insertItemsIfNotAlreadyStored(
-        vehicleId,
-        'vehicle_id',
-        itemsIds,
-        storedIds,
-        relationContext
-      );
+      return insertItemsIfNotAlreadyStored(vehicleId, 'vehicle_id', itemsIds, storedIds, relationContext);
     },
   Remove: (field: string) =>
     async function(ids: string[]): Promise<IDBResponse<string>> {
@@ -106,9 +76,7 @@ export const VehicleContext: IDBContext<IVehicleViewModel> = {
           and id(s) equals to ${JSON.stringify(ids)} 
           deleted successfully`
       };
-      const relation: RelationData | undefined = buildRelationContextFromField(
-        field
-      );
+      const relation: RelationData | undefined = buildRelationContextFromField(field);
       if (relation) {
         return knex(relation.tableName)
           .whereIn(relation.columnName, ids)

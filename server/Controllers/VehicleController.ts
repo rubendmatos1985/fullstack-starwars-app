@@ -10,7 +10,7 @@ import {
   UpdateEntityRequest,
   fail
 } from './commons';
-import { Vehicle } from '../types/DB';
+import { Vehicle } from '../models/Vehicle';
 import { IDBResponse } from '../DB';
 import { Permissions } from '../middlewares/permissions';
 import { Validation } from '../middlewares/validation';

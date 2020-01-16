@@ -12,7 +12,7 @@ import {
   AddItemsRequest,
   UpdateEntityRequest
 } from './commons';
-import { Specie } from '../types/DB';
+import { ISpecieEntity } from '../models/Specie';
 import { Permissions } from '../middlewares/permissions';
 import { Validation } from '../middlewares/validation';
 
@@ -21,31 +21,11 @@ class SpeciesController extends Controller {
     const router = () => {
       const r: Router = Router();
       r.get('/', this.HandleQueryParams);
-      r.post(
-        '/delete/items',
-        Permissions.Write,
-        Validation.CheckItemIdIsProvided,
-        this.RemoveItem
-      );
-      r.post(
-        '/add',
-        Permissions.Write,
-        Validation.CheckItemIdIsProvided,
-        this.AddItem
-      );
-      r.post(
-        '/update',
-        Permissions.Write,
-        Validation.CheckItemIdIsProvided,
-        this.Update
-      );
+      r.post('/delete/items', Permissions.Write, Validation.CheckItemIdIsProvided, this.RemoveItem);
+      r.post('/add', Permissions.Write, Validation.CheckItemIdIsProvided, this.AddItem);
+      r.post('/update', Permissions.Write, Validation.CheckItemIdIsProvided, this.Update);
       r.post('/create', Permissions.Write, this.CreateSpecie);
-      r.post(
-        '/delete',
-        Permissions.Write,
-        Validation.CheckItemIdIsProvided,
-        this.RemoveSpecie
-      );
+      r.post('/delete', Permissions.Write, Validation.CheckItemIdIsProvided, this.RemoveSpecie);
       return r;
     };
     super(router);
@@ -53,11 +33,7 @@ class SpeciesController extends Controller {
   }
 
   public async GetById(req: Request, res: Response): Promise<Response> {
-    const {
-      message
-    }: IDBResponse<ISpecieViewModel[]> = await SpecieRepository.GetById(
-      req.query.id
-    );
+    const { message }: IDBResponse<ISpecieViewModel[]> = await SpecieRepository.GetById(req.query.id);
     return res.json(message);
   }
   private async CreateSpecie(req: Request, res: Response) {
@@ -69,10 +45,7 @@ class SpeciesController extends Controller {
     return fail(res, 'check your request body');
   }
   private async GetAll(req: Request, res: Response): Promise<Response> {
-    const {
-      status,
-      message
-    }: IDBResponse<ISpecieViewModel[]> = await SpecieRepository.GetAll();
+    const { status, message }: IDBResponse<ISpecieViewModel[]> = await SpecieRepository.GetAll();
     if (status === Status.Successfull) {
       return res.json(message);
     }
@@ -80,11 +53,7 @@ class SpeciesController extends Controller {
   }
 
   private async GetByName(req: Request, res: Response): Promise<Response> {
-    const {
-      message
-    }: IDBResponse<ISpecieViewModel[]> = await SpecieRepository.GetByName(
-      req.query.name
-    );
+    const { message }: IDBResponse<ISpecieViewModel[]> = await SpecieRepository.GetByName(req.query.name);
     return res.json(message);
   }
 
@@ -111,10 +80,7 @@ class SpeciesController extends Controller {
     const removeItemHandler = RemoveItemHandlerForDomain(this.Pathname);
     const fieldNames: string[] = ['films', 'people'] as string[];
 
-    const removers = [
-      SpecieRepository.RemoveFilms,
-      SpecieRepository.RemovePeople
-    ];
+    const removers = [SpecieRepository.RemoveFilms, SpecieRepository.RemovePeople];
     return await Promise.all(
       new Array(fieldNames.length)
         .fill(removeItemHandler(req, res))
@@ -131,7 +97,7 @@ class SpeciesController extends Controller {
         .map((handler, i) => handler(fieldNames[i], adders[i]))
     ).catch((e) => ({ status: Status.Error, message: 'Error' }));
   }
-  private async Update(req: UpdateEntityRequest<Specie>, res: Response) {
+  private async Update(req: UpdateEntityRequest<ISpecieEntity>, res: Response) {
     const redirectUrl = `/api/v1/${this.Pathname}?id=${req.query.id}&apiKey=${req.query.apiKey}`;
     const result: IDBResponse<string> = await SpecieRepository.Update({
       id: req.query.id,
