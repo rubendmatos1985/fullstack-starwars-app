@@ -1,7 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import validate from 'uuid-validate';
 import { Status } from './helpers';
-import { contains } from 'ramda';
 export namespace Validation {
   export const ErrorMessages = {
     Body: {
@@ -40,7 +39,7 @@ export namespace Validation {
         .split(' ')
         .join('');
       const matched: string[] | null = formattedString.match(/[a-zA-Z\u00C0-\u017F]+/);
-      return matched !== null ? matched[0].length === formattedString.length : false;
+      return matched !== null ? matched[0] !== 'null' && matched[0].length === formattedString.length : false;
     };
     if (req.query.name) {
       if (validateQuery(req.query.name)) {
@@ -51,6 +50,13 @@ export namespace Validation {
     return next();
   }
   export function AddOrRemoveItemsBodyParameters(req: Request, res: Response, next: NextFunction) {
+    const bodyContainsKeys = () =>
+      Object.keys(req.body).includes('fieldName') && Object.keys(req.body).includes('itemsIds');
+
+    if (!bodyContainsKeys()) {
+      return res.status(400).send({ status: Status.Error, message: ErrorMessages.Body.AddOrRemoveItems });
+    }
+
     if (req.body && req.body.fieldName && req.body.itemsIds) {
       if (
         typeof req.body.fieldName === 'string' &&
@@ -64,6 +70,7 @@ export namespace Validation {
         message: ErrorMessages.Body.AddOrRemoveItems
       });
     }
+
     return res.status(400).json({
       status: Status.Error,
       message: ErrorMessages.Body.AddOrRemoveItems

@@ -7,7 +7,7 @@ import { isEmpty } from 'ramda';
 import { Status } from '../server/middlewares/helpers';
 import { Validation } from '../server/middlewares/validation';
 import uuid from 'uuid';
-
+import { PostRequests } from './commons/post_queries';
 describe('Post Characters in Films: add and remvove', () => {
   let apiKey: string;
   let film: Film;
@@ -73,32 +73,13 @@ describe('Post Characters in Films: add and remvove', () => {
     expect(response.text.split(' ')[3]).toBe(expectedRedirectionPath);
     expect(response.status).toBe(302);
   });
-  test('Add characters with wrong body.itemsIds', async () => {
-    const response = await request(App)
-      .post(`/api/v1/films/add?id=${film.id}&apiKey=${apiKey}`)
-      .send({
-        fieldName: 'characters',
-        itemsIds: [characters] // wrong
-      });
+  test('Add with wrong body.itemsIds values', async () =>
+    await PostRequests.Body.Wrong.ItemsIdsValues(film, apiKey));
+  test('Add with wrong body.fieldName values', async () =>
+    await PostRequests.Body.Wrong.fieldNameValues(film, apiKey));
 
-    expect({ status: Status.Error, message: Validation.ErrorMessages.Body.AddOrRemoveItems }).toStrictEqual(
-      JSON.parse(response.text)
-    );
-    expect(response.status).toBe(400);
-  });
-  test('Add characters with wrong body.fieldName', async () => {
-    const response = await request(App)
-      .post(`/api/v1/films/add?id=${film.id}&apiKey=${apiKey}`)
-      .send({
-        fieldName: 12345, // wrong
-        itemsIds: characters
-      });
+  test('Wrong body keys', async () => PostRequests.Body.Wrong.keys(film, apiKey));
 
-    expect({ status: Status.Error, message: Validation.ErrorMessages.Body.AddOrRemoveItems }).toStrictEqual(
-      JSON.parse(response.text)
-    );
-    expect(response.status).toBe(400);
-  });
   test('Remove characters with wrong body.itemsIds', async () => {
     const response = await request(App)
       .post(`/api/v1/films/delete/items?id=${film.id}&apiKey=${apiKey}`)
