@@ -11,10 +11,9 @@ interface ApiUrls {
   starships: string;
 }
 
-export function buildHomeData(req:Request){
- const apiData = (req: Request): ApiUrls => {
-    const url = (name: string) =>
-      `${req.protocol}://${req.get('host')}/api/v1/${name}`;
+export function buildHomeData(req: Request) {
+  const apiData = (req: Request): ApiUrls => {
+    const url = (name: string) => `${req.protocol}://${req.get('host')}/api/v1/${name}`;
     return {
       people: url('people'),
       planets: url('planets'),
@@ -23,22 +22,16 @@ export function buildHomeData(req:Request){
       vehicles: url('vehicles'),
       starships: url('starships')
     };
-  }
-  return({
+  };
+  return {
     status: Status.Successfull,
     endpoints: apiData(req),
     resources: {
       type: 'GET',
       urls: {
-        get_all: `https://${req.get(
-          'host'
-        )}/api/v1/<resource>?id=<resource_id>&apiKey=<your_api_key>`,
-        get_by_id: `https://${req.get(
-          'host'
-        )}/api/v1/<resource>?id=<resource_id>&apiKey=<your_api_key>`,
-        get_by_name: `https://${req.get(
-          'host'
-        )}/api/v1/<resource>?name=<resource_name>&apiKey=<your_api_key>`
+        get_all: `https://${req.get('host')}/api/v1/<resource>?id=<resource_id>&apiKey=<your_api_key>`,
+        get_by_id: `https://${req.get('host')}/api/v1/<resource>?id=<resource_id>&apiKey=<your_api_key>`,
+        get_by_name: `https://${req.get('host')}/api/v1/<resource>?name=<resource_name>&apiKey=<your_api_key>`
       },
       scopes: ['read']
     },
@@ -54,9 +47,7 @@ export function buildHomeData(req:Request){
     },
     add: {
       type: 'POST',
-      url: `https://${req.get(
-        'host'
-      )}/api/v1/<resource>/add?id=<resource_id>&apiKey=<your_api_key>`,
+      url: `https://${req.get('host')}/api/v1/<resource>/add?id=<resource_id>&apiKey=<your_api_key>`,
       body: {
         fieldName: 'string',
         itemsIds: ['string']
@@ -77,22 +68,17 @@ export function buildHomeData(req:Request){
       },
       delete_entity: {
         type: 'POST',
-        url: `https://${req.get(
-          'host'
-        )}/api/v1/<resource>/delete?id=<resource id>&apiKey=<your_api_key>`,
+        url: `https://${req.get('host')}/api/v1/<resource>/delete?id=<resource id>&apiKey=<your_api_key>`,
         scopes: ['read', 'write']
       }
     },
     create: {
       type: 'POST',
-      url: `https://${req.get(
-        'host'
-      )}/api/v1/<resource>/create?apiKey=<your_api_key>`,
+      url: `https://${req.get('host')}/api/v1/<resource>/create?apiKey=<your_api_key>`,
       scopes: ['read', 'write']
     }
-  })
+  };
 }
-
 
 export class HomeController extends Controller {
   constructor() {
@@ -104,8 +90,6 @@ export class HomeController extends Controller {
     super(router);
     this.Pathname = 'home';
   }
-
-  private 
 
   private async GetHome(req: Request, res: Response) {
     return res.json(buildHomeData(req));
