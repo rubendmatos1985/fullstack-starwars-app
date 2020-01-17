@@ -8,6 +8,7 @@ import { Status } from '../server/middlewares/helpers';
 import { Validation } from '../server/middlewares/validation';
 import uuid from 'uuid';
 import { CommonPostRequestsTests } from './commons/post_queries';
+
 describe('Post Characters in Films: add and remvove', () => {
   let apiKey: string;
   let film: Film;
@@ -73,15 +74,4 @@ describe('Post Characters in Films: add and remvove', () => {
     expect(response.text.split(' ')[3]).toBe(expectedRedirectionPath);
     expect(response.status).toBe(302);
   });
-  test('Add with wrong body.itemsIds values', async () =>
-    await CommonPostRequestsTests.Add.Body.Wrong.ItemsIdsValues(film, 'films', apiKey));
-  test('Add with wrong body.fieldName values', async () =>
-    await CommonPostRequestsTests.Add.Body.Wrong.FieldNameValues(film, 'films', apiKey));
-
-  test('Wrong body keys', async () => CommonPostRequestsTests.Add.Body.Wrong.Keys(film, 'films', apiKey));
-
-  test('Remove something with wrong body.itemsIds', async () =>
-    await CommonPostRequestsTests.Remove.Body.Wrong.ItemsIds(film, 'characters', apiKey));
-  test('Remove something with wrong body.fieldName', async () =>
-    await CommonPostRequestsTests.Remove.Body.Wrong.FieldNames(film, characters, apiKey));
 });
