@@ -1,8 +1,8 @@
-import { knex } from '../server/DB/index';
+import { knex } from '../../../server/DB/index';
 import request from 'supertest';
-import App from '../server/app';
-import { IUserEntity } from '../server/models/User';
-import { Film } from '../server/models/Film';
+import App from '../../../server/app';
+import { IUserEntity } from '../../../server/models/User';
+import { Film } from '../../../server/models/Film';
 import { isEmpty } from 'ramda';
 
 describe('Post Characters in Films: add and remvove', () => {

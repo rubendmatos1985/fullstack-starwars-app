@@ -1,10 +1,10 @@
-import { Film } from '../server/models/Film';
+import { Film } from '../../../server/models/Film';
 
-import { IUserEntity } from '../server/models/User';
+import { IUserEntity } from '../../../server/models/User';
 
-import { knex } from '../server/DB';
+import { knex } from '../../../server/DB';
 
-import { CommonPostRequestsTests } from './commons/post_queries';
+import { CommonPostRequestsTests } from '../../commons/post_queries';
 
 describe('Film: common tests', () => {
   let apiKey: string;

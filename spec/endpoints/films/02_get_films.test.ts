@@ -1,9 +1,9 @@
 import request from 'supertest';
-import App from '../server/app';
-import { knex } from '../server/DB';
-import { Film } from '../server/models/Film';
-import { Status } from '../server/middlewares/helpers';
-import { IUserEntity } from '../server/models/User';
+import App from '../../../server/app';
+import { knex } from '../../../server/DB';
+import { Film } from '../../../server/models/Film';
+import { Status } from '../../../server/middlewares/helpers';
+import { IUserEntity } from '../../../server/models/User';
 import uuid from 'uuid';
 
 describe('Films Controller', () => {

@@ -1,7 +1,7 @@
-import { Film } from '../server/models/Film';
-import { knex } from '../server/DB';
+import { Film } from '../../../server/models/Film';
+import { knex } from '../../../server/DB';
 import request from 'supertest';
-import App from '../server/app';
+import App from '../../../server/app';
 import { isEmpty } from 'ramda';
 
 describe('Post Starships in Films', () => {

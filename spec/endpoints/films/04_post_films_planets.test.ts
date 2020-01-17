@@ -1,7 +1,7 @@
-import { knex } from '../server/DB';
+import { knex } from '../../../server/DB';
 import request from 'supertest';
-import App from '../server/app';
-import { Film } from '../server/models/Film';
+import App from '../../../server/app';
+import { Film } from '../../../server/models/Film';
 import { isEmpty } from 'ramda';
 describe('Post Planets in Films', () => {
   let apiKey: string;
