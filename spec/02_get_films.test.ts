@@ -13,11 +13,7 @@ describe('Films Controller', () => {
     apiKey = user[0].api_key;
     done();
   });
-  test('fail if api key is not in query', async () => {
-    const response = await request(App).get('/api/v1/films');
-    const formattedResponse = JSON.parse(response.text);
-    expect(formattedResponse.status).toBe(Status.Error);
-  });
+
   test('success if api key is in query', async () => {
     const filmToCompare: Film[] = await knex('film')
       .select('*')

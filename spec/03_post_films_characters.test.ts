@@ -7,7 +7,7 @@ import { isEmpty } from 'ramda';
 import { Status } from '../server/middlewares/helpers';
 import { Validation } from '../server/middlewares/validation';
 import uuid from 'uuid';
-import { PostRequests } from './commons/post_queries';
+import { CommonPostRequestsTests } from './commons/post_queries';
 describe('Post Characters in Films: add and remvove', () => {
   let apiKey: string;
   let film: Film;
@@ -74,34 +74,14 @@ describe('Post Characters in Films: add and remvove', () => {
     expect(response.status).toBe(302);
   });
   test('Add with wrong body.itemsIds values', async () =>
-    await PostRequests.Body.Wrong.ItemsIdsValues(film, apiKey));
+    await CommonPostRequestsTests.Add.Body.Wrong.ItemsIdsValues(film, 'films', apiKey));
   test('Add with wrong body.fieldName values', async () =>
-    await PostRequests.Body.Wrong.fieldNameValues(film, apiKey));
+    await CommonPostRequestsTests.Add.Body.Wrong.FieldNameValues(film, 'films', apiKey));
 
-  test('Wrong body keys', async () => PostRequests.Body.Wrong.keys(film, apiKey));
+  test('Wrong body keys', async () => CommonPostRequestsTests.Add.Body.Wrong.Keys(film, 'films', apiKey));
 
-  test('Remove characters with wrong body.itemsIds', async () => {
-    const response = await request(App)
-      .post(`/api/v1/films/delete/items?id=${film.id}&apiKey=${apiKey}`)
-      .send({
-        fieldName: 'characters',
-        itemsIds: [characters] // wrong
-      });
-    expect({ status: Status.Error, message: Validation.ErrorMessages.Body.AddOrRemoveItems }).toStrictEqual(
-      JSON.parse(response.text)
-    );
-    expect(response.status).toBe(400);
-  });
-  test('Remove characters with wrong body.fieldName', async () => {
-    const response = await request(App)
-      .post(`/api/v1/films/delete/items?id=${film.id}&apiKey=${apiKey}`)
-      .send({
-        fieldName: 12345, // wrong
-        itemsIds: [characters]
-      });
-    expect({ status: Status.Error, message: Validation.ErrorMessages.Body.AddOrRemoveItems }).toStrictEqual(
-      JSON.parse(response.text)
-    );
-    expect(response.status).toBe(400);
-  });
+  test('Remove something with wrong body.itemsIds', async () =>
+    await CommonPostRequestsTests.Remove.Body.Wrong.ItemsIds(film, 'characters', apiKey));
+  test('Remove something with wrong body.fieldName', async () =>
+    await CommonPostRequestsTests.Remove.Body.Wrong.FieldNames(film, characters, apiKey));
 });
