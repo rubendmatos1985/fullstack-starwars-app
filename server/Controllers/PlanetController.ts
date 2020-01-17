@@ -13,8 +13,20 @@ class PlanetController extends Controller {
     const router = () => {
       const r = Router();
       r.get('/', this.QueryParamsHandler);
-      r.post('/add', Permissions.Write, Validation.CheckItemIdIsProvided, this.AddItem);
-      r.post('/delete/items', Permissions.Write, Validation.CheckItemIdIsProvided, this.RemoveItem);
+      r.post(
+        '/add/items',
+        Permissions.Write,
+        Validation.CheckItemIdIsProvided,
+        Validation.AddOrRemoveItemsBodyParameters,
+        this.AddItem
+      );
+      r.post(
+        '/delete/items',
+        Permissions.Write,
+        Validation.CheckItemIdIsProvided,
+        Validation.AddOrRemoveItemsBodyParameters,
+        this.RemoveItem
+      );
       r.post('/delete', Permissions.Write, Validation.CheckItemIdIsProvided, this.RemovePlanet);
       r.post('/update', Permissions.Write, Validation.CheckItemIdIsProvided, this.Update);
       r.post('/delete', Permissions.Write, Validation.CheckItemIdIsProvided, this.RemovePlanet);

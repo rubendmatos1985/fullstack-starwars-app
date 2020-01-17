@@ -39,7 +39,7 @@ describe('Post Characters in Films: add and remvove', () => {
   });
   test('Add new characters', async () => {
     const response = await request(App)
-      .post(`/api/v1/films/add?id=${film.id}&apiKey=${apiKey}`)
+      .post(`/api/v1/films/add/items?id=${film.id}&apiKey=${apiKey}`)
       .send({
         fieldName: 'characters',
         itemsIds: characters

@@ -49,7 +49,7 @@ class FilmsController extends Controller {
       );
       r.post('/delete', Permissions.Write, Validation.CheckItemIdIsProvided, this.RemoveFilm);
       r.post(
-        '/add',
+        '/add/items',
         Permissions.Write,
         Validation.CheckItemIdIsProvided,
         Validation.AddOrRemoveItemsBodyParameters,

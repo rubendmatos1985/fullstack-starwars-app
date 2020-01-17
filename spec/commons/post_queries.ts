@@ -9,7 +9,7 @@ export namespace PostRequests {
     export namespace Wrong {
       export const ItemsIdsValues = async (item: IEntity, apiKey: string) => {
         const response = await request(App)
-          .post(`/api/v1/films/add?id=${item.id}&apiKey=${apiKey}`)
+          .post(`/api/v1/films/add/items?id=${item.id}&apiKey=${apiKey}`)
           .send({
             fieldName: 'characters',
             itemsIds: [[]] // wrong
@@ -23,7 +23,7 @@ export namespace PostRequests {
       };
       export const fieldNameValues = async (item: IEntity, apiKey: string) => {
         const response = await request(App)
-          .post(`/api/v1/films/add?id=${item.id}&apiKey=${apiKey}`)
+          .post(`/api/v1/films/add/items?id=${item.id}&apiKey=${apiKey}`)
           .send({
             fieldName: 12345, // wrong
             itemsIds: []
@@ -37,10 +37,11 @@ export namespace PostRequests {
       };
       export const keys = async (item: IEntity, apiKey: string) => {
         const mock = jest.fn<Promise<Response>, any[]>();
+        const url: string = `/api/v1/films/add/items?id=${item.id}&apiKey=${apiKey}`;
         const mockedRequest = mock
           .mockReturnValueOnce(
             request(App)
-              .post(`/api/v1/films/add?id=${item.id}&apiKey=${apiKey}`)
+              .post(url)
               .send({
                 afdgfh: 'something', // wrong
                 itemsIds: []
@@ -48,7 +49,7 @@ export namespace PostRequests {
           )
           .mockReturnValueOnce(
             request(App)
-              .post(`/api/v1/films/add?id=${item.id}&apiKey=${apiKey}`)
+              .post(url)
               .send({
                 fieldName: 'something',
                 sddfgh: [] // wrong

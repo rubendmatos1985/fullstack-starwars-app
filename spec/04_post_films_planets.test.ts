@@ -33,7 +33,7 @@ describe('Post Planets in Films', () => {
   });
   test('Add new planets', async () => {
     const response = await request(App)
-      .post(`/api/v1/films/add?id=${targetFilm.id}&apiKey=${apiKey}`)
+      .post(`/api/v1/films/add/items?id=${targetFilm.id}&apiKey=${apiKey}`)
       .send({ fieldName: 'planets', itemsIds: notStoredPlanetsIds });
     const storedPlanetsIds: string[] = await knex('planets_in_films')
       .select('planet_id')

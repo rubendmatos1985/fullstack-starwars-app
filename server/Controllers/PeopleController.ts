@@ -16,8 +16,20 @@ class PeopleController extends Controller {
     function router() {
       const r = Router();
       r.get('/', Validation.ValidateIdAsUUID, Validation.ValidateNameAsString, this.GetQueryParamsHandler);
-      r.post('/add', Permissions.Write, Validation.CheckItemIdIsProvided, this.AddItem);
-      r.post('/delete/items', Permissions.Write, Validation.CheckItemIdIsProvided, this.RemoveItems);
+      r.post(
+        '/add/items',
+        Permissions.Write,
+        Validation.CheckItemIdIsProvided,
+        Validation.AddOrRemoveItemsBodyParameters,
+        this.AddItem
+      );
+      r.post(
+        '/delete/items',
+        Permissions.Write,
+        Validation.CheckItemIdIsProvided,
+        Validation.AddOrRemoveItemsBodyParameters,
+        this.RemoveItems
+      );
       r.post('/delete', Permissions.Write, Validation.CheckItemIdIsProvided, this.RemovePeople);
       r.post('/update', Permissions.Write, Validation.CheckItemIdIsProvided, this.Update);
       r.post('/create', Permissions.Write, this.CreatePeople);
