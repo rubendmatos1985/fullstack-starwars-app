@@ -1,7 +1,6 @@
 import request, { Response } from 'supertest';
 import App from '../../server/app';
 import { Status } from '../../server/middlewares/helpers';
-import { Film } from '../../server/models/Film';
 import { Validation } from '../../server/middlewares/validation';
 import { IEntity } from '../../server/models/Entity';
 
