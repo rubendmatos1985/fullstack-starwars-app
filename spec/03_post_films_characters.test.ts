@@ -4,10 +4,6 @@ import App from '../server/app';
 import { IUserEntity } from '../server/models/User';
 import { Film } from '../server/models/Film';
 import { isEmpty } from 'ramda';
-import { Status } from '../server/middlewares/helpers';
-import { Validation } from '../server/middlewares/validation';
-import uuid from 'uuid';
-import { CommonPostRequestsTests } from './commons/post_queries';
 
 describe('Post Characters in Films: add and remvove', () => {
   let apiKey: string;
