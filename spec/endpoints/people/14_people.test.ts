@@ -1,11 +1,11 @@
-import { knex, IDBResponse } from '../server/DB';
+import { knex, IDBResponse } from '../../../server/DB';
 import request from 'supertest';
-import App from '../server/app';
-import { Status } from '../server/middlewares/helpers';
-import { Authentication } from '../server/middlewares/authentication';
-import { IPeople } from '../server/models/People';
-import { IPeopleViewModel } from '../server/models/ViewModels/PeopleViewModel';
-import { Validation } from '../server/middlewares/validation';
+import App from '../../../server/app';
+import { Status } from '../../../server/middlewares/helpers';
+import { Authentication } from '../../../server/middlewares/authentication';
+import { IPeople } from '../../../server/models/People';
+import { IPeopleViewModel } from '../../../server/models/ViewModels/PeopleViewModel';
+import { Validation } from '../../../server/middlewares/validation';
 import uuid from 'uuid';
 
 describe('People Controller', () => {

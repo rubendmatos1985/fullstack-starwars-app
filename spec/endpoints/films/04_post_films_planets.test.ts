@@ -7,7 +7,7 @@ describe('Post Planets in Films', () => {
   let apiKey: string;
   let notStoredPlanetsIds: string[];
   let targetFilm: Film;
-  let expectedRedirectionPath;
+  let expectedRedirectionPath: string;
   beforeAll(async (done) => {
     const [userApiKey]: { api_key: string }[] = await knex('user')
       .select('api_key')
